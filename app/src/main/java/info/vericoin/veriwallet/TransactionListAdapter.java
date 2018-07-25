@@ -9,9 +9,11 @@ import android.widget.TextView;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.kits.WalletAppKit;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
-public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
+public class TransactionListAdapter extends RecyclerView.Adapter<TransactionListAdapter.ViewHolder> {
     private List<Transaction> mDataset;
 
     // Provide a reference to the views for each data item
@@ -34,7 +36,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TransactionAdapter(List<Transaction> myDataset) {
+    public TransactionListAdapter(List<Transaction> myDataset) {
         mDataset = myDataset;
     }
 
@@ -45,8 +47,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     // Create new views (invoked by the layout manager)
     @Override
-    public TransactionAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+    public TransactionListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                int viewType) {
         // create a new view
         ConstraintLayout v = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.transaction_item, parent, false);
@@ -65,7 +67,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
         WalletAppKit kit = WalletConnection.getKit();
         holder.txHash.setText(tx.getHashAsString());
-        holder.date.setText(tx.getUpdateTime().toLocaleString());
+
+        DateFormat format = DateFormat.getDateInstance();
+        holder.date.setText(format.format(tx.getUpdateTime()));
         holder.value.setText(tx.getValue(kit.wallet()).toFriendlyString());
 
     }

@@ -21,7 +21,7 @@ public class TransactionListActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private TransactionAdapter mAdapter;
+    private TransactionListAdapter mAdapter;
     private WalletAppKit kit;
 
     public static Intent createIntent(Context context){
@@ -59,7 +59,7 @@ public class TransactionListActivity extends AppCompatActivity {
 
                 List<Transaction> myDataset = getDataSet();
                 // specify an adapter (see also next example)
-                mAdapter = new TransactionAdapter(myDataset);
+                mAdapter = new TransactionListAdapter(myDataset);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });
