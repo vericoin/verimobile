@@ -124,7 +124,7 @@ public class BitcoinService extends Service {
     }
 
     @Override
-    public BitcoinBinder onBind(Intent intent) {
-        return new BitcoinBinder(kit);
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

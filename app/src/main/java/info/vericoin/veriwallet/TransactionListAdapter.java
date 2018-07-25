@@ -10,7 +10,6 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.kits.WalletAppKit;
 
 import java.text.DateFormat;
-import java.util.Date;
 import java.util.List;
 
 public class TransactionListAdapter extends RecyclerView.Adapter<TransactionListAdapter.ViewHolder> {
