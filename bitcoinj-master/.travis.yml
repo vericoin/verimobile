@@ -1,0 +1,19 @@
+# configuration for https://travis-ci.org/bitcoinj/bitcoinj
+sudo: false
+dist: trusty
+language: java
+jdk: oraclejdk8
+install:
+# before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y protobuf-compiler
+script:
+  - gradle -q clean install
+  - jdk_switcher use openjdk7
+  - cd core
+  - gradle -q clean build
+
+notifications:
+  irc:
+    channels: "irc.freenode.net#bitcoinj"
+    skip_join: true
