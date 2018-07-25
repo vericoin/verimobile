@@ -1,8 +1,8 @@
 package info.vericoin.veriwallet;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
-public class BitcoinApplication extends Application {
+public class BitcoinApplication extends MultiDexApplication {
 
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
