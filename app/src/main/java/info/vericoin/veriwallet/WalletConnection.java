@@ -111,18 +111,24 @@ public class WalletConnection {
                         // be called in onSetupCompleted() above. But we don't do that here to demonstrate the more common
                         // case of waiting for a block.
 
-                        onCoinReceiveListener.onCoinsReceived(wallet, tx, prevBalance, newBalance);
+                        if(onCoinReceiveListener != null) {
+                            onCoinReceiveListener.onCoinsReceived(wallet, tx, prevBalance, newBalance);
+                        }
 
                         Futures.addCallback(tx.getConfidence().getDepthFuture(1), new FutureCallback<TransactionConfidence>() {
                             @Override
                             public void onSuccess(TransactionConfidence result) {
                                 // "result" here is the same as "tx" above, but we use it anyway for clarity.
-                                onCoinReceiveListener.onSuccess(wallet, tx, prevBalance, newBalance, result);
+                                if(onCoinReceiveListener != null) {
+                                    onCoinReceiveListener.onSuccess(wallet, tx, prevBalance, newBalance, result);
+                                }
                             }
 
                             @Override
                             public void onFailure(Throwable t) {
-                                onCoinReceiveListener.onFailure(wallet, tx, prevBalance, newBalance);
+                                if(onCoinReceiveListener != null) {
+                                    onCoinReceiveListener.onFailure(wallet, tx, prevBalance, newBalance);
+                                }
                             }
                         }, runInUIThread);
                     }
