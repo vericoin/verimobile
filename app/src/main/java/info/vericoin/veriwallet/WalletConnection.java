@@ -88,7 +88,12 @@ public class WalletConnection {
             protected void onSetupCompleted() {
 
                 //WalletAppKit is now ready to be used.
-                connectListener.OnSetUpComplete(kit);
+                runInUIThread.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        connectListener.OnSetUpComplete(kit);
+                    }
+                });
                 startUpComplete = true;
 
                 // This is called in a background thread after startAndWait is called, as setting up various objects
