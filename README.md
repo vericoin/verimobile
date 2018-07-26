@@ -1,5 +1,7 @@
 # VeriMobile
-Temporary Repository
+Official Repository
+
+Wallet is currently in development.
 
 USE AT YOUR OWN RISK
 
