@@ -1,4 +1,4 @@
-# VeriWallet
+# VeriMobile
 Temporary Repository
 
 USE AT YOUR OWN RISK
