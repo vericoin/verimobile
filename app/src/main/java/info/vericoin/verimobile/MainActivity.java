@@ -1,4 +1,4 @@
-package info.vericoin.veriwallet;
+package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,18 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
-
-import static info.vericoin.veriwallet.WalletConnection.runInUIThread;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,8 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView availableBalance;
     private TextView blockHeight;
     private Button sendButton;
-    private Intent serviceIntent;
-    private WalletConnection walletConnection;
     private WalletAppKit kit;
 
     private CardView walletView;

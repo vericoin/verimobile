@@ -1,4 +1,4 @@
-package info.vericoin.veriwallet;
+package info.vericoin.verimobile;
 
 import org.junit.Test;
 

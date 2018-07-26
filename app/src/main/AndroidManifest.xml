@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="info.vericoin.veriwallet">
+    package="info.vericoin.verimobile">
 
     <application
-        android:name=".BitcoinApplication"
+        android:name="info.vericoin.verimobile.BitcoinApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashActivity"
+        <activity android:name="info.vericoin.verimobile.SplashActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,10 +18,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TransactionListActivity"/>
-        <activity android:name=".MainActivity"/>
-        <activity android:name=".SendActivity"/>
-        <service android:name=".BitcoinService"/>
+        <activity android:name="info.vericoin.verimobile.TransactionListActivity"/>
+        <activity android:name="info.vericoin.verimobile.MainActivity"/>
+        <activity android:name="info.vericoin.verimobile.SendActivity"/>
+        <service android:name="info.vericoin.verimobile.BitcoinService"/>
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

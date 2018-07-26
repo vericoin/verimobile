@@ -1,4 +1,4 @@
-package info.vericoin.veriwallet;
+package info.vericoin.verimobile;
 
 import android.app.Service;
 import android.content.Context;
@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.graphics.BitmapCompat;
 
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -26,12 +24,10 @@ import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.utils.BriefLogFormatter;
-import org.bitcoinj.utils.Threading;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 
 public class BitcoinService extends Service {
 

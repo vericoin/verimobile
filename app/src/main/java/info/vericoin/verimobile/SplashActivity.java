@@ -1,10 +1,8 @@
-package info.vericoin.veriwallet;
+package info.vericoin.verimobile;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
 
-import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.kits.WalletAppKit;
 
 public class SplashActivity extends AppCompatActivity {

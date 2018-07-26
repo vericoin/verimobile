@@ -1,4 +1,4 @@
-package info.vericoin.veriwallet;
+package info.vericoin.verimobile;
 
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;

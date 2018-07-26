@@ -1,4 +1,4 @@
-package info.vericoin.veriwallet;
+package info.vericoin.verimobile;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
