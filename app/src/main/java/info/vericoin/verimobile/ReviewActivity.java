@@ -92,6 +92,11 @@ public class ReviewActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            @Override
+            public void OnSyncComplete() {
+
+            }
         });
 
     }

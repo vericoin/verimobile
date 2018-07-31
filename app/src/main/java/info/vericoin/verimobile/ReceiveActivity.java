@@ -39,6 +39,11 @@ public class ReceiveActivity extends AppCompatActivity {
                 Address receiveAddr = kit.wallet().currentReceiveAddress();
                 receiveView.setText(receiveAddr.toString());
             }
+
+            @Override
+            public void OnSyncComplete() {
+
+            }
         });
 
     }

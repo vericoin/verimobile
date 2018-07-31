@@ -62,6 +62,11 @@ public class WalletHistoryActivity extends AppCompatActivity {
                 mAdapter = new TransactionListAdapter(WalletHistoryActivity.this, myDataset);
                 mRecyclerView.setAdapter(mAdapter);
             }
+
+            @Override
+            public void OnSyncComplete() {
+
+            }
         });
         WalletConnection.setOnCoinReceiveListener(new WalletConnection.OnCoinReceiveListener() {
             @Override

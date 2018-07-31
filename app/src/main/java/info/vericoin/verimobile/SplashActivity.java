@@ -23,6 +23,11 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(MainActivity.createIntent(SplashActivity.this));
                 finish(); //Prevent app from going back to this activity after its finished.
             }
+
+            @Override
+            public void OnSyncComplete() {
+
+            }
         });
     }
 

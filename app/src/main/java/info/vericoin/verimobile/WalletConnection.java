@@ -28,12 +28,14 @@ public class WalletConnection {
 
     public interface OnConnectListener{
         void OnSetUpComplete(WalletAppKit kit);
+        void OnSyncComplete();
     }
 
     private static OnCoinReceiveListener onCoinReceiveListener;
     private static OnNewBestBlockListener onNewBestBlockListener;
 
     private static boolean startUpComplete = false;
+    private static boolean syncComplete = false;
 
     public interface OnCoinReceiveListener{
         void onCoinsReceived(final Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance);
@@ -165,10 +167,12 @@ public class WalletConnection {
             @Override
             public void run() {
                 if(connectListener != null){
-                    connectListener.OnSetUpComplete(kit);
+                    connectListener.OnSyncComplete();
                 }
             }
         });
+        syncComplete = true;
+
     }
 
     /*/
@@ -216,6 +220,10 @@ public class WalletConnection {
         connectListener = newListener;
         if(kit != null && startUpComplete){
             connectListener.OnSetUpComplete(kit);
+        }
+
+        if(kit != null && syncComplete){
+            connectListener.OnSyncComplete();
         }
     }
 

@@ -122,6 +122,11 @@ public class AmountActivity extends AppCompatActivity implements View.OnClickLis
                     }
                 });
             }
+
+            @Override
+            public void OnSyncComplete() {
+
+            }
         });
     }
 

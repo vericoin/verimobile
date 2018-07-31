@@ -78,6 +78,11 @@ public class RecipientActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            @Override
+            public void OnSyncComplete() {
+
+            }
         });
     }
 

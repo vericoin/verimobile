@@ -2,6 +2,7 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     private CardView walletView;
 
+    private ConstraintLayout synchingBlock;
+
     public static Intent createIntent(Context context){
         return new Intent(context, MainActivity.class);
     }
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         sendButton = findViewById(R.id.sendButton);
         receiveButton = findViewById(R.id.receiveButton);
         walletView = findViewById(R.id.wallet_card_view);
+        synchingBlock = findViewById(R.id.synchingBlock);
 
         walletView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
 
                 setBalances(kit.wallet());
                 setBlockHeight(kit.chain().getBestChainHeight());
+            }
+
+            @Override
+            public void OnSyncComplete() {
+                synchingBlock.setVisibility(View.GONE);
             }
         });
 
