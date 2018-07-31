@@ -2,6 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent.Light">#FF4081</color>
     <color name="colorAccent">#E0E0E0</color>
     <color name="colorDivider">#30000000</color>
     <color name="greenNumber">#158407</color>
