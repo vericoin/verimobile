@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         walletView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(TransactionListActivity.createIntent(MainActivity.this));
+                startActivity(WalletHistoryActivity.createIntent(MainActivity.this));
             }
         });
 

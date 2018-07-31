@@ -73,6 +73,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-condensed"
         android:text="2f2fd2fa90fb3025064fde59d97eeae0f111267fbfc0dba486269efd04e3a814"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textIsSelectable="true"

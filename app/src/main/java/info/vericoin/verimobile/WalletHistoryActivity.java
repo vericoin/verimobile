@@ -16,7 +16,7 @@ import org.bitcoinj.wallet.Wallet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionListActivity extends AppCompatActivity {
+public class WalletHistoryActivity extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -25,7 +25,7 @@ public class TransactionListActivity extends AppCompatActivity {
     private WalletAppKit kit;
 
     public static Intent createIntent(Context context){
-        return new Intent(context, TransactionListActivity.class);
+        return new Intent(context, WalletHistoryActivity.class);
     }
 
     @Override
@@ -55,11 +55,11 @@ public class TransactionListActivity extends AppCompatActivity {
 
             @Override
             public void OnSetUpComplete(WalletAppKit kit) {
-                TransactionListActivity.this.kit = kit;
+                WalletHistoryActivity.this.kit = kit;
 
                 List<Transaction> myDataset = getDataSet();
                 // specify an adapter (see also next example)
-                mAdapter = new TransactionListAdapter(myDataset);
+                mAdapter = new TransactionListAdapter(WalletHistoryActivity.this, myDataset);
                 mRecyclerView.setAdapter(mAdapter);
             }
         });

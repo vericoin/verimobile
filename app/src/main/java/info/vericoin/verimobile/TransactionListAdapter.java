@@ -1,11 +1,13 @@
 package info.vericoin.verimobile;
 
+import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.kits.WalletAppKit;
 
@@ -14,6 +16,7 @@ import java.util.List;
 
 public class TransactionListAdapter extends RecyclerView.Adapter<TransactionListAdapter.ViewHolder> {
     private List<Transaction> mDataset;
+    private Context context;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -35,8 +38,9 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TransactionListAdapter(List<Transaction> myDataset) {
+    public TransactionListAdapter(Context context, List<Transaction> myDataset) {
         mDataset = myDataset;
+        this.context = context;
     }
 
     public void setmDataset(List<Transaction> mDataset) {
@@ -69,7 +73,14 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
 
         DateFormat format = DateFormat.getDateInstance();
         holder.date.setText(format.format(tx.getUpdateTime()));
-        holder.value.setText(tx.getValue(kit.wallet()).toFriendlyString());
+
+        Coin amount = tx.getValue(kit.wallet());
+        if(amount.isPositive()){
+            holder.value.setTextColor(context.getResources().getColor(R.color.greenNumber));
+        }else{
+            holder.value.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
+        }
+        holder.value.setText(amount.toFriendlyString());
 
     }
 

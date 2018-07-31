@@ -18,7 +18,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="info.vericoin.verimobile.TransactionListActivity"/>
+        <activity android:name="info.vericoin.verimobile.WalletHistoryActivity"
+            android:label="Wallet History"/>
         <activity android:name="info.vericoin.verimobile.MainActivity"/>
         <activity android:name=".RecipientActivity"
             android:label="Choose recipient"/>
