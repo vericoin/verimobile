@@ -19,12 +19,11 @@ public class VeriTransaction {
         this.listener = listener;
     }
 
-    public void sendTransaction(String amount, String toAddr){
-        Coin value = Coin.parseCoin(amount);
+    public void sendTransaction(Coin amount, Address toAddr){
 
         WalletAppKit kit = WalletConnection.getKit();
         try {
-            SendRequest request = SendRequest.to(Address.fromString(kit.params() , toAddr), value);
+            SendRequest request = SendRequest.to(toAddr, amount);
             final Wallet.SendResult sendResult = kit.wallet().sendCoins(request);
 
             // Register a callback that is invoked when the transaction has propagated across the network.

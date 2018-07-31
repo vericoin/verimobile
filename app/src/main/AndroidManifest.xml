@@ -20,11 +20,17 @@
         </activity>
         <activity android:name="info.vericoin.verimobile.TransactionListActivity"/>
         <activity android:name="info.vericoin.verimobile.MainActivity"/>
-        <activity android:name="info.vericoin.verimobile.SendActivity"/>
+        <activity android:name=".RecipientActivity"
+            android:label="Choose recipient"/>
+        <activity android:name=".AmountActivity"
+            android:label="Send Amount"/>
+        <activity android:name=".ReviewActivity"
+            android:label="Review and Send"/>
+        <activity android:name=".TransactionCompleteActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ReceiveActivity"
+            android:label="Receive Address"/>
         <service android:name="info.vericoin.verimobile.BitcoinService"/>
-        <meta-data
-            android:name="preloaded_fonts"
-            android:resource="@array/preloaded_fonts" />
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

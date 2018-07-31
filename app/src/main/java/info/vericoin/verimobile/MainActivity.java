@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView availableBalance;
     private TextView blockHeight;
     private Button sendButton;
+    private Button receiveButton;
     private WalletAppKit kit;
 
     private CardView walletView;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         availableBalance = findViewById(R.id.availableBalance);
         blockHeight = findViewById(R.id.blockHeight);
         sendButton = findViewById(R.id.sendButton);
+        receiveButton = findViewById(R.id.receiveButton);
         walletView = findViewById(R.id.wallet_card_view);
 
         walletView.setOnClickListener(new View.OnClickListener() {
@@ -51,7 +53,14 @@ public class MainActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(SendActivity.createIntent(MainActivity.this));
+                startActivity(RecipientActivity.createIntent(MainActivity.this));
+            }
+        });
+
+        receiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(ReceiveActivity.createIntent(MainActivity.this));
             }
         });
     }
