@@ -5,10 +5,12 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.kits.WalletAppKit;
 
 import java.text.DateFormat;
@@ -27,6 +29,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         public TextView txHash;
         public TextView date;
         public TextView value;
+        public ImageView confidenceImage;
 
         public ViewHolder(ConstraintLayout v) {
             super(v);
@@ -34,6 +37,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
             txHash = v.findViewById(R.id.txHash);
             date = v.findViewById(R.id.date);
             value = v.findViewById(R.id.value);
+            confidenceImage = v.findViewById(R.id.confidenceImage);
         }
     }
 
@@ -67,6 +71,20 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         // - replace the contents of the view with that element
 
         Transaction tx = mDataset.get(position);
+
+        TransactionConfidence.ConfidenceType confidenceType = tx.getConfidence().getConfidenceType();
+        if(confidenceType.equals(TransactionConfidence.ConfidenceType.BUILDING)){
+            holder.confidenceImage.setImageResource(R.drawable.transaction_building);
+        }else if(confidenceType.equals(TransactionConfidence.ConfidenceType.PENDING)){
+            holder.confidenceImage.setImageResource(R.drawable.transaction_pending);
+        }else if(confidenceType.equals(TransactionConfidence.ConfidenceType.DEAD)){
+            holder.confidenceImage.setImageResource(R.drawable.transaction_dead);
+        }else if(confidenceType.equals(TransactionConfidence.ConfidenceType.UNKNOWN)){
+            holder.confidenceImage.setImageResource(R.drawable.transaction_unknown);
+        }else if(confidenceType.equals(TransactionConfidence.ConfidenceType.IN_CONFLICT)){
+            holder.confidenceImage.setImageResource(R.drawable.transaction_conflict);
+        }
+
 
         WalletAppKit kit = WalletConnection.getKit();
         holder.txHash.setText(tx.getHashAsString());
