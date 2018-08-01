@@ -79,6 +79,7 @@ public class ReviewActivity extends AppCompatActivity {
                     amountView.setText(amount.toFriendlyString());
                     feeView.setText(estimateFee().toFriendlyString());
                     totalView.setText(total.toFriendlyString());
+                    addrView.setText(address.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

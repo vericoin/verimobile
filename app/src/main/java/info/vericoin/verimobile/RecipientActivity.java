@@ -2,15 +2,18 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -23,6 +26,8 @@ public class RecipientActivity extends AppCompatActivity {
     private Button nextButton;
 
     private WalletAppKit kit;
+
+    private ConstraintLayout scanButton;
 
     public static Intent createIntent(Context context){
         return new Intent(context, RecipientActivity.class);
@@ -52,7 +57,29 @@ public class RecipientActivity extends AppCompatActivity {
             }
         });
 
+        scanButton = findViewById(R.id.scanButton);
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new IntentIntegrator(RecipientActivity.this).initiateScan();
+            }
+        });
+
         nextButton = findViewById(R.id.nextButton);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                sendAddr.getEditText().setText(result.getContents());
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
