@@ -72,11 +72,15 @@ public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.Vi
 
         WalletAppKit kit = WalletConnection.getKit();
 
-        holder.amount.setText(put.getValue().toFriendlyString());
+        Coin amount = put.getValue();
+        if(amount == null){
+            holder.amount.setText("Unknown");
+        }else {
+            holder.amount.setText(amount.toFriendlyString());
+        }
         try {
-            holder.address.setText(String.valueOf(put.getAddressFromP2PKHScript(kit.params())));
+            holder.address.setText(put.getAddressFromP2PKHScript(kit.params()).toBase58());
         }catch(Exception e){
-            e.printStackTrace();
             holder.address.setText("Unknown");
         }
     }

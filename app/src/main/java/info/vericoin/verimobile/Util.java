@@ -23,7 +23,7 @@ public class Util {
 
     public static String getConfidenceString(TransactionConfidence.ConfidenceType confidenceType){
         if (confidenceType.equals(TransactionConfidence.ConfidenceType.BUILDING)) {
-            return "Confirmed";
+            return "Building";
         } else if (confidenceType.equals(TransactionConfidence.ConfidenceType.PENDING)) {
             return "Pending";
         } else if (confidenceType.equals(TransactionConfidence.ConfidenceType.DEAD)) {
@@ -37,6 +37,11 @@ public class Util {
 
     public static String getDateString(Transaction tx){
         DateFormat format = DateFormat.getDateInstance();
+        return  format.format(tx.getUpdateTime());
+    }
+
+    public static String getDateTimeString(Transaction tx){
+        DateFormat format = DateFormat.getDateTimeInstance();
         return  format.format(tx.getUpdateTime());
     }
 }

@@ -14,6 +14,7 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Utils;
 import org.bitcoinj.crypto.PBKDF2SHA512;
 import org.bitcoinj.kits.WalletAppKit;
@@ -82,7 +83,12 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
             holder.amount.setText(value.toFriendlyString());
         }
 
-        holder.address.setText("WIP");
+        TransactionOutput output = put.getConnectedOutput();
+        try{
+            holder.address.setText(output.getAddressFromP2PKHScript(kit.params()).toBase58());
+        }catch(Exception e){
+            holder.address.setText("Unknown");
+        }
 
     }
 
