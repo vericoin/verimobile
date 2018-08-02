@@ -107,7 +107,7 @@ public class TransactionDetailActivity extends AppCompatActivity{
 
                 txHashView.setText(tx.getHashAsString());
 
-                dateView.setText(Util.getDateTimeString(tx));
+                dateView.setText(Util.getDateTimeString(tx.getUpdateTime()));
                 confidenceTypeView.setText(Util.getConfidenceString(tx.getConfidence().getConfidenceType()));
                 confidenceImageView.setImageResource(Util.getConfidenceResource(tx.getConfidence().getConfidenceType()));
 

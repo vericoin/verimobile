@@ -80,7 +80,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         WalletAppKit kit = WalletConnection.getKit();
         holder.txHash.setText(tx.getHashAsString());
 
-        holder.date.setText(Util.getDateString(tx));
+        holder.date.setText(Util.getDateString(tx.getUpdateTime()));
 
         Coin amount = tx.getValue(kit.wallet());
         if(amount.isPositive()){

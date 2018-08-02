@@ -56,6 +56,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="sans-serif-condensed"
         android:gravity="right"
         android:text="1NZL8pDzBGn6NcXiKsrmuaG6G76FvDVZbX1NZL8pDzBGn6NcXiKsrmuaG6G76FvDVZbX"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"

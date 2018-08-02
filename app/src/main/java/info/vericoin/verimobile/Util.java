@@ -4,6 +4,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 
 import java.text.DateFormat;
+import java.util.Date;
 
 public class Util {
 
@@ -35,13 +36,21 @@ public class Util {
         }
     }
 
-    public static String getDateString(Transaction tx){
-        DateFormat format = DateFormat.getDateInstance();
-        return  format.format(tx.getUpdateTime());
+    public static String getDateString(Date date){
+        if(date == null){
+            return "Unknown";
+        }else {
+            DateFormat format = DateFormat.getDateInstance();
+            return format.format(date);
+        }
     }
 
-    public static String getDateTimeString(Transaction tx){
-        DateFormat format = DateFormat.getDateTimeInstance();
-        return  format.format(tx.getUpdateTime());
+    public static String getDateTimeString(Date date){
+        if(date == null){
+            return "Unknown";
+        }else {
+            DateFormat format = DateFormat.getDateTimeInstance();
+            return format.format(date);
+        }
     }
 }

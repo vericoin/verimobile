@@ -17,6 +17,8 @@ import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.Wallet;
 
+import java.util.Date;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView unconfirmedBalance;
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout walletView;
 
     private ConstraintLayout synchingBlock;
+
+    private TextView lastSeenBlockDate;
 
     public static Intent createIntent(Context context){
         return new Intent(context, MainActivity.class);
@@ -46,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         receiveButton = findViewById(R.id.receiveButton);
         walletView = findViewById(R.id.wallet_constraint_view);
         synchingBlock = findViewById(R.id.synchingBlock);
+        lastSeenBlockDate = findViewById(R.id.lastSeenBlockDate);
 
         walletView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                 MainActivity.this.kit = kit;
 
                 setBalances(kit.wallet());
-                setBlockHeight(kit.chain().getBestChainHeight());
+                setBlockHeight(kit.wallet().getLastBlockSeenHeight());
+                setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
             }
 
             @Override
@@ -109,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void newBlock(StoredBlock block) {
                 setBlockHeight(block.getHeight());
+                setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
             }
         });
     }
@@ -129,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
         Coin unconfirmed = estimated.subtract(available);
         setUnconfirmedBalance(unconfirmed);
         setAvailableBalance(available);
+    }
+
+    public void setLastSeenBlockDate(Date date){
+        lastSeenBlockDate.setText(Util.getDateTimeString(date));
     }
 
     public void setUnconfirmedBalance(Coin coin){
