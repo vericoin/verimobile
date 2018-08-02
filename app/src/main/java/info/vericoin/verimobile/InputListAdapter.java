@@ -4,21 +4,26 @@ import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
+import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.Utils;
+import org.bitcoinj.crypto.PBKDF2SHA512;
 import org.bitcoinj.kits.WalletAppKit;
 
 import java.text.DateFormat;
 import java.util.List;
 
-public class TransactionListAdapter extends RecyclerView.Adapter<TransactionListAdapter.ViewHolder> {
-    private List<Transaction> mDataset;
+public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.ViewHolder> {
+
+    private List<TransactionInput> mDataset;
     private Context context;
 
     // Provide a reference to the views for each data item
@@ -26,40 +31,35 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public ConstraintLayout constraintLayout;
-        public TextView txHash;
-        public TextView date;
-        public TextView value;
-        public ImageView confidenceImage;
+
+        public TextView address;
+        public TextView amount;
 
         public ViewHolder(ConstraintLayout v) {
             super(v);
-            constraintLayout = v;
-            txHash = v.findViewById(R.id.txHash);
-            date = v.findViewById(R.id.date);
-            value = v.findViewById(R.id.value);
-            confidenceImage = v.findViewById(R.id.confidenceImage);
+            address = v.findViewById(R.id.address);
+            amount = v.findViewById(R.id.amount);
         }
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TransactionListAdapter(Context context, List<Transaction> myDataset) {
+    public InputListAdapter(Context context, List<TransactionInput> myDataset) {
         mDataset = myDataset;
         this.context = context;
     }
 
-    public void setmDataset(List<Transaction> mDataset) {
+    public void setmDataset(List<TransactionInput> mDataset) {
         this.mDataset = mDataset;
         notifyDataSetChanged();
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public TransactionListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public InputListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                                 int viewType) {
         // create a new view
         ConstraintLayout v = (ConstraintLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.transaction_item, parent, false);
+                .inflate(R.layout.transaction_put, parent, false);
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
@@ -71,31 +71,18 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        final Transaction tx = mDataset.get(position);
-
-        TransactionConfidence.ConfidenceType confidenceType = tx.getConfidence().getConfidenceType();
-        holder.confidenceImage.setImageResource(Util.getConfidenceResource(confidenceType));
-
+        TransactionInput put = mDataset.get(position);
 
         WalletAppKit kit = WalletConnection.getKit();
-        holder.txHash.setText(tx.getHashAsString());
 
-        holder.date.setText(Util.getDateString(tx));
-
-        Coin amount = tx.getValue(kit.wallet());
-        if(amount.isPositive()){
-            holder.value.setTextColor(context.getResources().getColor(R.color.greenNumber));
-        }else{
-            holder.value.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
+        Coin value = put.getValue();
+        if(value == null){
+            holder.amount.setText("Unknown");
+        }else {
+            holder.amount.setText(value.toFriendlyString());
         }
-        holder.value.setText(amount.toFriendlyString());
 
-        holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                context.startActivity(TransactionDetailActivity.createIntent(context, tx.getHashAsString()));
-            }
-        });
+        holder.address.setText("WIP");
 
     }
 

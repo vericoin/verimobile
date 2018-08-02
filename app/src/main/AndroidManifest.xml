@@ -32,6 +32,8 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ReceiveActivity"
             android:label="Receive Address"/>
+        <activity android:name=".TransactionDetailActivity"
+            android:label="Transaction Details"/>
         <service android:name="info.vericoin.verimobile.BitcoinService"/>
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"

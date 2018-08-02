@@ -72,9 +72,7 @@ public class RecipientActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if(result != null) {
-            if(result.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-            } else {
+            if(result.getContents() != null) {
                 sendAddr.getEditText().setText(result.getContents());
             }
         } else {
