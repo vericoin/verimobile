@@ -17,6 +17,7 @@ import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.SendRequest;
 
 import static android.view.View.GONE;
+import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
 public class ReviewActivity extends AppCompatActivity {
 
@@ -62,9 +63,11 @@ public class ReviewActivity extends AppCompatActivity {
 
     public Coin estimateFee() throws Exception{
         SendRequest request = SendRequest.to(address, amount);
+        request.feeNeeded = BTC_TRANSACTION_FEE;
         kit.wallet().completeTx(request);
         return request.tx.getFee();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -81,6 +84,7 @@ public class ReviewActivity extends AppCompatActivity {
                     totalView.setText(total.toFriendlyString());
                     addrView.setText(address.toString());
                 } catch (Exception e) {
+                    Toast.makeText(ReviewActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
                 sendButton.setOnClickListener(new View.OnClickListener() {

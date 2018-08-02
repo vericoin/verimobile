@@ -11,11 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.bitcoinj.core.Address;
-import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.kits.WalletAppKit;
-import org.bitcoinj.wallet.SendRequest;
+
+import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
 public class AmountActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -105,19 +104,12 @@ public class AmountActivity extends AppCompatActivity implements View.OnClickLis
                 nextButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try {
-                            Coin amount = Coin.parseCoin(amountParser.getAmount());
-                            SendRequest request = SendRequest.to(address, amount);
-                            kit.wallet().completeTx(request);
+                        Coin amount = Coin.parseCoin(amountParser.getAmount());
+
+                        if(amount.isGreaterThan(kit.wallet().getBalance().add(BTC_TRANSACTION_FEE))){
+                            Toast.makeText(AmountActivity.this, "Wallet does not have enough funds", Toast.LENGTH_LONG).show();
+                        }else {
                             startActivity(ReviewActivity.createIntent(AmountActivity.this, address, amount));
-                        }catch(IllegalArgumentException e){
-                            e.printStackTrace();
-                            Toast.makeText(AmountActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                        } catch (InsufficientMoneyException e) {
-                            Toast.makeText(AmountActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                            e.printStackTrace();
-                        } catch(Exception e){
-                            e.printStackTrace();
                         }
                     }
                 });

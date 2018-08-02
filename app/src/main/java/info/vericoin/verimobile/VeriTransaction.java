@@ -9,6 +9,8 @@ import org.bitcoinj.wallet.Wallet;
 
 public class VeriTransaction {
 
+    public static final Coin BTC_TRANSACTION_FEE = Coin.valueOf(50_000);
+
     private OnBroadcastListener listener;
 
     public interface OnBroadcastListener{
@@ -24,6 +26,8 @@ public class VeriTransaction {
         WalletAppKit kit = WalletConnection.getKit();
         try {
             SendRequest request = SendRequest.to(toAddr, amount);
+            request.feeNeeded = BTC_TRANSACTION_FEE;
+
             final Wallet.SendResult sendResult = kit.wallet().sendCoins(request);
 
             // Register a callback that is invoked when the transaction has propagated across the network.

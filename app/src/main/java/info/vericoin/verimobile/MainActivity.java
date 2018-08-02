@@ -9,6 +9,7 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.StoredBlock;
@@ -18,6 +19,7 @@ import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.Wallet;
 
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -86,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 setBalances(kit.wallet());
                 setBlockHeight(kit.wallet().getLastBlockSeenHeight());
                 setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
+
             }
 
             @Override

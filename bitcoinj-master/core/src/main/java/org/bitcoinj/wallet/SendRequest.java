@@ -78,6 +78,8 @@ public class SendRequest {
      */
     public Address changeAddress = null;
 
+    public Coin feeNeeded = Coin.valueOf(100_000);
+
     /**
      * <p>A transaction can have a fee attached, which is defined as the difference between the input values
      * and output values. Any value taken in that is not provided to an output can be claimed by a miner. This

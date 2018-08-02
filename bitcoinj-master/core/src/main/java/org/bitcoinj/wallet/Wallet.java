@@ -4887,7 +4887,10 @@ public class Wallet extends BaseTaggableObject
             if (needAtLeastReferenceFee && feePerKb.compareTo(Transaction.REFERENCE_DEFAULT_MIN_TX_FEE) < 0) {
                 feePerKb = Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
             }
-            Coin feeNeeded = feePerKb.multiply(size).divide(1000);
+
+            Coin feeNeeded = req.feeNeeded;
+
+            //Coin feeNeeded = feePerKb.multiply(size).divide(1000);
 
             if (!fee.isLessThan(feeNeeded)) {
                 // Done, enough fee included.
