@@ -2,9 +2,9 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppCompat.Button.Borderless"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    style="@style/Widget.AppCompat.Button.Borderless">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/value"
@@ -35,7 +35,6 @@
         android:singleLine="true"
         android:text="abcdefghijklmnopqrstuvwyxz0987654321abcdefghijklmnopqrstuvwyxz0987654321"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textIsSelectable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

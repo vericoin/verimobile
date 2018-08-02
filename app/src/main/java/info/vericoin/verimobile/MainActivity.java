@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private Button receiveButton;
     private WalletAppKit kit;
 
-    private CardView walletView;
+    private ConstraintLayout walletView;
 
     private ConstraintLayout synchingBlock;
 
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         blockHeight = findViewById(R.id.blockHeight);
         sendButton = findViewById(R.id.sendButton);
         receiveButton = findViewById(R.id.receiveButton);
-        walletView = findViewById(R.id.wallet_card_view);
+        walletView = findViewById(R.id.wallet_constraint_view);
         synchingBlock = findViewById(R.id.synchingBlock);
 
         walletView.setOnClickListener(new View.OnClickListener() {

@@ -64,8 +64,12 @@ public class WalletHistoryActivity extends AppCompatActivity {
 
                 List<Transaction> myDataset = getDataSet();
                 // specify an adapter (see also next example)
-                mAdapter = new TransactionListAdapter(WalletHistoryActivity.this, myDataset);
-                mRecyclerView.setAdapter(mAdapter);
+                if(mAdapter == null) {
+                    mAdapter = new TransactionListAdapter(WalletHistoryActivity.this, myDataset);
+                    mRecyclerView.setAdapter(mAdapter);
+                }else{
+                    mAdapter.setmDataset(myDataset);
+                }
             }
 
             @Override
