@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.StoredBlock;
@@ -19,7 +17,6 @@ import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.Wallet;
 
 import java.util.Date;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private Button sendButton;
     private Button receiveButton;
     private WalletAppKit kit;
+
+    private TextView percentComplete;
 
     private ConstraintLayout walletView;
 
@@ -52,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         receiveButton = findViewById(R.id.receiveButton);
         walletView = findViewById(R.id.wallet_constraint_view);
         synchingBlock = findViewById(R.id.synchingBlock);
+        percentComplete = findViewById(R.id.percentComplete);
         lastSeenBlockDate = findViewById(R.id.lastSeenBlockDate);
 
         walletView.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 setBalances(kit.wallet());
                 setBlockHeight(kit.wallet().getLastBlockSeenHeight());
                 setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
-
+                setPercentComplete(kit.wallet().getEstBlockchainPercentComplete());
             }
 
             @Override
@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
             public void newBlock(StoredBlock block) {
                 setBlockHeight(block.getHeight());
                 setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
+                setPercentComplete(kit.wallet().getEstBlockchainPercentComplete());
             }
         });
     }
@@ -139,6 +140,10 @@ public class MainActivity extends AppCompatActivity {
         Coin unconfirmed = estimated.subtract(available);
         setUnconfirmedBalance(unconfirmed);
         setAvailableBalance(available);
+    }
+
+    public void setPercentComplete(double percent){
+        percentComplete.setText(String.valueOf(percent) + " %");
     }
 
     public void setLastSeenBlockDate(Date date){

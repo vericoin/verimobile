@@ -168,8 +168,23 @@
                             android:text="Syncing..."
                             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             card_view:layout_constraintBottom_toBottomOf="parent"
-                            card_view:layout_constraintEnd_toStartOf="@+id/progressBar2"
+                            card_view:layout_constraintEnd_toStartOf="@+id/percentComplete"
                             card_view:layout_constraintStart_toStartOf="parent"
+                            card_view:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/percentComplete"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginRight="8dp"
+                            android:layout_marginTop="8dp"
+                            android:fontFamily="serif"
+                            android:text="0.00 %"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                            card_view:layout_constraintBottom_toBottomOf="parent"
+                            card_view:layout_constraintEnd_toStartOf="@+id/progressBar2"
                             card_view:layout_constraintTop_toTopOf="parent" />
                     </android.support.constraint.ConstraintLayout>
 

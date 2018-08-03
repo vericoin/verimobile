@@ -3384,6 +3384,16 @@ public class Wallet extends BaseTaggableObject
             return new Date(secs * 1000);
     }
 
+    public double getEstBlockchainPercentComplete(){
+        long start = params.getGenesisBlock().getTimeSeconds();
+        long lastBlock = getLastBlockSeenTimeSecs();
+        long currentTime = System.currentTimeMillis() / 1000; //Convert to seconds
+
+        double percent = (double)(lastBlock - start) / (double)(currentTime - start) * 100;
+
+        return (double)Math.round(percent * 100) / 100;
+    }
+
     /**
      * Returns the height of the last seen best-chain block. Can be 0 if a wallet is brand new or -1 if the wallet
      * is old and doesn't have that data.
