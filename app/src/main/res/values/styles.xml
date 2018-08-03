@@ -12,6 +12,13 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorButtonNormal">@color/blueButton</item>
+
+    </style>
+
+    <style name="SplashTheme" parent="AppTheme.NoActionBar">
+        <item name="colorPrimary">#2c2c2d</item>
+        <item name="colorPrimaryDark">#1c1c1d</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0771b7">
+    android:background="#2c2c2d">
 
     <ImageView
         android:id="@+id/imageView7"
@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.45"
-        app:srcCompat="@drawable/vericoin" />
+        app:srcCompat="@drawable/vericonomy_logo" />
 
     <ProgressBar
         android:id="@+id/progressBar"

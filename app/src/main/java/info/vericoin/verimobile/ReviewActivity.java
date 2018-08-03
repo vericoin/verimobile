@@ -15,6 +15,7 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.SendRequest;
+import org.bitcoinj.wallet.Wallet;
 
 import static android.view.View.GONE;
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
@@ -107,16 +108,31 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
     public void sendTransaction(){
-        VeriTransaction veriTransaction = new VeriTransaction();
-        veriTransaction.setBroadcastListener(new VeriTransaction.OnBroadcastListener() {
-            @Override
-            public void broadcastComplete(org.bitcoinj.core.Transaction tx) {
-                progressBar.setVisibility(GONE);
-                startActivity(TransactionCompleteActivity.createIntent(ReviewActivity.this, tx.getHashAsString()));
-                finish();
-            }
-        });
-        veriTransaction.sendTransaction(amount, address);
+        WalletAppKit kit = WalletConnection.getKit();
+        try {
+
+            sendButton.setEnabled(false); //Prevent user sending multiple transactions;
+
+            SendRequest request = SendRequest.to(address, amount);
+            request.feeNeeded = BTC_TRANSACTION_FEE;
+
+            final Wallet.SendResult sendResult = kit.wallet().sendCoins(request);
+
+            // Register a callback that is invoked when the transaction has propagated across the network.
+            // This shows a second style of registering ListenableFuture callbacks, it works when you don't
+            // need access to the object the future returns.
+            sendResult.broadcastComplete.addListener(new Runnable() {
+                @Override
+                public void run() {
+                    progressBar.setVisibility(GONE);
+                    startActivity(TransactionCompleteActivity.createIntent(ReviewActivity.this, sendResult.tx.getHashAsString()));
+                    finish();
+                }
+            }, WalletConnection.getRunInUIThread());
+        } catch (InsufficientMoneyException e) {
+            e.printStackTrace();
+            sendButton.setEnabled(true);
+        }
     }
 
     @Override
