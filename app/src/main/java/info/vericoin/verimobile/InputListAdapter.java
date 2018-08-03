@@ -78,7 +78,7 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
 
         Coin value = put.getValue();
         if(value == null){
-            holder.amount.setText("Unknown");
+            holder.amount.setText("N/A");
         }else {
             holder.amount.setText(value.toFriendlyString());
         }
@@ -87,7 +87,7 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
         try{
             holder.address.setText(output.getAddressFromP2PKHScript(kit.params()).toBase58());
         }catch(Exception e){
-            holder.address.setText("Unknown");
+            holder.address.setText("N/A");
         }
 
     }

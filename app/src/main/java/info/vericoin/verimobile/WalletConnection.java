@@ -175,47 +175,7 @@ public class WalletConnection {
 
     }
 
-    /*/
-    private ServiceReceiver serviceReceiver = new ServiceReceiver(new ServiceReceiver.OnConnectionReceivedListener() {
-        @Override
-        public void ConnectionReceived() {
-            if(kit != null) {
-                connectListener.OnWalletRunning(kit);
-            }
-        }
-    });
-    /*/
-
-    /*/
-    private android.content.ServiceConnection serviceConnection = new android.content.ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            BitcoinBinder bitcoinBinder = (BitcoinBinder) iBinder;
-
-            kit = bitcoinBinder.getKit();
-            if(kit.isRunning()){
-                connectListener.OnWalletRunning(kit);
-            }
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-
-        }
-    };
-    /*/
-
     public static void connect(OnConnectListener newListener){
-        /*/
-        Intent serviceIntent = BitcoinService.createIntent(context);
-        context.startService(serviceIntent);
-        context.bindService(serviceIntent, serviceConnection, 0);
-
-
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        filter.addAction(BitcoinService.BROADCAST_ESTABLISHED_CONNECTION);
-        LocalBroadcastManager.getInstance(context).registerReceiver(serviceReceiver, filter);
-        /*/
 
         connectListener = newListener;
         if(kit != null && startUpComplete){
@@ -235,9 +195,5 @@ public class WalletConnection {
         onCoinReceiveListener = null;
         connectListener = null;
         onNewBestBlockListener = null;
-        /*/
-        LocalBroadcastManager.getInstance(context).unregisterReceiver(serviceReceiver);
-        context.unbindService(serviceConnection);
-        /*/
     }
 }

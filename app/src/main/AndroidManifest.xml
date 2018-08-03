@@ -11,34 +11,52 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Light">
+
         <activity android:name="info.vericoin.verimobile.SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name="info.vericoin.verimobile.WalletHistoryActivity"
-            android:label="Wallet History"/>
-        <activity android:name="info.vericoin.verimobile.MainActivity"/>
+            android:label="Wallet History"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name="info.vericoin.verimobile.MainActivity"
+                  android:screenOrientation="portrait"/>
+
         <activity android:name=".RecipientActivity"
-            android:label="Choose recipient"/>
+            android:label="Choose recipient"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".AmountActivity"
-            android:label="Send Amount"/>
+            android:label="Send Amount"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".ReviewActivity"
-            android:label="Review and Send"/>
+            android:label="Review and Send"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".TransactionCompleteActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
+
         <activity android:name=".ReceiveActivity"
-            android:label="Receive Address"/>
+            android:label="Receive Address"
+            android:screenOrientation="portrait"/>
         <activity android:name=".TransactionDetailActivity"
-            android:label="Transaction Details"/>
-        <service android:name="info.vericoin.verimobile.BitcoinService"/>
+            android:label="Transaction Details"
+            android:screenOrientation="portrait"/>
+
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
+
     </application>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>

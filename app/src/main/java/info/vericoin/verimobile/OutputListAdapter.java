@@ -74,14 +74,14 @@ public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.Vi
 
         Coin amount = put.getValue();
         if(amount == null){
-            holder.amount.setText("Unknown");
+            holder.amount.setText("N/A");
         }else {
             holder.amount.setText(amount.toFriendlyString());
         }
         try {
             holder.address.setText(put.getAddressFromP2PKHScript(kit.params()).toBase58());
         }catch(Exception e){
-            holder.address.setText("Unknown");
+            holder.address.setText("N/A");
         }
     }
 

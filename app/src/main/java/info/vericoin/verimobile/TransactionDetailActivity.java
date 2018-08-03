@@ -113,7 +113,7 @@ public class TransactionDetailActivity extends AppCompatActivity{
 
                 Coin fee = tx.getFee();
                 if(fee == null){
-                    feeView.setText("Unknown"); //If transaction wasn't sent by us we don't know fee.
+                    feeView.setText("N/A"); //If transaction wasn't sent by us we don't know fee.
                 }else {
                     feeView.setText(fee.toFriendlyString());
                 }
