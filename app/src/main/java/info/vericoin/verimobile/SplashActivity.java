@@ -23,7 +23,7 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void OnSetUpComplete(WalletAppKit kit) {
-                    startActivity(MainActivity.createIntent(SplashActivity.this));
+                    startActivity(UnlockActivity.createIntent(SplashActivity.this)); //Ask for password;
                     finish(); //Prevent app from going back to this activity after its finished.
                 }
 

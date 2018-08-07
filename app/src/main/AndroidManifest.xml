@@ -42,7 +42,7 @@
             android:label="Review and Send"
             android:screenOrientation="portrait"/>
 
-        <activity android:name=".TransactionCompleteActivity"
+        <activity android:name=".ProcessTransactionActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
 
@@ -72,6 +72,10 @@
         <activity android:name=".CreateWalletActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme"/>
+
+        <activity android:name=".UnlockActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"

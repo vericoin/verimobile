@@ -12,10 +12,8 @@ import android.widget.Toast;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.SendRequest;
-import org.bitcoinj.wallet.Wallet;
 
 import static android.view.View.GONE;
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
@@ -105,7 +103,7 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
     public void sendTransaction(){
-        startActivity(TransactionCompleteActivity.createIntent(this, address, amount));
+        startActivity(ProcessTransactionActivity.createIntent(this, address, amount));
     }
 
     @Override

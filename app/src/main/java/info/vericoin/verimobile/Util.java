@@ -1,12 +1,25 @@
 package info.vericoin.verimobile;
 
+import org.bitcoinj.core.Base58;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.util.Date;
 
 public class Util {
+
+    public static String hashStringSHA256(String toHash){
+        MessageDigest messageDigest = Sha256Hash.newDigest();
+        messageDigest.update(toHash.getBytes());
+        byte[] hash = messageDigest.digest();
+        return Base58.encode(hash);
+    }
 
     public static int getConfidenceResource(TransactionConfidence.ConfidenceType confidenceType) {
         if (confidenceType.equals(TransactionConfidence.ConfidenceType.BUILDING)) {

@@ -15,7 +15,6 @@ import android.widget.Toast;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
-import org.bitcoinj.core.Transaction;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.Wallet;
@@ -24,7 +23,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.view.View.GONE;
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
-public class TransactionCompleteActivity extends AppCompatActivity {
+public class ProcessTransactionActivity extends AppCompatActivity {
 
     private final static String ADDRESS_EXTRA = "address";
     private final static String AMOUNT_EXTRA = "amount";
@@ -45,7 +44,7 @@ public class TransactionCompleteActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     public static Intent createIntent(Context context, Address toAddr, Coin amount){
-        Intent intent = new Intent(context, TransactionCompleteActivity.class);
+        Intent intent = new Intent(context, ProcessTransactionActivity.class);
         intent.putExtra(ADDRESS_EXTRA, toAddr);
         intent.putExtra(AMOUNT_EXTRA, amount);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
@@ -55,7 +54,7 @@ public class TransactionCompleteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_transaction_complete);
+        setContentView(R.layout.activity_process_transaction);
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
@@ -77,7 +76,7 @@ public class TransactionCompleteActivity extends AppCompatActivity {
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(MainActivity.createIntent(TransactionCompleteActivity.this));
+                startActivity(MainActivity.createIntent(ProcessTransactionActivity.this));
                 finish();
             }
         });
@@ -90,7 +89,7 @@ public class TransactionCompleteActivity extends AppCompatActivity {
         WalletConnection.connect(new WalletConnection.OnConnectListener() {
             @Override
             public void OnSetUpComplete(final WalletAppKit kit) {
-                TransactionCompleteActivity.this.kit = kit;
+                ProcessTransactionActivity.this.kit = kit;
                 sendTransaction();
             }
 
@@ -140,7 +139,7 @@ public class TransactionCompleteActivity extends AppCompatActivity {
     }
 
     public void broadcastFailed(String message){
-        Toast.makeText(TransactionCompleteActivity.this, message, Toast.LENGTH_LONG).show();
+        Toast.makeText(ProcessTransactionActivity.this, message, Toast.LENGTH_LONG).show();
         progressBar.setVisibility(GONE);
         doneButton.setVisibility(View.VISIBLE);
         statusView.setText("Broadcast Failed");

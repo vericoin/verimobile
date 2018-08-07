@@ -89,12 +89,16 @@ public class WalletConnection {
     }
 
     public static void startAsync(final Context context){
+        startAsync(context, "");
+    }
+
+    public static void startAsync(final Context context, final String password){
 
         if(kit == null) { //Only start async if it has not already started.
             BriefLogFormatter.init();
             new Thread(new Runnable() {
                 public void run() {
-                    connectToWallet(context.getApplicationContext());
+                    connectToWallet(context.getApplicationContext(), password);
                 }
             }).start();
         }
@@ -105,18 +109,21 @@ public class WalletConnection {
         return new File( context.getFilesDir(), filePrefix + ".wallet").exists();
     }
 
-    public static void connectToWallet(Context context){
+    public static void connectToWallet(Context context, final String password){
 
         // Start up a basic app using a class that automates some boilerplate. Ensure we always have at least one key.
         kit = new WalletAppKit(params, context.getFilesDir(), filePrefix) {
             @Override
             protected void onSetupCompleted() {
-
                 // This is called in a background thread after startAndWait is called, as setting up various objects
                 // can do disk and network IO that may cause UI jank/stuttering in wallet apps if it were to be done
                 // on the main thread.
                 if (wallet().getKeyChainGroupSize() < 1) {
                     wallet().importKey(new ECKey());
+                }
+
+                if(!password.isEmpty()){
+                    wallet().encrypt(password);
                 }
 
                 //WalletAppKit is now ready to be used.
