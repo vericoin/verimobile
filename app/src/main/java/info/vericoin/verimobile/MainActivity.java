@@ -101,19 +101,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        WalletConnection.setOnCoinReceiveListener(new WalletConnection.OnCoinReceiveListener() {
+        WalletConnection.setOnWalletChangeListener(new WalletConnection.OnWalletChangeListener() {
             @Override
-            public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-                setBalances(wallet);
-            }
-
-            @Override
-            public void onSuccess(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance, TransactionConfidence result) {
-                setBalances(wallet);
-            }
-
-            @Override
-            public void onFailure(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+            public void walletChanged(Wallet wallet) {
                 setBalances(wallet);
             }
         });

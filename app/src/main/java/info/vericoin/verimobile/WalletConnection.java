@@ -20,6 +20,7 @@ import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 
 import java.io.File;
@@ -34,6 +35,7 @@ public class WalletConnection {
 
     private static OnCoinReceiveListener onCoinReceiveListener;
     private static OnNewBestBlockListener onNewBestBlockListener;
+    private static OnWalletChangeListener onWalletChangeListener;
 
     private static boolean startUpComplete = false;
     private static boolean syncComplete = false;
@@ -46,6 +48,14 @@ public class WalletConnection {
 
     public interface OnNewBestBlockListener{
         void newBlock(StoredBlock block);
+    }
+
+    public interface OnWalletChangeListener{
+        void walletChanged(Wallet wallet);
+    }
+
+    public static void setOnWalletChangeListener(OnWalletChangeListener onWalletChangeListener) {
+        WalletConnection.onWalletChangeListener = onWalletChangeListener;
     }
 
     public static void setOnNewBestBlockListener(OnNewBestBlockListener onNewBestBlockListener) {
@@ -159,6 +169,15 @@ public class WalletConnection {
                     }
                 });
 
+                wallet().addChangeEventListener(runInUIThread, new WalletChangeEventListener() {
+                    @Override
+                    public void onWalletChanged(Wallet wallet) {
+                        if(onWalletChangeListener != null){
+                            onWalletChangeListener.walletChanged(wallet);
+                        }
+                    }
+                });
+
             }
         };
 
@@ -204,5 +223,6 @@ public class WalletConnection {
         onCoinReceiveListener = null;
         connectListener = null;
         onNewBestBlockListener = null;
+        onWalletChangeListener = null;
     }
 }

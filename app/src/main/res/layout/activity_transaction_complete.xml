@@ -58,7 +58,6 @@
         android:id="@+id/doneButton"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        android:background="@color/colorPrimaryDark"
         android:text="Done"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

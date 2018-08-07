@@ -131,7 +131,10 @@ public class ReviewActivity extends AppCompatActivity {
             }, WalletConnection.getRunInUIThread());
         } catch (InsufficientMoneyException e) {
             e.printStackTrace();
+            Toast.makeText(ReviewActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
             sendButton.setEnabled(true);
+            progressBar.setVisibility(GONE);
+            sendButton.setText("Send");
         }
     }
 
