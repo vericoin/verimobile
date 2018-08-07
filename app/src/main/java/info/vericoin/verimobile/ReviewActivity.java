@@ -60,11 +60,8 @@ public class ReviewActivity extends AppCompatActivity {
         progressBar.setVisibility(GONE);
     }
 
-    public Coin estimateFee() throws Exception{
-        SendRequest request = SendRequest.to(address, amount);
-        request.feeNeeded = BTC_TRANSACTION_FEE;
-        kit.wallet().completeTx(request);
-        return request.tx.getFee();
+    public Coin estimateFee() {
+        return BTC_TRANSACTION_FEE;
     }
 
     @Override
@@ -102,8 +99,16 @@ public class ReviewActivity extends AppCompatActivity {
 
     }
 
+    public boolean isWalletEncrypted(){
+        return kit.wallet().isEncrypted();
+    }
+
     public void sendTransaction(){
-        startActivity(ProcessTransactionActivity.createIntent(this, address, amount));
+        if(isWalletEncrypted()){
+            startActivity(DecryptWalletActivity.createIntent(this, address, amount));
+        }else {
+            startActivity(ProcessTransactionActivity.createIntent(this, address, amount));
+        }
     }
 
     @Override

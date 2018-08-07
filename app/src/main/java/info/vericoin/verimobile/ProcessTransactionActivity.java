@@ -27,6 +27,7 @@ public class ProcessTransactionActivity extends AppCompatActivity {
 
     private final static String ADDRESS_EXTRA = "address";
     private final static String AMOUNT_EXTRA = "amount";
+    private final static String PASSWORD_EXTRA = "password";
 
     private TextView txHashView;
 
@@ -43,10 +44,17 @@ public class ProcessTransactionActivity extends AppCompatActivity {
     private WalletAppKit kit;
     private ProgressBar progressBar;
 
+    private String password;
+
     public static Intent createIntent(Context context, Address toAddr, Coin amount){
+        return createIntent(context, toAddr, amount, "");
+    }
+
+    public static Intent createIntent(Context context, Address toAddr, Coin amount, String password){
         Intent intent = new Intent(context, ProcessTransactionActivity.class);
         intent.putExtra(ADDRESS_EXTRA, toAddr);
         intent.putExtra(AMOUNT_EXTRA, amount);
+        intent.putExtra(PASSWORD_EXTRA, password);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
@@ -58,6 +66,7 @@ public class ProcessTransactionActivity extends AppCompatActivity {
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
+        password = getIntent().getStringExtra(PASSWORD_EXTRA);
 
         txHashView = findViewById(R.id.txHash);
         txHashBox = findViewById(R.id.txHashBox);
@@ -71,7 +80,7 @@ public class ProcessTransactionActivity extends AppCompatActivity {
         completeImage.setVisibility(GONE);
         txHashBox.setVisibility(GONE);
 
-        statusView.setText("Broadcasting Transaction...");
+        statusView.setText("Creating Transaction...");
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,25 +117,49 @@ public class ProcessTransactionActivity extends AppCompatActivity {
     }
 
     public void sendTransaction(){
-        try {
-            SendRequest request = SendRequest.to(address, amount);
-            request.feeNeeded = BTC_TRANSACTION_FEE;
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    SendRequest request = SendRequest.to(address, amount);
+                    request.feeNeeded = BTC_TRANSACTION_FEE;
 
-            final Wallet.SendResult sendResult = kit.wallet().sendCoins(request);
+                    if(!password.isEmpty()) { //If password is required to decrypt wallet add it to request.
+                        request.aesKey = kit.wallet().getKeyCrypter().deriveKey(password);
+                    }
 
-            // Register a callback that is invoked when the transaction has propagated across the network.
-            // This shows a second style of registering ListenableFuture callbacks, it works when you don't
-            // need access to the object the future returns.
-            sendResult.broadcastComplete.addListener(new Runnable() {
-                @Override
-                public void run() {
-                    broadcastComplete(sendResult.tx.getHashAsString());
+                    final Wallet.SendResult sendResult = kit.wallet().sendCoins(request);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            broadcastWaiting(); //Transaction sent. Wait for broadcast to complete.
+                        }
+                    });
+
+                    // Register a callback that is invoked when the transaction has propagated across the network.
+                    // This shows a second style of registering ListenableFuture callbacks, it works when you don't
+                    // need access to the object the future returns.
+                    sendResult.broadcastComplete.addListener(new Runnable() {
+                        @Override
+                        public void run() {
+                            broadcastComplete(sendResult.tx.getHashAsString()); //Broadcast complete show user TX hash.
+                        }
+                    }, WalletConnection.getRunInUIThread());
+                } catch (final InsufficientMoneyException e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            broadcastFailed(e.getMessage());
+                        }
+                    });
                 }
-            }, WalletConnection.getRunInUIThread());
-        } catch (InsufficientMoneyException e) {
-            e.printStackTrace();
-            broadcastFailed(e.getMessage());
-        }
+            }
+        }).start();
+    }
+
+    public void broadcastWaiting(){
+        statusView.setText("Broadcasting Transaction...");
     }
 
     public void broadcastComplete(String txHash){
