@@ -18,6 +18,8 @@ import org.bitcoinj.wallet.Wallet;
 
 import java.util.Date;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView unconfirmedBalance;
@@ -36,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView lastSeenBlockDate;
 
     public static Intent createIntent(Context context){
-        return new Intent(context, MainActivity.class);
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
+        return intent;
     }
 
     @Override

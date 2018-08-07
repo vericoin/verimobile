@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimary">#1f72bc</color>
+    <color name="colorPrimaryDark">#0f2f57</color>
     <color name="colorAccent.Light">#FF4081</color>
     <color name="colorAccent">#E0E0E0</color>
     <color name="colorDivider">#30000000</color>
@@ -11,5 +11,6 @@
     <color name="pendingTransaction">#50000000</color>
     <color name="buildingTransaction">#FF4081</color>
     <color name="unknownTransaction">#50000000</color>
-    <color name="blueButton">#303F9F</color>
+    <color name="blueButton">#0f2f57</color>
+    <color name="darkWindowBackground">#2c2c2d</color>
 </resources>

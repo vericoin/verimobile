@@ -9,7 +9,7 @@ public class BitcoinApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        WalletConnection.createConnection(this);
+
     }
 
 }

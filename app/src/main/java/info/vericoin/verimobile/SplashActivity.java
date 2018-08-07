@@ -16,19 +16,26 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
 
-            @Override
-            public void OnSetUpComplete(WalletAppKit kit) {
-                startActivity(MainActivity.createIntent(SplashActivity.this));
-                finish(); //Prevent app from going back to this activity after its finished.
-            }
+        if(WalletConnection.doesWalletExist(SplashActivity.this)){
+            WalletConnection.startAsync(SplashActivity.this);
+            WalletConnection.connect(new WalletConnection.OnConnectListener() {
 
-            @Override
-            public void OnSyncComplete() {
+                @Override
+                public void OnSetUpComplete(WalletAppKit kit) {
+                    startActivity(MainActivity.createIntent(SplashActivity.this));
+                    finish(); //Prevent app from going back to this activity after its finished.
+                }
 
-            }
-        });
+                @Override
+                public void OnSyncComplete() {
+
+                }
+            });
+        }else {
+            startActivity(WelcomeActivity.createIntent(SplashActivity.this));
+            finish();
+        }
     }
 
     @Override

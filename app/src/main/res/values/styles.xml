@@ -13,12 +13,15 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorButtonNormal">@color/blueButton</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
 
     </style>
 
     <style name="SplashTheme" parent="AppTheme.NoActionBar">
         <item name="colorPrimary">#2c2c2d</item>
         <item name="colorPrimaryDark">#1c1c1d</item>
+        <item name="colorButtonNormal">#606060</item>
+        <item name="android:windowBackground">@color/darkWindowBackground</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">

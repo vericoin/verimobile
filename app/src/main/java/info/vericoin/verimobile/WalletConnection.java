@@ -22,6 +22,7 @@ import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 
+import java.io.File;
 import java.util.concurrent.Executor;
 
 public class WalletConnection {
@@ -58,7 +59,7 @@ public class WalletConnection {
     private static OnConnectListener connectListener;
 
     private static NetworkParameters params = TestNet3Params.get();
-    private static String filePrefix = "forwarding-service-testnet";
+    public static final String filePrefix = "forwarding-service-testnet";
     private static WalletAppKit kit;
     public static Executor runInUIThread = new Executor() {
         @Override public void execute(Runnable runnable) {
@@ -72,22 +73,36 @@ public class WalletConnection {
         return runInUIThread;
     }
 
-    public static void createConnection(final Context context){
+    public static void startAsync(final Context context){
 
-        BriefLogFormatter.init();
-        new Thread(new Runnable() {
-            public void run() {
-                connectToWallet(context);
-            }
-        }).start();
+        if(kit == null) { //Only start async if it has not already started.
+            BriefLogFormatter.init();
+            new Thread(new Runnable() {
+                public void run() {
+                    connectToWallet(context.getApplicationContext());
+                }
+            }).start();
+        }
 
     }
 
+    public static boolean doesWalletExist(Context context){
+        return new File( context.getFilesDir(), filePrefix + ".wallet").exists();
+    }
+
     public static void connectToWallet(Context context){
+
         // Start up a basic app using a class that automates some boilerplate. Ensure we always have at least one key.
         kit = new WalletAppKit(params, context.getFilesDir(), filePrefix) {
             @Override
             protected void onSetupCompleted() {
+
+                // This is called in a background thread after startAndWait is called, as setting up various objects
+                // can do disk and network IO that may cause UI jank/stuttering in wallet apps if it were to be done
+                // on the main thread.
+                if (wallet().getKeyChainGroupSize() < 1) {
+                    wallet().importKey(new ECKey());
+                }
 
                 //WalletAppKit is now ready to be used.
                 runInUIThread.execute(new Runnable() {
@@ -97,12 +112,6 @@ public class WalletConnection {
                     }
                 });
                 startUpComplete = true;
-
-                // This is called in a background thread after startAndWait is called, as setting up various objects
-                // can do disk and network IO that may cause UI jank/stuttering in wallet apps if it were to be done
-                // on the main thread.
-                if (wallet().getKeyChainGroupSize() < 1)
-                    wallet().importKey(new ECKey());
 
                 wallet().addCoinsReceivedEventListener(runInUIThread, new WalletCoinsReceivedEventListener() {
                     @Override

@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">VeriMobile</string>
+
+    <string name="vericoin_desc">The Extremely Fast, Secure and Scalable Digital Currency That Pays You Interest.</string>
+    <string name="verium_desc">The World’s First CPU Mineable Digital Commodity.</string>
+
+    <string name="vericoin_benefits">
+\u2022 Earn Interest By Staking Your VeriCoin \n
+\u2022 Lightning Fast Transactions. \n
+\u2022 Confirmations In Less Than 5 Seconds \n
+\u2022 Near-Zero Transaction Costs. (Only .0001 VRC) \n
+\u2022 Exponentially More Secure Than Traditional POS \n
+\u2022 Energy Efficient Network Consensus</string>
+
+<string name="verium_benefits">
+\u2022 Mine With Your CPU \n
+\u2022 ASIC and GPU Resistant Means True Decentralization \n
+\u2022 Variable Blocktime That Increases As Mining Power Increases \n
+</string>
+
+<string name="binary_desc">
+    The Binary Chain - Proof of Work + Proof of Stake - Paired By Design
+</string>
+
 </resources>
