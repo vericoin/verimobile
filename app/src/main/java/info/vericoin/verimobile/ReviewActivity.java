@@ -91,9 +91,6 @@ public class ReviewActivity extends AppCompatActivity {
                 sendButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        progressBar.setVisibility(View.VISIBLE);
-                        sendButton.setText("");
-
                         sendTransaction();
                     }
                 });
@@ -108,34 +105,7 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
     public void sendTransaction(){
-        WalletAppKit kit = WalletConnection.getKit();
-        try {
-
-            sendButton.setEnabled(false); //Prevent user sending multiple transactions;
-
-            SendRequest request = SendRequest.to(address, amount);
-            request.feeNeeded = BTC_TRANSACTION_FEE;
-
-            final Wallet.SendResult sendResult = kit.wallet().sendCoins(request);
-
-            // Register a callback that is invoked when the transaction has propagated across the network.
-            // This shows a second style of registering ListenableFuture callbacks, it works when you don't
-            // need access to the object the future returns.
-            sendResult.broadcastComplete.addListener(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setVisibility(GONE);
-                    startActivity(TransactionCompleteActivity.createIntent(ReviewActivity.this, sendResult.tx.getHashAsString()));
-                    finish();
-                }
-            }, WalletConnection.getRunInUIThread());
-        } catch (InsufficientMoneyException e) {
-            e.printStackTrace();
-            Toast.makeText(ReviewActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-            sendButton.setEnabled(true);
-            progressBar.setVisibility(GONE);
-            sendButton.setText("Send");
-        }
+        startActivity(TransactionCompleteActivity.createIntent(this, address, amount));
     }
 
     @Override

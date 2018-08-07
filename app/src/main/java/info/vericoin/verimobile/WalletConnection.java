@@ -19,12 +19,17 @@ import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.utils.BriefLogFormatter;
+import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executor;
+
+import javax.annotation.Nullable;
 
 public class WalletConnection {
 
@@ -180,6 +185,24 @@ public class WalletConnection {
 
             }
         };
+
+        List<String> mnemonicCode = new ArrayList<String>();
+        mnemonicCode.add("swallow");
+        mnemonicCode.add("inject");
+        mnemonicCode.add("snow");
+        mnemonicCode.add("liberty");
+        mnemonicCode.add("token");
+        mnemonicCode.add("sample");
+        mnemonicCode.add("zero");
+        mnemonicCode.add("front");
+        mnemonicCode.add("gas");
+        mnemonicCode.add("common");
+        mnemonicCode.add("daughter");
+        mnemonicCode.add("door");
+
+        long creationTimeSeconds = 1533600544;
+
+        //kit.restoreWalletFromSeed(new DeterministicSeed(mnemonicCode, null, "", creationTimeSeconds));
 
         if (params == RegTestParams.get()) {
             // Regression test mode is designed for testing and development only, so there's no public network for it.
