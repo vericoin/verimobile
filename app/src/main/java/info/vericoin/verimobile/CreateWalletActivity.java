@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 
 import org.bitcoinj.kits.WalletAppKit;
@@ -31,8 +32,22 @@ public class CreateWalletActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPref;
 
+    private CheckBox noPasswordBox;
+
     public static Intent createIntent(Context context){
         return new Intent(context, CreateWalletActivity.class);
+    }
+
+    public void disableNewPassword(){
+        passwordLayout.setEnabled(false);
+        rePasswordLayout.setEnabled(false);
+        encryptWallet.setEnabled(false);
+    }
+
+    public void enableNewPassword(){
+        passwordLayout.setEnabled(true);
+        rePasswordLayout.setEnabled(true);
+        encryptWallet.setEnabled(true);
     }
 
     @Override
@@ -48,14 +63,27 @@ public class CreateWalletActivity extends AppCompatActivity {
         rePasswordLayout = findViewById(R.id.rePasswordInputLayout);
         encryptWallet = findViewById(R.id.encryptWallet);
 
+        noPasswordBox = findViewById(R.id.noPasswordBox);
+
+        noPasswordBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    disableNewPassword();
+                }else{
+                    enableNewPassword();
+                }
+            }
+        });
+
         sharedPref = getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
 
         createWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!arePasswordsEqual()) {
+                if(!arePasswordsEqual() && !noPasswordBox.isChecked()) {
                     rePasswordLayout.setError("Passwords do not match");
-                }else if(passwordsAreEmpty()) {
+                }else if(passwordsAreEmpty() && !noPasswordBox.isChecked()) {
                     passwordLayout.setError("Password can not be empty");
                 }else{
                     passwordLayout.setErrorEnabled(false);
@@ -65,14 +93,16 @@ public class CreateWalletActivity extends AppCompatActivity {
                     createWalletButton.setText("");
                     progressBar.setVisibility(View.VISIBLE);
 
-                    savePasswordHash(getPassword());
-
-                    String password = "";
-                    if(shouldEncryptWallet()){
-                        password = getPassword();
+                    if(noPasswordBox.isChecked()) {
+                        WalletConnection.startAsync(CreateWalletActivity.this);
+                    }else if(shouldEncryptWallet()){
+                        savePasswordHash(getPassword());
+                        WalletConnection.startAsync(CreateWalletActivity.this, getPassword());
+                    }else{
+                        savePasswordHash(getPassword());
+                        WalletConnection.startAsync(CreateWalletActivity.this);
                     }
 
-                    WalletConnection.startAsync(CreateWalletActivity.this, password);
                     WalletConnection.connect(new WalletConnection.OnConnectListener() {
 
                         @Override
