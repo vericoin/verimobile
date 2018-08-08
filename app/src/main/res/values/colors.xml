@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#0f2f57</color>
     <color name="colorAccent.Light">#FF4081</color>
     <color name="colorAccent">#E0E0E0</color>
-    <color name="colorDivider">#30000000</color>
+    <color name="colorDivider">#20000000</color>
     <color name="greenNumber">#158407</color>
     <color name="deadTransaction">#000000</color>
     <color name="conflictTransaction">#50000000</color>

@@ -1,5 +1,6 @@
 package info.vericoin.verimobile;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -7,10 +8,14 @@ import org.bitcoinj.kits.WalletAppKit;
 
 public class SplashActivity extends AppCompatActivity {
 
+    private SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        sharedPref = getSharedPreferences(BitcoinApplication.PREFERENCE_FILE_KEY, MODE_PRIVATE);
     }
 
     @Override
@@ -23,7 +28,12 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void OnSetUpComplete(WalletAppKit kit) {
-                    startActivity(UnlockActivity.createIntent(SplashActivity.this)); //Ask for password;
+                    String password = sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
+                    if(password.isEmpty()){
+                        startActivity(MainActivity.createIntent(SplashActivity.this));
+                    }else {
+                        startActivity(UnlockActivity.createIntent(SplashActivity.this)); //Ask for password;
+                    }
                     finish(); //Prevent app from going back to this activity after its finished.
                 }
 

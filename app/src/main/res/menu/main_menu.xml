@@ -3,9 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/settings"
-        android:title="Change Password"
-        app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
-        tools:icon="@drawable/ic_baseline_settings" />
+    <item android:id="@+id/settings"
+        android:icon="@drawable/ic_baseline_settings"
+        android:title="Settings"
+        app:showAsAction="ifRoom"/>
 </menu>

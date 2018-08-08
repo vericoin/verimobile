@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         switch (id) {
             case R.id.settings:
                 //Write your code
-                startActivity(ChangePasswordActivity.createIntent(this));
+                startActivity(SettingsActivity.createIntent(this));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

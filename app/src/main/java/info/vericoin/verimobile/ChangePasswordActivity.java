@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -27,6 +28,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
 
     private ProgressBar progressBar;
+
+    private CheckBox noPasswordBox;
 
     public static Intent createIntent(Context context){
         return new Intent(context, ChangePasswordActivity.class);
@@ -47,6 +50,30 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
+
+        noPasswordBox = findViewById(R.id.noPasswordBox);
+        noPasswordBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    disableNewPassword();
+                }else{
+                    enableNewPassword();
+                }
+            }
+        });
+    }
+
+    public void disableNewPassword(){
+        newPasswordLayout.setEnabled(false);
+        reNewPasswordLayout.setEnabled(false);
+        encryptWalletBox.setEnabled(false);
+    }
+
+    public void enableNewPassword(){
+        newPasswordLayout.setEnabled(true);
+        reNewPasswordLayout.setEnabled(true);
+        encryptWalletBox.setEnabled(true);
     }
 
     @Override
@@ -64,9 +91,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
                         if(!isCurrentPasswordCorrect(getCurrentPassword())){
                             currentPasswordLayout.setError("Current password is not correct");
-                        }else if(!doPasswordsMatch()) {
+                        }else if(!doPasswordsMatch() && !noPasswordBox.isChecked()) {
                             newPasswordLayout.setError("Passwords do not match");
-                        }else if(isNewPasswordEmpty()){
+                        }else if(isNewPasswordEmpty() && !noPasswordBox.isChecked()){
                             newPasswordLayout.setError("Password can not be empty");
                         }else{
                             updatePassword(getNewPassword());
@@ -83,7 +110,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     public void updatePassword(String password){
-        sharedPref.edit().putString(BitcoinApplication.PASSWORD_HASH_PREF, Util.hashStringSHA256(password)).apply();
+
+        if(noPasswordBox.isChecked()){
+            sharedPref.edit().remove(BitcoinApplication.PASSWORD_HASH_PREF).apply();
+        }else {
+            sharedPref.edit().putString(BitcoinApplication.PASSWORD_HASH_PREF, Util.hashStringSHA256(password)).apply();
+        }
 
         changePasswordButton.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
@@ -97,7 +129,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     decryptWallet(getCurrentPassword());
                 }
 
-                if(encryptWalletBox.isChecked()){
+                if (encryptWalletBox.isChecked() && !noPasswordBox.isChecked()) {
                     encryptWallet(getNewPassword());
                 }
 
