@@ -12,10 +12,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ProgressBar;
 
-import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.kits.WalletAppKit;
-
-import java.security.MessageDigest;
 
 import static info.vericoin.verimobile.BitcoinApplication.PASSWORD_HASH_PREF;
 import static info.vericoin.verimobile.BitcoinApplication.PREFERENCE_FILE_KEY;

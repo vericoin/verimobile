@@ -13,4 +13,6 @@
     <color name="unknownTransaction">#50000000</color>
     <color name="blueButton">#0f2f57</color>
     <color name="darkWindowBackground">#2c2c2d</color>
+
+    <color name="errorColor">#FFA0C1</color>
 </resources>

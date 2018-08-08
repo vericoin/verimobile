@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -150,5 +153,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void setAvailableBalance(Coin coin){
         availableBalance.setText(coin.toFriendlyString());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.settings:
+                //Write your code
+                startActivity(ChangePasswordActivity.createIntent(this));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
