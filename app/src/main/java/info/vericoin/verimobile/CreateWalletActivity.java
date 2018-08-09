@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -95,6 +96,8 @@ public class CreateWalletActivity extends AppCompatActivity {
 
                     if(noPasswordBox.isChecked()) {
                         WalletConnection.startAsync(CreateWalletActivity.this);
+                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+                        sp.edit().putBoolean(getString(R.string.lock_transactions_key), false).apply(); //Unlock transactions
                     }else if(shouldEncryptWallet()){
                         savePasswordHash(getPassword());
                         WalletConnection.startAsync(CreateWalletActivity.this, getPassword());

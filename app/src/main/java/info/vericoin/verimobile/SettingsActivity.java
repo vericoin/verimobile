@@ -2,6 +2,7 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -51,18 +52,33 @@ public class SettingsActivity extends AppCompatActivity {
             lockTransactions = (CheckBoxPreference) findPreference(getString(R.string.lock_transactions_key));
         }
 
+        public boolean doesPasswordExist(){
+            SharedPreferences sharedPref = getActivity().getSharedPreferences(BitcoinApplication.PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
+            String password = sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
+            if(password.isEmpty()){
+                return false;
+            }else{
+                return true;
+            }
+        }
+
         @Override
         public void onResume() {
             super.onResume();
+
             WalletConnection.connect(new WalletConnection.OnConnectListener() {
                 @Override
                 public void OnSetUpComplete(WalletAppKit kit) {
                     if(kit.wallet().isEncrypted()){
                         lockTransactions.setEnabled(false);
                         lockTransactions.setChecked(true);
-                    }else{
+                    }else if(doesPasswordExist()){
                         lockTransactions.setEnabled(true);
+                    }else{
+                        lockTransactions.setEnabled(false);
+                        lockTransactions.setChecked(false);
                     }
+
                 }
 
                 @Override

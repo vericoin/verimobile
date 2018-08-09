@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -80,6 +81,12 @@ public class ChangePasswordActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        if(doesPasswordExist()){
+            currentPasswordLayout.setEnabled(true);
+        }else{
+            currentPasswordLayout.setEnabled(false);
+        }
+
         WalletConnection.connect(new WalletConnection.OnConnectListener() {
             @Override
             public void OnSetUpComplete(final WalletAppKit kit) {
@@ -109,10 +116,22 @@ public class ChangePasswordActivity extends AppCompatActivity {
         });
     }
 
+    public boolean doesPasswordExist(){
+        SharedPreferences sharedPref = getSharedPreferences(BitcoinApplication.PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
+        String password = sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
+        if(password.isEmpty()){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     public void updatePassword(String password){
 
         if(noPasswordBox.isChecked()){
             sharedPref.edit().remove(BitcoinApplication.PASSWORD_HASH_PREF).apply();
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+            sp.edit().putBoolean(getString(R.string.lock_transactions_key), false).apply(); //Unlock transactions
         }else {
             sharedPref.edit().putString(BitcoinApplication.PASSWORD_HASH_PREF, Util.hashStringSHA256(password)).apply();
         }

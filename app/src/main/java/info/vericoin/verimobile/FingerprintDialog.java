@@ -40,7 +40,7 @@ public class FingerprintDialog extends DialogFragment {
                 super.onAuthenticationError(errorCode, errString);
                 if(errorCode == FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
                     message.setText("Touch Sensor");
-                    imageView.setImageResource(R.drawable.ic_baseline_fingerprint);
+                    imageView.setImageResource(R.drawable.ic_baseline_fingerprint_dark);
                 }else{
                     message.setText(errString);
                     imageView.setImageResource(R.drawable.ic_error);
@@ -51,14 +51,14 @@ public class FingerprintDialog extends DialogFragment {
             public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
                 super.onAuthenticationHelp(helpCode, helpString);
                 message.setText(helpString);
-                imageView.setImageResource(R.drawable.ic_baseline_fingerprint);
+                imageView.setImageResource(R.drawable.ic_baseline_fingerprint_dark);
             }
 
             @Override
             public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
                 message.setText("Authentication Success!");
-                imageView.setImageResource(R.drawable.ic_baseline_fingerprint);
+                imageView.setImageResource(R.drawable.ic_baseline_fingerprint_dark);
 
                 if(listener != null){
                     listener.onSuccess();
@@ -73,7 +73,7 @@ public class FingerprintDialog extends DialogFragment {
             }
         }, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MyDialogTheme);
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
