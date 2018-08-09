@@ -23,7 +23,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="67" />
+                                                <entry key="scalingPercent" value="56" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -33,7 +33,11 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="C:\Users\Maxwell\Downloads\ic_launcher.png" />
+                                      <entry key="backgroundAssetType" value="COLOR" />
+                                      <entry key="backgroundColor" value="ffffff" />
+                                      <entry key="foregroundImage" value="C:\Users\Maxwell\Downloads\Vericonomy_Logo.png" />
+                                      <entry key="legacyIconShape" value="CIRCLE" />
+                                      <entry key="webIconShape" value="CIRCLE" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -60,8 +64,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_baseline_settings" />
-                            <entry key="sourceFile" value="C:\Users\Maxwell\Downloads\baseline-settings-20px.svg" />
+                            <entry key="outputName" value="ic_baseline_fingerprint" />
+                            <entry key="sourceFile" value="C:\Users\Maxwell\Downloads\baseline-fingerprint-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

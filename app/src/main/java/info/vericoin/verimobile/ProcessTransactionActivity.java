@@ -178,4 +178,9 @@ public class ProcessTransactionActivity extends AppCompatActivity {
         statusView.setText("Broadcast Failed");
     }
 
+    @Override
+    public void onBackPressed(){
+        //Do nothing. (We don't want user to go back while a transaction is being processed.)
+    }
+
 }

@@ -44,7 +44,7 @@ public class DecryptWalletActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_unlock_wallet);
+        setContentView(R.layout.activity_decrypt_wallet);
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);

@@ -1,0 +1,15 @@
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="first_preferencescreen">
+
+    <PreferenceCategory android:title="Account">
+
+        <Preference
+            android:key="@string/change_password_button"
+            android:title="Change Password" />
+        <CheckBoxPreference
+            android:key="@string/lock_transactions_key"
+            android:summary="Require wallet to be unlocked before sending transactions. If wallet is encrypted then password is required to send transactions."
+            android:title="Lock Transactions" />
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -2,7 +2,9 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -103,9 +105,16 @@ public class ReviewActivity extends AppCompatActivity {
         return kit.wallet().isEncrypted();
     }
 
+    public boolean isLockTransactions() {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        return sp.getBoolean(getString(R.string.lock_transactions_key), false);
+    }
+
     public void sendTransaction(){
-        if(isWalletEncrypted()){
+        if(isWalletEncrypted()) {
             startActivity(DecryptWalletActivity.createIntent(this, address, amount));
+        }else if(isLockTransactions()){
+            startActivity(UnlockActivity.createIntent(this, amount, address));
         }else {
             startActivity(ProcessTransactionActivity.createIntent(this, address, amount));
         }

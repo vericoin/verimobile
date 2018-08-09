@@ -22,4 +22,7 @@
     The Binary Chain - Proof of Work + Proof of Stake - Paired By Design
 </string>
 
+<string name="change_password_button">changePassword</string>
+<string name="lock_transactions_key">lockTransactions</string>
+
 </resources>
