@@ -6,11 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
-import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
+
 
 import org.bitcoinj.kits.WalletAppKit;
 
@@ -35,8 +33,7 @@ public class SettingsActivity extends AppCompatActivity {
         private CheckBoxPreference lockTransactions;
 
         @Override
-        public void onCreate(final Bundle savedInstanceState)
-        {
+        public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_screen);
 
@@ -50,6 +47,27 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
             lockTransactions = (CheckBoxPreference) findPreference(getString(R.string.lock_transactions_key));
+
+            lockTransactions.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+                    final boolean after = checkBoxPreference.isChecked();
+                    checkBoxPreference.setChecked(!after); //Prevent any change before password
+
+                    PasswordDialog passwordDialog = new PasswordDialog();
+                    passwordDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "PasswordDialog");
+
+                    passwordDialog.setListener(new PasswordDialog.OnPasswordListener() {
+                        @Override
+                        public void onSuccess() {
+                            checkBoxPreference.setChecked(after);
+                        }
+                    });
+
+                    return true;
+                }
+            });
         }
 
         public boolean doesPasswordExist(){

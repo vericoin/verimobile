@@ -159,6 +159,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         changePasswordButton.setText("Update Password");
                         changePasswordButton.setEnabled(true);
                         Toast.makeText(ChangePasswordActivity.this, "Password updated!", Toast.LENGTH_LONG).show();
+                        finish();
                         clearInputs();
                     }
                 });
