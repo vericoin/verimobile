@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -29,7 +30,7 @@ public class UnlockActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPref;
 
-    private ImageButton fingerPrintButton;
+    private ConstraintLayout fingerPrintButton;
 
     private FingerprintHelper fingerprintHelper;
 
