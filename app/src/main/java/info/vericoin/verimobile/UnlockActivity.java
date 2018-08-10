@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -73,9 +74,12 @@ public class UnlockActivity extends AppCompatActivity {
             }
         });
 
-        if(!showFingerPrintButton()){
-            fingerPrintButton.setVisibility(View.GONE);
-        }
+        fingerprintHelper.setListener(new FingerprintHelper.OnAuthListener() {
+            @Override
+            public void onSuccess() {
+                unlockWallet();
+            }
+        });
 
         unlockButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,14 +91,21 @@ public class UnlockActivity extends AppCompatActivity {
                 }
             }
         });
+    }
 
-        fingerprintHelper.attemptToUnlock(); //Try to use Biometric or Fingerprint Manager if device supports it.
-        fingerprintHelper.setListener(new FingerprintHelper.OnAuthListener() {
-            @Override
-            public void onSuccess() {
-                unlockWallet();
-            }
-        });
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean fingerPrintEnabled = sp.getBoolean(getString(R.string.fingerprint_enabled_key), true);
+
+        if(!showFingerPrintButton() || !fingerPrintEnabled){
+            fingerPrintButton.setVisibility(View.GONE);
+        }else{
+            fingerPrintButton.setVisibility(View.VISIBLE);
+            fingerprintHelper.attemptToUnlock(); //Try to use Biometric or Fingerprint Manager if device supports it.
+        }
     }
 
     public boolean showFingerPrintButton(){

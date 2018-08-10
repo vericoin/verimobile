@@ -24,5 +24,6 @@
 
 <string name="change_password_button">changePassword</string>
 <string name="lock_transactions_key">lockTransactions</string>
+<string name="fingerprint_enabled_key">enableFingerprint</string>
 
 </resources>

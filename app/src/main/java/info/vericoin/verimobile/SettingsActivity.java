@@ -32,6 +32,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         private CheckBoxPreference lockTransactions;
 
+        private CheckBoxPreference fingerPrintEnabled;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -47,6 +49,8 @@ public class SettingsActivity extends AppCompatActivity {
             });
 
             lockTransactions = (CheckBoxPreference) findPreference(getString(R.string.lock_transactions_key));
+
+            fingerPrintEnabled = (CheckBoxPreference) findPreference(getString(R.string.fingerprint_enabled_key));
 
             lockTransactions.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -92,9 +96,11 @@ public class SettingsActivity extends AppCompatActivity {
                         lockTransactions.setChecked(true);
                     }else if(doesPasswordExist()){
                         lockTransactions.setEnabled(true);
+                        fingerPrintEnabled.setEnabled(true);
                     }else{
                         lockTransactions.setEnabled(false);
                         lockTransactions.setChecked(false);
+                        fingerPrintEnabled.setEnabled(false);
                     }
 
                 }

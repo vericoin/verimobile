@@ -11,5 +11,10 @@
             android:key="@string/lock_transactions_key"
             android:summary="Require wallet to be unlocked before sending transactions. If wallet is encrypted then password is required to send transactions."
             android:title="Lock Transactions" />
+        <CheckBoxPreference
+            android:key="@string/fingerprint_enabled_key"
+            android:summary="Allow fingerprint to unlock wallet instead of using password"
+            android:title="Fingerprint Unlocking"
+            android:defaultValue="true"/>
     </PreferenceCategory>
 </PreferenceScreen>
