@@ -26,11 +26,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     private WalletAppKit kit;
 
-    private SharedPreferences sharedPref;
-
     private ProgressBar progressBar;
 
     private CheckBox noPasswordBox;
+
+    private BitcoinApplication bitcoinApplication;
 
     public static Intent createIntent(Context context){
         return new Intent(context, ChangePasswordActivity.class);
@@ -40,14 +40,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+        bitcoinApplication = (BitcoinApplication) getApplication();
 
         currentPasswordLayout = findViewById(R.id.currentPasswordInputLayout);
         newPasswordLayout = findViewById(R.id.newPasswordLayout);
         reNewPasswordLayout = findViewById(R.id.reNewPasswordLayout);
         changePasswordButton = findViewById(R.id.changePasswordButton);
         encryptWalletBox = findViewById(R.id.encryptWallet);
-
-        sharedPref = getSharedPreferences(BitcoinApplication.PREFERENCE_FILE_KEY, MODE_PRIVATE);
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
@@ -117,23 +116,16 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     public boolean doesPasswordExist(){
-        SharedPreferences sharedPref = getSharedPreferences(BitcoinApplication.PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
-        String password = sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
-        if(password.isEmpty()){
-            return false;
-        }else{
-            return true;
-        }
+        return bitcoinApplication.doesPasswordExist();
     }
 
     public void updatePassword(String password){
 
         if(noPasswordBox.isChecked()){
-            sharedPref.edit().remove(BitcoinApplication.PASSWORD_HASH_PREF).apply();
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-            sp.edit().putBoolean(getString(R.string.lock_transactions_key), false).apply(); //Unlock transactions
+            bitcoinApplication.removePassword();
+            bitcoinApplication.unlockTransactions();
         }else {
-            sharedPref.edit().putString(BitcoinApplication.PASSWORD_HASH_PREF, Util.hashStringSHA256(password)).apply();
+            bitcoinApplication.newPassword(password);
         }
 
         changePasswordButton.setEnabled(false);
@@ -172,7 +164,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     public String getCurrentPasswordHash(){
-        return sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
+        return bitcoinApplication.getPasswordHash();
     }
 
     public void clearInputs(){

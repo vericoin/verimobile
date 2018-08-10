@@ -56,7 +56,7 @@ public class FingerprintHelper {
 
     private boolean isSupportBiometricSupported() {
         PackageManager packageManager = context.getPackageManager();
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)) {
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             return true;
         }
         return false;

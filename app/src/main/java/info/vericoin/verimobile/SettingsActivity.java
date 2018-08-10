@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -34,10 +36,17 @@ public class SettingsActivity extends AppCompatActivity {
 
         private CheckBoxPreference fingerPrintEnabled;
 
+        private BitcoinApplication bitcoinApplication;
+
+        private FingerprintHelper fingerprintHelper;
+
+        private PreferenceCategory categoryAccount;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_screen);
+            bitcoinApplication = (BitcoinApplication) getActivity().getApplication();
 
             changePasswordRow = findPreference(getString(R.string.change_password_button));
             changePasswordRow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -48,9 +57,17 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
+            categoryAccount = (PreferenceCategory) findPreference("account");
+
             lockTransactions = (CheckBoxPreference) findPreference(getString(R.string.lock_transactions_key));
 
             fingerPrintEnabled = (CheckBoxPreference) findPreference(getString(R.string.fingerprint_enabled_key));
+
+            fingerprintHelper = new FingerprintHelper((AppCompatActivity) getActivity());
+
+            if(!fingerprintHelper.isFingerPrintSupported()){ //Device doesn't support fingerprint remove preference
+                categoryAccount.removePreference(fingerPrintEnabled);
+            }
 
             lockTransactions.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
@@ -75,13 +92,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         public boolean doesPasswordExist(){
-            SharedPreferences sharedPref = getActivity().getSharedPreferences(BitcoinApplication.PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
-            String password = sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
-            if(password.isEmpty()){
-                return false;
-            }else{
-                return true;
-            }
+            return bitcoinApplication.doesPasswordExist();
         }
 
         @Override

@@ -8,14 +8,13 @@ import org.bitcoinj.kits.WalletAppKit;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private SharedPreferences sharedPref;
+    private BitcoinApplication bitcoinApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        sharedPref = getSharedPreferences(BitcoinApplication.PREFERENCE_FILE_KEY, MODE_PRIVATE);
+        bitcoinApplication = (BitcoinApplication) getApplication();
     }
 
     @Override
@@ -28,11 +27,10 @@ public class SplashActivity extends AppCompatActivity {
 
                 @Override
                 public void OnSetUpComplete(WalletAppKit kit) {
-                    String password = sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
-                    if(password.isEmpty()){
-                        startActivity(MainActivity.createIntent(SplashActivity.this));
-                    }else {
+                    if(doesPasswordExist()){
                         startActivity(UnlockActivity.createIntent(SplashActivity.this)); //Ask for password;
+                    }else {
+                        startActivity(MainActivity.createIntent(SplashActivity.this));
                     }
                     finish(); //Prevent app from going back to this activity after its finished.
                 }
@@ -46,6 +44,10 @@ public class SplashActivity extends AppCompatActivity {
             startActivity(WelcomeActivity.createIntent(SplashActivity.this));
             finish();
         }
+    }
+
+    public boolean doesPasswordExist(){
+        return bitcoinApplication.doesPasswordExist();
     }
 
     @Override

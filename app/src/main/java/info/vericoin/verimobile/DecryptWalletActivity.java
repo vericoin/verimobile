@@ -8,14 +8,11 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.kits.WalletAppKit;
 
-import static info.vericoin.verimobile.BitcoinApplication.PASSWORD_HASH_PREF;
-import static info.vericoin.verimobile.BitcoinApplication.PREFERENCE_FILE_KEY;
 
 public class DecryptWalletActivity extends AppCompatActivity{
 
@@ -23,13 +20,13 @@ public class DecryptWalletActivity extends AppCompatActivity{
 
     private Button unlockButton;
 
-    private SharedPreferences sharedPref;
-
     private Address address;
 
     private Coin amount;
 
     private WalletAppKit kit;
+
+    private BitcoinApplication bitcoinApplication;
 
     private final static String ADDRESS_EXTRA = "address";
     private final static String AMOUNT_EXTRA = "amount";
@@ -45,11 +42,10 @@ public class DecryptWalletActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decrypt_wallet);
+        bitcoinApplication = (BitcoinApplication) getApplication();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
-
-        sharedPref = getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
 
         unlockButton = findViewById(R.id.unlockButton);
 
@@ -97,12 +93,7 @@ public class DecryptWalletActivity extends AppCompatActivity{
     }
 
     public boolean isPasswordCorrect(){
-        String passwordHash = sharedPref.getString(PASSWORD_HASH_PREF,"");
-        if(passwordHash.isEmpty()){
-            return true; //There is no password
-        }else {
-            return passwordHash.equals(Util.hashStringSHA256(getPassword()));
-        }
+        return bitcoinApplication.checkPassword(getPassword());
     }
 
 }

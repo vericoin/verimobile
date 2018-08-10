@@ -32,6 +32,8 @@ public class ReviewActivity extends AppCompatActivity {
         return intent;
     }
 
+    private BitcoinApplication bitcoinApplication;
+
     private Address address;
     private Coin amount;
     private WalletAppKit kit;
@@ -48,6 +50,7 @@ public class ReviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_review);
+        bitcoinApplication = (BitcoinApplication) getApplication();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
@@ -106,8 +109,7 @@ public class ReviewActivity extends AppCompatActivity {
     }
 
     public boolean isLockTransactions() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        return sp.getBoolean(getString(R.string.lock_transactions_key), false);
+        return bitcoinApplication.isLockTransactions();
     }
 
     public void sendTransaction(){

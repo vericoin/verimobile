@@ -11,13 +11,10 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 
-import static info.vericoin.verimobile.BitcoinApplication.PASSWORD_HASH_PREF;
-import static info.vericoin.verimobile.BitcoinApplication.PREFERENCE_FILE_KEY;
 
 @TargetApi(28)
 public class UnlockActivity extends AppCompatActivity {
@@ -29,11 +26,11 @@ public class UnlockActivity extends AppCompatActivity {
 
     private Button unlockButton;
 
-    private SharedPreferences sharedPref;
-
     private ConstraintLayout fingerPrintButton;
 
     private FingerprintHelper fingerprintHelper;
+
+    private BitcoinApplication bitcoinApplication;
 
     private Coin coin;
     private Address address;
@@ -53,13 +50,12 @@ public class UnlockActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unlock_wallet);
+        bitcoinApplication = (BitcoinApplication) getApplication();
 
         coin = (Coin) getIntent().getSerializableExtra(COIN_EXTRA);
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
 
         fingerprintHelper = new FingerprintHelper(this);
-
-        sharedPref = getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
 
         unlockButton = findViewById(R.id.unlockButton);
 
@@ -97,8 +93,7 @@ public class UnlockActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean fingerPrintEnabled = sp.getBoolean(getString(R.string.fingerprint_enabled_key), true);
+        boolean fingerPrintEnabled = bitcoinApplication.isFingerPrintEnabled();
 
         if(!showFingerPrintButton() || !fingerPrintEnabled){
             fingerPrintButton.setVisibility(View.GONE);
@@ -125,18 +120,12 @@ public class UnlockActivity extends AppCompatActivity {
         finish(); //Prevent app from going back to this activity after its finished.
     }
 
-
     public String getPassword(){
         return passwordLayout.getEditText().getText().toString();
     }
 
     public boolean isPasswordCorrect(){
-        String passwordHash = sharedPref.getString(PASSWORD_HASH_PREF,"");
-        if(passwordHash.isEmpty()){
-            return true; //There is no password
-        }else {
-            return passwordHash.equals(Util.hashStringSHA256(getPassword()));
-        }
+        return bitcoinApplication.checkPassword(getPassword());
     }
 
 }

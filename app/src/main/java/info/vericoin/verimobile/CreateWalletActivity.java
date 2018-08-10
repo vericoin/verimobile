@@ -16,9 +16,6 @@ import android.widget.ProgressBar;
 
 import org.bitcoinj.kits.WalletAppKit;
 
-import static info.vericoin.verimobile.BitcoinApplication.PASSWORD_HASH_PREF;
-import static info.vericoin.verimobile.BitcoinApplication.PREFERENCE_FILE_KEY;
-
 public class CreateWalletActivity extends AppCompatActivity {
 
     private Button createWalletButton;
@@ -31,9 +28,9 @@ public class CreateWalletActivity extends AppCompatActivity {
 
     private CheckBox encryptWallet;
 
-    private SharedPreferences sharedPref;
-
     private CheckBox noPasswordBox;
+
+    private BitcoinApplication bitcoinApplication;
 
     public static Intent createIntent(Context context){
         return new Intent(context, CreateWalletActivity.class);
@@ -55,6 +52,7 @@ public class CreateWalletActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_wallet);
+        bitcoinApplication = (BitcoinApplication) getApplication();
 
         createWalletButton = findViewById(R.id.createWalletButton);
         progressBar = findViewById(R.id.progressBar);
@@ -77,8 +75,6 @@ public class CreateWalletActivity extends AppCompatActivity {
             }
         });
 
-        sharedPref = getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
-
         createWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -96,13 +92,12 @@ public class CreateWalletActivity extends AppCompatActivity {
 
                     if(noPasswordBox.isChecked()) {
                         WalletConnection.startAsync(CreateWalletActivity.this);
-                        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-                        sp.edit().putBoolean(getString(R.string.lock_transactions_key), false).apply(); //Unlock transactions
+                        bitcoinApplication.unlockTransactions();
                     }else if(shouldEncryptWallet()){
-                        savePasswordHash(getPassword());
+                        savePassword(getPassword());
                         WalletConnection.startAsync(CreateWalletActivity.this, getPassword());
                     }else{
-                        savePasswordHash(getPassword());
+                        savePassword(getPassword());
                         WalletConnection.startAsync(CreateWalletActivity.this);
                     }
 
@@ -124,8 +119,8 @@ public class CreateWalletActivity extends AppCompatActivity {
         });
     }
 
-    public void savePasswordHash(String password){
-        sharedPref.edit().putString(PASSWORD_HASH_PREF, Util.hashStringSHA256(password)).apply();
+    public void savePassword(String password){
+        bitcoinApplication.newPassword(password);
     }
 
     public String getPassword(){

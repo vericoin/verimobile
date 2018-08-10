@@ -26,8 +26,12 @@ public class PasswordDialog extends DialogFragment {
         this.listener = listener;
     }
 
+    private BitcoinApplication bitcoinApplication;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        bitcoinApplication = (BitcoinApplication) getActivity().getApplication();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MyDialogTheme);
         // Get the layout inflater
@@ -76,13 +80,6 @@ public class PasswordDialog extends DialogFragment {
     }
 
     public boolean isPasswordCorrect(String password){
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(BitcoinApplication.PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
-        String passwordHash = sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
-
-        if(passwordHash.equals(Util.hashStringSHA256(password))){
-            return true;
-        }else{
-            return false;
-        }
+        return bitcoinApplication.checkPassword(password);
     }
 }
