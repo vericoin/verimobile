@@ -55,23 +55,23 @@
 
         <activity android:name=".WelcomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".VericoinGettingStartedActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".VeriumGettingStartedActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".BinaryChainGettingStartedActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".CreateWalletActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/SplashTheme"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".UnlockActivity"
             android:screenOrientation="portrait"

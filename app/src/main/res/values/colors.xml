@@ -3,7 +3,7 @@
     <color name="colorPrimary">#1f72bc</color>
     <color name="colorPrimaryDark">#0f2f57</color>
     <color name="colorAccent.Light">#FF4081</color>
-    <color name="colorAccent">#E0E0E0</color>
+    <color name="colorAccent">#C0C0E0</color>
     <color name="colorDivider">#20000000</color>
     <color name="greenNumber">#158407</color>
     <color name="deadTransaction">#000000</color>
@@ -14,5 +14,5 @@
     <color name="blueButton">#0f2f57</color>
     <color name="darkWindowBackground">#2c2c2d</color>
 
-    <color name="errorColor">#FFA0C1</color>
+    <color name="errorColor">#FFC0C0</color>
 </resources>

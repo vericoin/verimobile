@@ -20,7 +20,7 @@
 
         <Button
             android:id="@+id/sendButton"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="64dp"
             android:layout_marginBottom="8dp"
@@ -37,7 +37,7 @@
 
         <Button
             android:id="@+id/receiveButton"
-            style="@style/Widget.AppCompat.Button.Borderless"
+            android:background="?android:attr/selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="64dp"
             android:layout_marginBottom="8dp"
@@ -231,7 +231,7 @@
 
                 <android.support.constraint.ConstraintLayout
                     android:id="@+id/wallet_constraint_view"
-                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:background="?android:attr/selectableItemBackground"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -239,6 +239,8 @@
                         android:id="@+id/imageView2"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
                         app:srcCompat="@drawable/bitcoin_logo"
                         card_view:layout_constraintBottom_toBottomOf="parent"
                         card_view:layout_constraintEnd_toEndOf="parent" />
@@ -256,6 +258,8 @@
                         android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
                         android:fontFamily="serif"
                         android:text="Bitcoin Wallet"
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
@@ -266,6 +270,7 @@
                         android:id="@+id/availableBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif-smallcaps"
                         android:text="1.51 BTC"
@@ -278,6 +283,7 @@
                         android:id="@+id/textView3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:fontFamily="serif"
                         android:text="Available Balance"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
@@ -288,6 +294,7 @@
                         android:id="@+id/unconfirmedBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:fontFamily="sans-serif-smallcaps"
                         android:text="0.5877 BTC"
@@ -300,6 +307,8 @@
                         android:id="@+id/textView5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginStart="8dp"
                         android:fontFamily="serif"
                         android:text="Unconfirmed Balance"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
