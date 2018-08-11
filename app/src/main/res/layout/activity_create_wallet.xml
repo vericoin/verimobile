@@ -115,7 +115,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:fontFamily="serif"
         android:text="If you encrypt your wallet, you will have to type your password every time you send a transaction."
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         app:layout_constraintEnd_toEndOf="parent"

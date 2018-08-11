@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,9 +14,43 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/colorPrimary"
+            android:theme="@style/AppTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:layout_marginTop="32dp"
+                android:orientation="horizontal"
+                android:weightSum="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView34">
+
+                <Button
+                    android:id="@+id/sendButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Send"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <Button
+                    android:id="@+id/receiveButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:text="Receive"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textView31"
@@ -23,10 +58,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:fontFamily="serif"
                 android:text="Available Balance"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="?android:attr/textColorPrimaryInverse"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/availableBalance" />
@@ -38,10 +71,9 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="32dp"
-                android:fontFamily="sans-serif-smallcaps"
                 android:text="3,323.85 BTC"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -52,11 +84,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-smallcaps"
+                android:layout_marginTop="16dp"
                 android:text="10.00 BTC"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:textColor="?android:attr/textColorPrimaryInverse"
+                android:textColor="?android:attr/textColorPrimary"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView31" />
@@ -67,45 +98,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:fontFamily="serif"
                 android:text="Unconfirmed Balance"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="?android:attr/textColorPrimaryInverse"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/unconfirmedBalance" />
-
-            <Button
-                android:id="@+id/sendButton"
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:fontFamily="serif"
-                android:text="Send"
-                android:textAppearance="@style/TextAppearance.AppCompat.Button"
-                android:textColor="?android:attr/textColorPrimaryInverse"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView34" />
-
-            <Button
-                android:id="@+id/receiveButton"
-                android:layout_width="wrap_content"
-                android:layout_height="64dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:background="?android:attr/selectableItemBackground"
-                android:fontFamily="serif"
-                android:text="Receive"
-                android:textAppearance="@style/TextAppearance.AppCompat.Button"
-                android:textColor="?android:attr/textColorPrimaryInverse"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView34" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -140,8 +137,8 @@
                         android:id="@+id/view4"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
                         android:background="#20000000"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -161,10 +158,9 @@
                         android:id="@+id/textView37"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:fontFamily="serif"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         android:text="Recent Transactions"
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -206,10 +202,8 @@
                         android:id="@+id/view"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
                         android:background="#20000000"
                         card_view:layout_constraintEnd_toEndOf="parent"
                         card_view:layout_constraintStart_toStartOf="parent"
@@ -219,9 +213,7 @@
                         android:id="@+id/textView8"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"
-                        android:fontFamily="serif"
+                        android:layout_marginStart="16dp"
                         android:text="Block Height"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         card_view:layout_constraintStart_toStartOf="parent"
@@ -231,10 +223,8 @@
                         android:id="@+id/blockHeight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
-                        android:fontFamily="sans-serif-smallcaps"
                         android:text="1356627"
                         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                         android:textSize="30sp"
@@ -245,10 +235,8 @@
                         android:id="@+id/textView6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="8dp"
-                        android:fontFamily="serif"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
                         android:text="Blockchain"
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                         card_view:layout_constraintStart_toStartOf="parent"
@@ -258,8 +246,12 @@
                         android:id="@+id/synchingBlock"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginTop="8dp"
                         card_view:layout_constraintBottom_toBottomOf="parent"
-                        card_view:layout_constraintEnd_toEndOf="parent">
+                        card_view:layout_constraintEnd_toEndOf="parent"
+                        card_view:layout_constraintTop_toBottomOf="@+id/textView8">
 
                         <ProgressBar
                             android:id="@+id/progressBar2"
@@ -280,15 +272,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:layout_marginEnd="8dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginRight="8dp"
                             android:layout_marginStart="8dp"
-                            android:fontFamily="serif"
+                            android:layout_marginTop="8dp"
                             android:text="Syncing..."
                             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             card_view:layout_constraintBottom_toBottomOf="parent"
                             card_view:layout_constraintEnd_toStartOf="@+id/percentComplete"
-                            card_view:layout_constraintStart_toStartOf="parent" />
+                            card_view:layout_constraintStart_toStartOf="parent"
+                            card_view:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
                             android:id="@+id/percentComplete"
@@ -296,12 +287,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:layout_marginEnd="8dp"
-                            android:layout_marginRight="8dp"
-                            android:fontFamily="serif"
+                            android:layout_marginTop="8dp"
                             android:text="0.00 %"
                             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             card_view:layout_constraintBottom_toBottomOf="parent"
-                            card_view:layout_constraintEnd_toStartOf="@+id/progressBar2" />
+                            card_view:layout_constraintEnd_toStartOf="@+id/progressBar2"
+                            card_view:layout_constraintTop_toTopOf="parent" />
                     </android.support.constraint.ConstraintLayout>
 
                     <TextView
@@ -310,17 +301,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:layout_marginEnd="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
-                        android:fontFamily="serif"
                         android:text="July 31, 2018 10:00:00 PM"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        card_view:layout_constraintBottom_toBottomOf="parent"
+                        card_view:layout_constraintBottom_toBottomOf="@+id/synchingBlock"
                         card_view:layout_constraintEnd_toStartOf="@+id/synchingBlock"
                         card_view:layout_constraintStart_toStartOf="parent"
-                        card_view:layout_constraintTop_toBottomOf="@+id/textView8" />
+                        card_view:layout_constraintTop_toTopOf="@+id/synchingBlock" />
                 </android.support.constraint.ConstraintLayout>
             </android.support.v7.widget.CardView>
 

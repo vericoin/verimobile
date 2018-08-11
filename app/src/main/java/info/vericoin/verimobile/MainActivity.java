@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void OnSyncComplete() {
-                synchingBlock.setVisibility(View.GONE);
+                synchingBlock.setVisibility(View.INVISIBLE);
             }
         });
 

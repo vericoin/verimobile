@@ -5,6 +5,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent.Light</item>
+
+        <item name="android:fontFamily">@font/neutra_text_book_alt</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat">
@@ -16,6 +18,9 @@
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="textColorError">@color/errorColor</item>
 
+        <item name="alertDialogTheme">@style/Fingerprint.Dialog</item>
+
+        <item name="android:fontFamily">@font/neutra_text_book_alt</item>
     </style>
 
     <style name="SplashTheme" parent="AppTheme.NoActionBar">
@@ -23,6 +28,13 @@
         <item name="colorPrimaryDark">#1c1c1d</item>
         <item name="colorButtonNormal">#606060</item>
         <item name="android:windowBackground">@color/darkWindowBackground</item>
+    </style>
+
+    <style name="Fingerprint.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorAccent.Light</item>
+
+        <item name="android:textViewStyle">@style/AppTheme.TextView</item>
+        <item name="android:buttonStyle">@style/AppTheme.ButtonView</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
@@ -37,6 +49,12 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert"/>
+    <style name="AppTheme.TextView" parent="android:Widget.DeviceDefault.TextView">
+        <item name="android:fontFamily">@font/neutra_2d_display_medium</item>
+    </style>
+
+    <style name="AppTheme.ButtonView" parent="android:Widget.DeviceDefault.Button">
+        <item name="android:fontFamily">@font/neutra_2d_display_medium</item>
+    </style>
 
 </resources>

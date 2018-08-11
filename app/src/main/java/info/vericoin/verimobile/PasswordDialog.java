@@ -33,7 +33,7 @@ public class PasswordDialog extends DialogFragment {
 
         bitcoinApplication = (BitcoinApplication) getActivity().getApplication();
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext(), R.style.MyDialogTheme);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         // Get the layout inflater
         LayoutInflater inflater = getActivity().getLayoutInflater();
 

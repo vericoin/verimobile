@@ -15,7 +15,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:fontFamily="sans-serif-smallcaps"
         android:text="1 VRC"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
         app:layout_constraintBottom_toTopOf="@+id/numberPad"
@@ -48,12 +47,11 @@
             android:id="@+id/button1"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
 
@@ -61,12 +59,11 @@
             android:id="@+id/button2"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="2"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
 
@@ -74,12 +71,11 @@
             android:id="@+id/button3"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="3"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
 
@@ -87,12 +83,11 @@
             android:id="@+id/button4"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="4"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
 
@@ -100,12 +95,11 @@
             android:id="@+id/button5"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="5"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
 
@@ -113,12 +107,11 @@
             android:id="@+id/button6"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="6"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
 
@@ -126,12 +119,11 @@
             android:id="@+id/button7"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="7"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
 
@@ -139,12 +131,11 @@
             android:id="@+id/button8"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="8"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
 
@@ -152,12 +143,11 @@
             android:id="@+id/button9"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="9"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
 
@@ -165,12 +155,11 @@
             android:id="@+id/dotbutton"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="."
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnSpan="1"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
@@ -179,12 +168,11 @@
             android:id="@+id/button0"
             android:layout_width="0dp"
             android:layout_height="75dp"
-            android:fontFamily="sans-serif-smallcaps"
+            android:background="?android:attr/selectableItemBackground"
             android:gravity="center"
             android:text="0"
             android:textAppearance="@style/TextAppearance.AppCompat.Button"
             android:textSize="24sp"
-            android:background="?android:attr/selectableItemBackground"
             grid:layout_columnSpan="1"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />
