@@ -58,10 +58,6 @@ public class BitcoinApplication extends MultiDexApplication {
         return sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
     }
 
-    public void unlockTransactions(){
-        defaultPref.edit().putBoolean(getString(R.string.lock_transactions_key), false).apply(); //Unlock transactions
-    }
-
     public boolean isFingerPrintEnabled(){
         return defaultPref.getBoolean(getString(R.string.fingerprint_enabled_key), true);
     }

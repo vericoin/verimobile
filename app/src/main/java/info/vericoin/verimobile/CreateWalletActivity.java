@@ -92,7 +92,6 @@ public class CreateWalletActivity extends AppCompatActivity {
 
                     if(noPasswordBox.isChecked()) {
                         WalletConnection.startAsync(CreateWalletActivity.this);
-                        bitcoinApplication.unlockTransactions();
                     }else if(shouldEncryptWallet()){
                         savePassword(getPassword());
                         WalletConnection.startAsync(CreateWalletActivity.this, getPassword());

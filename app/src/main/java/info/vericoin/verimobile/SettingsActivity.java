@@ -104,13 +104,11 @@ public class SettingsActivity extends AppCompatActivity {
                 public void OnSetUpComplete(WalletAppKit kit) {
                     if(kit.wallet().isEncrypted()){
                         lockTransactions.setEnabled(false);
-                        lockTransactions.setChecked(true);
                     }else if(doesPasswordExist()){
                         lockTransactions.setEnabled(true);
                         fingerPrintEnabled.setEnabled(true);
                     }else{
                         lockTransactions.setEnabled(false);
-                        lockTransactions.setChecked(false);
                         fingerPrintEnabled.setEnabled(false);
                     }
 

@@ -49,6 +49,16 @@ public class Util {
         }
     }
 
+    public static Throwable getCause(Throwable e) {
+        Throwable cause = null;
+        Throwable result = e;
+
+        while(null != (cause = result.getCause())  && (result != cause) ) {
+            result = cause;
+        }
+        return result;
+    }
+
     public static String getDateString(Date date){
         if(date == null){
             return "Unknown";

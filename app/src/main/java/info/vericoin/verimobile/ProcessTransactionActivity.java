@@ -145,12 +145,12 @@ public class ProcessTransactionActivity extends AppCompatActivity {
                             broadcastComplete(sendResult.tx.getHashAsString()); //Broadcast complete show user TX hash.
                         }
                     }, WalletConnection.getRunInUIThread());
-                } catch (final InsufficientMoneyException e) {
+                } catch (final Exception e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            broadcastFailed(e.getMessage());
+                            broadcastFailed(e.toString());
                         }
                     });
                 }

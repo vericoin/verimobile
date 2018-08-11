@@ -22,8 +22,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="info.vericoin.verimobile.WalletHistoryActivity"
-            android:label="Wallet History"
+        <activity android:name="info.vericoin.verimobile.TransactionListActivity"
+            android:label="Transaction History"
             android:screenOrientation="portrait"/>
 
         <activity android:name="info.vericoin.verimobile.MainActivity"

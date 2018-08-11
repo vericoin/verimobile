@@ -123,7 +123,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         if(noPasswordBox.isChecked()){
             bitcoinApplication.removePassword();
-            bitcoinApplication.unlockTransactions();
         }else {
             bitcoinApplication.newPassword(password);
         }
