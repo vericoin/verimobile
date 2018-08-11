@@ -27,7 +27,7 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name="info.vericoin.verimobile.MainActivity"
-                  android:screenOrientation="portrait"/>
+                  android:screenOrientation="portrait" />
 
         <activity android:name=".RecipientActivity"
             android:label="Choose recipient"
