@@ -17,7 +17,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.kits.WalletAppKit;
 
-public class ReceiveActivity extends AppCompatActivity {
+public class ReceiveActivity extends VeriActivity {
 
     private WalletAppKit kit;
 

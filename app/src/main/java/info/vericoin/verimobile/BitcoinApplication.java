@@ -63,4 +63,8 @@ public class BitcoinApplication extends MultiDexApplication {
         return defaultPref.getBoolean(getString(R.string.fingerprint_enabled_key), true);
     }
 
+    public boolean isSecureWindowEnabled(){
+        return defaultPref.getBoolean(getString(R.string.secure_window_key), true);
+    }
+
 }

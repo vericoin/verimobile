@@ -19,7 +19,7 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.kits.WalletAppKit;
 
-public class RecipientActivity extends AppCompatActivity {
+public class RecipientActivity extends VeriActivity {
 
     private TextInputLayout sendAddr;
 

@@ -23,7 +23,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.view.View.GONE;
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
-public class ProcessTransactionActivity extends AppCompatActivity {
+public class ProcessTransactionActivity extends VeriActivity {
 
     private final static String ADDRESS_EXTRA = "address";
     private final static String AMOUNT_EXTRA = "amount";

@@ -14,7 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.bitcoinj.kits.WalletAppKit;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends VeriActivity {
 
     public static Intent createIntent(Context context){
         return new Intent(context, SettingsActivity.class);
@@ -42,6 +42,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         private PreferenceCategory categoryAccount;
 
+        private CheckBoxPreference secureWindow;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -63,6 +65,8 @@ public class SettingsActivity extends AppCompatActivity {
 
             fingerPrintEnabled = (CheckBoxPreference) findPreference(getString(R.string.fingerprint_enabled_key));
 
+            secureWindow = (CheckBoxPreference) findPreference(getString(R.string.secure_window_key));
+
             fingerprintHelper = new FingerprintHelper((AppCompatActivity) getActivity());
 
             if(!fingerprintHelper.isFingerPrintSupported()){ //Device doesn't support fingerprint remove preference
@@ -73,20 +77,32 @@ public class SettingsActivity extends AppCompatActivity {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
-                    final boolean after = checkBoxPreference.isChecked();
-                    checkBoxPreference.setChecked(!after); //Prevent any change before password
-
-                    PasswordDialog passwordDialog = new PasswordDialog();
-                    passwordDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "PasswordDialog");
-
-                    passwordDialog.setListener(new PasswordDialog.OnPasswordListener() {
-                        @Override
-                        public void onSuccess() {
-                            checkBoxPreference.setChecked(after);
-                        }
-                    });
-
+                    changeCheckBoxUsingPassword(checkBoxPreference);
                     return true;
+                }
+            });
+
+            secureWindow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    final CheckBoxPreference checkBoxPreference = (CheckBoxPreference) preference;
+                    changeCheckBoxUsingPassword(checkBoxPreference);
+                    return true;
+                }
+            });
+        }
+
+        public void changeCheckBoxUsingPassword(final CheckBoxPreference checkBoxPreference){
+            final boolean after = checkBoxPreference.isChecked();
+            checkBoxPreference.setChecked(!after); //Prevent any change before password
+
+            PasswordDialog passwordDialog = new PasswordDialog();
+            passwordDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "PasswordDialog");
+
+            passwordDialog.setListener(new PasswordDialog.OnPasswordListener() {
+                @Override
+                public void onSuccess() {
+                    checkBoxPreference.setChecked(after);
                 }
             });
         }

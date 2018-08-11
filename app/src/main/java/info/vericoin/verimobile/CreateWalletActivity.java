@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 
 import org.bitcoinj.kits.WalletAppKit;
 
-public class CreateWalletActivity extends AppCompatActivity {
+public class CreateWalletActivity extends VeriActivity {
 
     private Button createWalletButton;
 

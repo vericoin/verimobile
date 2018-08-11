@@ -17,7 +17,7 @@ import org.bitcoinj.wallet.Wallet;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransactionListActivity extends AppCompatActivity {
+public class TransactionListActivity extends VeriActivity {
 
     private RecyclerView mRecyclerView;
     private LinearLayoutManager mLayoutManager;

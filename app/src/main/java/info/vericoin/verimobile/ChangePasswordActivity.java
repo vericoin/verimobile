@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import org.bitcoinj.kits.WalletAppKit;
 
-public class ChangePasswordActivity extends AppCompatActivity {
+public class ChangePasswordActivity extends VeriActivity {
 
     private TextInputLayout currentPasswordLayout;
     private TextInputLayout newPasswordLayout;

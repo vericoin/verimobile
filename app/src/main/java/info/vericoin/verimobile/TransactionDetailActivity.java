@@ -15,7 +15,7 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.kits.WalletAppKit;
 
-public class TransactionDetailActivity extends AppCompatActivity{
+public class TransactionDetailActivity extends VeriActivity{
 
     private final static String TX_EXTRA = "Transaction";
 

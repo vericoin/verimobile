@@ -17,5 +17,10 @@
             android:summary="Allow fingerprint to unlock wallet instead of using password"
             android:title="Fingerprint Unlocking"
             android:defaultValue="true"/>
+        <CheckBoxPreference
+            android:key="@string/secure_window_key"
+            android:summary="Prevents device from taking screenshots of app, and hides content when minimized."
+            android:title="Secure Window"
+            android:defaultValue="true"/>
     </PreferenceCategory>
 </PreferenceScreen>

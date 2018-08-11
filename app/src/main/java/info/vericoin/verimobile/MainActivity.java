@@ -29,7 +29,7 @@ import java.util.List;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends VeriActivity {
 
     private final static int RECENT_TRANSACTION_SIZE = 5;
 
@@ -63,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
 
         unconfirmedBalance = findViewById(R.id.unconfirmedBalance);
         availableBalance = findViewById(R.id.availableBalance);

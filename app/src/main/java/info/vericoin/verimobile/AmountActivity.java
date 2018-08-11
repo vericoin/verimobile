@@ -16,7 +16,7 @@ import org.bitcoinj.kits.WalletAppKit;
 
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
-public class AmountActivity extends AppCompatActivity implements View.OnClickListener{
+public class AmountActivity extends VeriActivity implements View.OnClickListener{
 
     private final static String ADDRESS_EXTRA = "address";
 

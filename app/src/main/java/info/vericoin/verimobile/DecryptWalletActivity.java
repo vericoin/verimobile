@@ -14,7 +14,7 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.kits.WalletAppKit;
 
 
-public class DecryptWalletActivity extends AppCompatActivity{
+public class DecryptWalletActivity extends VeriActivity{
 
     private TextInputLayout passwordLayout;
 

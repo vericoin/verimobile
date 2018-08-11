@@ -10,6 +10,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
 import org.bitcoinj.core.Address;
@@ -17,7 +18,7 @@ import org.bitcoinj.core.Coin;
 
 
 @TargetApi(28)
-public class UnlockActivity extends AppCompatActivity {
+public class UnlockActivity extends VeriActivity {
 
     public final static String COIN_EXTRA = "coin";
     public final static String ADDRESS_EXTRA = "address";
@@ -50,6 +51,7 @@ public class UnlockActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unlock_wallet);
+
         bitcoinApplication = (BitcoinApplication) getApplication();
 
         coin = (Coin) getIntent().getSerializableExtra(COIN_EXTRA);

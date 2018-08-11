@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import org.bitcoinj.kits.WalletAppKit;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends VeriActivity {
 
     private BitcoinApplication bitcoinApplication;
 
