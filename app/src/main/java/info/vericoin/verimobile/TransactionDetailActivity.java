@@ -52,6 +52,7 @@ public class TransactionDetailActivity extends VeriActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_details);
+        kit = WalletConnection.getKit();
 
         amountView = findViewById(R.id.amount);
         txHashView = findViewById(R.id.txHash);
@@ -79,58 +80,37 @@ public class TransactionDetailActivity extends VeriActivity{
 
         txString = getIntent().getStringExtra(TX_EXTRA);
 
+        setUpTransactionDetails();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public void setUpTransactionDetails(){
+        tx = kit.wallet().getTransaction(Sha256Hash.wrap(txString));
 
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
-            @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                TransactionDetailActivity.this.kit = kit;
+        inputAdapter = new InputListAdapter(TransactionDetailActivity.this, tx.getInputs());
+        outputAdapter = new OutputListAdapter(TransactionDetailActivity.this, tx.getOutputs());
 
-                tx = kit.wallet().getTransaction(Sha256Hash.wrap(txString));
+        inputRecyclerView.setAdapter(inputAdapter);
+        outputRecyclerView.setAdapter(outputAdapter);
 
-                inputAdapter = new InputListAdapter(TransactionDetailActivity.this, tx.getInputs());
-                outputAdapter = new OutputListAdapter(TransactionDetailActivity.this, tx.getOutputs());
+        Coin amount = tx.getValue(kit.wallet());
+        if(amount.isPositive()){
+            amountView.setTextColor(getResources().getColor(R.color.greenNumber));
+        }
 
-                inputRecyclerView.setAdapter(inputAdapter);
-                outputRecyclerView.setAdapter(outputAdapter);
+        amountView.setText(amount.toFriendlyString());
 
-                Coin amount = tx.getValue(kit.wallet());
-                if(amount.isPositive()){
-                    amountView.setTextColor(getResources().getColor(R.color.greenNumber));
-                }
+        txHashView.setText(tx.getHashAsString());
 
-                amountView.setText(amount.toFriendlyString());
+        dateView.setText(Util.getDateTimeString(tx.getUpdateTime()));
+        confidenceTypeView.setText(Util.getConfidenceString(tx.getConfidence().getConfidenceType()));
+        confidenceImageView.setImageResource(Util.getConfidenceResource(tx.getConfidence().getConfidenceType()));
 
-                txHashView.setText(tx.getHashAsString());
-
-                dateView.setText(Util.getDateTimeString(tx.getUpdateTime()));
-                confidenceTypeView.setText(Util.getConfidenceString(tx.getConfidence().getConfidenceType()));
-                confidenceImageView.setImageResource(Util.getConfidenceResource(tx.getConfidence().getConfidenceType()));
-
-                Coin fee = tx.getFee();
-                if(fee == null){
-                    feeView.setText("N/A"); //If transaction wasn't sent by us we don't know fee.
-                }else {
-                    feeView.setText(fee.toFriendlyString());
-                }
-                confirmationView.setText(String.valueOf(tx.getConfidence().getDepthInBlocks()));
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
-            }
-        });
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
+        Coin fee = tx.getFee();
+        if(fee == null){
+            feeView.setText("N/A"); //If transaction wasn't sent by us we don't know fee.
+        }else {
+            feeView.setText(fee.toFriendlyString());
+        }
+        confirmationView.setText(String.valueOf(tx.getConfidence().getDepthInBlocks()));
     }
 }

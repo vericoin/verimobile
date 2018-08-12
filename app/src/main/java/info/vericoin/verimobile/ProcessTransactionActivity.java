@@ -63,6 +63,7 @@ public class ProcessTransactionActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_process_transaction);
+        kit = WalletConnection.getKit();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
@@ -89,31 +90,8 @@ public class ProcessTransactionActivity extends VeriActivity {
                 finish();
             }
         });
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
-            @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                ProcessTransactionActivity.this.kit = kit;
-                sendTransaction();
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
-            }
-        });
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
+        sendTransaction();
     }
 
     public void sendTransaction(){

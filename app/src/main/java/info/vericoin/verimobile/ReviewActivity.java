@@ -50,6 +50,7 @@ public class ReviewActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_review);
+        kit = WalletConnection.getKit();
         bitcoinApplication = (BitcoinApplication) getApplication();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
@@ -63,45 +64,28 @@ public class ReviewActivity extends VeriActivity {
         sendButton = findViewById(R.id.sendButton);
 
         progressBar.setVisibility(GONE);
+
+        try {
+            Coin fee = estimateFee();
+            Coin total = amount.add(fee);
+            amountView.setText(amount.toFriendlyString());
+            feeView.setText(estimateFee().toFriendlyString());
+            totalView.setText(total.toFriendlyString());
+            addrView.setText(address.toString());
+        } catch (Exception e) {
+            Toast.makeText(ReviewActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendTransaction();
+            }
+        });
     }
 
     public Coin estimateFee() {
         return BTC_TRANSACTION_FEE;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
-            @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                ReviewActivity.this.kit = kit;
-                try {
-                    Coin fee = estimateFee();
-                    Coin total = amount.add(fee);
-                    amountView.setText(amount.toFriendlyString());
-                    feeView.setText(estimateFee().toFriendlyString());
-                    totalView.setText(total.toFriendlyString());
-                    addrView.setText(address.toString());
-                } catch (Exception e) {
-                    Toast.makeText(ReviewActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                }
-                sendButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        sendTransaction();
-                    }
-                });
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
-            }
-        });
-
     }
 
     public boolean isWalletEncrypted(){
@@ -120,12 +104,6 @@ public class ReviewActivity extends VeriActivity {
         }else {
             startActivity(ProcessTransactionActivity.createIntent(this, address, amount));
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
     }
 
 }

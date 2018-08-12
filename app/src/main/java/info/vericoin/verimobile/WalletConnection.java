@@ -7,6 +7,7 @@ import android.os.Looper;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 
+import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
@@ -35,48 +36,22 @@ public class WalletConnection {
 
     public interface OnConnectListener{
         void OnSetUpComplete(WalletAppKit kit);
-        void OnSyncComplete();
     }
 
-    private static OnCoinReceiveListener onCoinReceiveListener;
-    private static OnNewBestBlockListener onNewBestBlockListener;
-    private static OnWalletChangeListener onWalletChangeListener;
+    public interface OnSyncCompleteListener{
+        void OnSyncComplete();
+    }
 
     private static boolean startUpComplete = false;
     private static boolean syncComplete = false;
 
-    public interface OnCoinReceiveListener{
-        void onCoinsReceived(final Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance);
-        void onSuccess(final Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance, TransactionConfidence result);
-        void onFailure(final Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance);
-    }
-
-    public interface OnNewBestBlockListener{
-        void newBlock(StoredBlock block);
-    }
-
-    public interface OnWalletChangeListener{
-        void walletChanged(Wallet wallet);
-    }
-
-    public static void setOnWalletChangeListener(OnWalletChangeListener onWalletChangeListener) {
-        WalletConnection.onWalletChangeListener = onWalletChangeListener;
-    }
-
-    public static void setOnNewBestBlockListener(OnNewBestBlockListener onNewBestBlockListener) {
-        WalletConnection.onNewBestBlockListener = onNewBestBlockListener;
-    }
-
-    public static void setOnCoinReceiveListener(OnCoinReceiveListener onCoinReceiveListener) {
-        WalletConnection.onCoinReceiveListener = onCoinReceiveListener;
-    }
-
     private static OnConnectListener connectListener;
+    private static OnSyncCompleteListener syncCompleteListener;
 
     private static NetworkParameters params = TestNet3Params.get();
     public static final String filePrefix = "forwarding-service-testnet";
     private static WalletAppKit kit;
-    public static Executor runInUIThread = new Executor() {
+    private static Executor runInUIThread = new Executor() {
         @Override public void execute(Runnable runnable) {
             Handler handler = new Handler(Looper.getMainLooper());
             // For Android: handler was created in an Activity.onCreate method.
@@ -134,62 +109,6 @@ public class WalletConnection {
                     }
                 });
                 startUpComplete = true;
-
-                wallet().addCoinsReceivedEventListener(runInUIThread, new WalletCoinsReceivedEventListener() {
-                    @Override
-                    public void onCoinsReceived(final Wallet wallet, final Transaction tx, final Coin prevBalance, final Coin newBalance) {
-                        // Runs in the dedicated "user thread".
-                        //
-                        // The transaction "tx" can either be pending, or included into a block (we didn't see the broadcast).
-
-                        // Wait until it's made it into the block chain (may run immediately if it's already there).
-                        //
-                        // For this dummy app of course, we could just forward the unconfirmed transaction. If it were
-                        // to be double spent, no harm done. Wallet.allowSpendingUnconfirmedTransactions() would have to
-                        // be called in onSetupCompleted() above. But we don't do that here to demonstrate the more common
-                        // case of waiting for a block.
-
-                        if(onCoinReceiveListener != null) {
-                            onCoinReceiveListener.onCoinsReceived(wallet, tx, prevBalance, newBalance);
-                        }
-
-                        Futures.addCallback(tx.getConfidence().getDepthFuture(1), new FutureCallback<TransactionConfidence>() {
-                            @Override
-                            public void onSuccess(TransactionConfidence result) {
-                                // "result" here is the same as "tx" above, but we use it anyway for clarity.
-                                if(onCoinReceiveListener != null) {
-                                    onCoinReceiveListener.onSuccess(wallet, tx, prevBalance, newBalance, result);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                if(onCoinReceiveListener != null) {
-                                    onCoinReceiveListener.onFailure(wallet, tx, prevBalance, newBalance);
-                                }
-                            }
-                        }, runInUIThread);
-                    }
-                });
-
-                chain().addNewBestBlockListener(runInUIThread, new NewBestBlockListener() {
-                    @Override
-                    public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
-                        if(onNewBestBlockListener != null){
-                            onNewBestBlockListener.newBlock(block);
-                        }
-                    }
-                });
-
-                wallet().addChangeEventListener(runInUIThread, new WalletChangeEventListener() {
-                    @Override
-                    public void onWalletChanged(Wallet wallet) {
-                        if(onWalletChangeListener != null){
-                            onWalletChangeListener.walletChanged(wallet);
-                        }
-                    }
-                });
-
             }
         };
 
@@ -208,7 +127,6 @@ public class WalletConnection {
         mnemonicCode.add("door");
 
         long creationTimeSeconds = 1533600544;
-
         //kit.restoreWalletFromSeed(new DeterministicSeed(mnemonicCode, null, "", creationTimeSeconds));
 
         if (params == RegTestParams.get()) {
@@ -224,8 +142,8 @@ public class WalletConnection {
         runInUIThread.execute(new Runnable() {
             @Override
             public void run() {
-                if(connectListener != null){
-                    connectListener.OnSyncComplete();
+                if(syncCompleteListener != null){
+                    syncCompleteListener.OnSyncComplete();
                 }
             }
         });
@@ -240,8 +158,13 @@ public class WalletConnection {
             connectListener.OnSetUpComplete(kit);
         }
 
+    }
+
+    public static void setSyncCompleteListener(OnSyncCompleteListener syncCompleteListener) {
+        WalletConnection.syncCompleteListener = syncCompleteListener;
+
         if(kit != null && syncComplete){
-            connectListener.OnSyncComplete();
+            syncCompleteListener.OnSyncComplete();
         }
     }
 
@@ -249,10 +172,4 @@ public class WalletConnection {
         return kit;
     }
 
-    public static void disconnect(){
-        onCoinReceiveListener = null;
-        connectListener = null;
-        onNewBestBlockListener = null;
-        onWalletChangeListener = null;
-    }
 }

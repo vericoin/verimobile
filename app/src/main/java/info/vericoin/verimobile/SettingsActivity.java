@@ -44,11 +44,14 @@ public class SettingsActivity extends VeriActivity {
 
         private CheckBoxPreference secureWindow;
 
+        private WalletAppKit kit;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_screen);
             bitcoinApplication = (BitcoinApplication) getActivity().getApplication();
+            kit = WalletConnection.getKit();
 
             changePasswordRow = findPreference(getString(R.string.change_password_button));
             changePasswordRow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -115,32 +118,15 @@ public class SettingsActivity extends VeriActivity {
         public void onResume() {
             super.onResume();
 
-            WalletConnection.connect(new WalletConnection.OnConnectListener() {
-                @Override
-                public void OnSetUpComplete(WalletAppKit kit) {
-                    if(kit.wallet().isEncrypted()){
-                        lockTransactions.setEnabled(false);
-                    }else if(doesPasswordExist()){
-                        lockTransactions.setEnabled(true);
-                        fingerPrintEnabled.setEnabled(true);
-                    }else{
-                        lockTransactions.setEnabled(false);
-                        fingerPrintEnabled.setEnabled(false);
-                    }
-
-                }
-
-                @Override
-                public void OnSyncComplete() {
-
-                }
-            });
-        }
-
-        @Override
-        public void onPause() {
-            super.onPause();
-            WalletConnection.disconnect();
+            if(kit.wallet().isEncrypted()){
+                lockTransactions.setEnabled(false);
+            }else if(doesPasswordExist()){
+                lockTransactions.setEnabled(true);
+                fingerPrintEnabled.setEnabled(true);
+            }else{
+                lockTransactions.setEnabled(false);
+                fingerPrintEnabled.setEnabled(false);
+            }
         }
 
     }

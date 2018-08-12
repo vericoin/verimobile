@@ -108,10 +108,6 @@ public class CreateWalletActivity extends VeriActivity {
                             ActivityCompat.finishAffinity(CreateWalletActivity.this); //Prevent app from going back to previous activities.
                         }
 
-                        @Override
-                        public void OnSyncComplete() {
-
-                        }
                     });
                 }
             }

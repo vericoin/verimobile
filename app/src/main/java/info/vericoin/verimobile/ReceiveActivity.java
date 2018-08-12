@@ -33,45 +33,23 @@ public class ReceiveActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receive);
+        kit = WalletConnection.getKit();
 
         receiveView = findViewById(R.id.receiveAddr);
         qrImageView = findViewById(R.id.qrImage);
+
+        Address receiveAddr = kit.wallet().currentReceiveAddress();
+        String receiveAddrString = receiveAddr.toString();
+        receiveView.setText(receiveAddrString);
+
+        MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+        try {
+            BitMatrix bitMatrix = multiFormatWriter.encode(receiveAddrString, BarcodeFormat.QR_CODE,400,400);
+            Bitmap bitmap = Util.createBitmap(bitMatrix);
+            qrImageView.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
-            @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                ReceiveActivity.this.kit = kit;
-                Address receiveAddr = kit.wallet().currentReceiveAddress();
-                String receiveAddrString = receiveAddr.toString();
-                receiveView.setText(receiveAddrString);
-
-                MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
-                try {
-                    BitMatrix bitMatrix = multiFormatWriter.encode(receiveAddrString, BarcodeFormat.QR_CODE,400,400);
-                    Bitmap bitmap = Util.createBitmap(bitMatrix);
-                    qrImageView.setImageBitmap(bitmap);
-                } catch (WriterException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
-            }
-        });
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
-    }
 }

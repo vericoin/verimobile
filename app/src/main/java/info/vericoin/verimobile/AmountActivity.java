@@ -56,6 +56,8 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amount);
 
+        kit = WalletConnection.getKit();
+
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
 
         amountParser = new AmountParser(AMOUNT_DEFAULT.toPlainString());
@@ -90,42 +92,19 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
         button9.setOnClickListener(this);
         dotButton.setOnClickListener(this);
         backSpace.setOnClickListener(this);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                AmountActivity.this.kit = kit;
+            public void onClick(View v) {
+                Coin amount = Coin.parseCoin(amountParser.getAmount());
 
-                nextButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Coin amount = Coin.parseCoin(amountParser.getAmount());
-
-                        if(amount.isGreaterThan(kit.wallet().getBalance().add(BTC_TRANSACTION_FEE))){
-                            Toast.makeText(AmountActivity.this, "Wallet does not have enough funds", Toast.LENGTH_LONG).show();
-                        }else {
-                            startActivity(ReviewActivity.createIntent(AmountActivity.this, address, amount));
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
+                if(amount.isGreaterThan(kit.wallet().getBalance().add(BTC_TRANSACTION_FEE))){
+                    Toast.makeText(AmountActivity.this, "Wallet does not have enough funds", Toast.LENGTH_LONG).show();
+                }else {
+                    startActivity(ReviewActivity.createIntent(AmountActivity.this, address, amount));
+                }
             }
         });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
     }
 
     @Override

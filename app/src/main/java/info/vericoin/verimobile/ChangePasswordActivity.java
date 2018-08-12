@@ -40,6 +40,7 @@ public class ChangePasswordActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
+        kit = WalletConnection.getKit();
         bitcoinApplication = (BitcoinApplication) getApplication();
 
         currentPasswordLayout = findViewById(R.id.currentPasswordInputLayout);
@@ -59,6 +60,23 @@ public class ChangePasswordActivity extends VeriActivity {
                     disableNewPassword();
                 }else{
                     enableNewPassword();
+                }
+            }
+        });
+
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetErrors();
+
+                if(!isCurrentPasswordCorrect(getCurrentPassword())){
+                    currentPasswordLayout.setError("Current password is not correct");
+                }else if(!doPasswordsMatch() && !noPasswordBox.isChecked()) {
+                    newPasswordLayout.setError("Passwords do not match");
+                }else if(isNewPasswordEmpty() && !noPasswordBox.isChecked()){
+                    newPasswordLayout.setError("Password can not be empty");
+                }else{
+                    updatePassword(getNewPassword());
                 }
             }
         });
@@ -86,33 +104,6 @@ public class ChangePasswordActivity extends VeriActivity {
             currentPasswordLayout.setEnabled(false);
         }
 
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
-            @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                ChangePasswordActivity.this.kit = kit;
-                changePasswordButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        resetErrors();
-
-                        if(!isCurrentPasswordCorrect(getCurrentPassword())){
-                            currentPasswordLayout.setError("Current password is not correct");
-                        }else if(!doPasswordsMatch() && !noPasswordBox.isChecked()) {
-                            newPasswordLayout.setError("Passwords do not match");
-                        }else if(isNewPasswordEmpty() && !noPasswordBox.isChecked()){
-                            newPasswordLayout.setError("Password can not be empty");
-                        }else{
-                            updatePassword(getNewPassword());
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
-            }
-        });
     }
 
     public boolean doesPasswordExist(){
@@ -210,9 +201,4 @@ public class ChangePasswordActivity extends VeriActivity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
-    }
 }

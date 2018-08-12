@@ -38,6 +38,8 @@ public class RecipientActivity extends VeriActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipient);
 
+        kit = WalletConnection.getKit();
+
         sendAddr = findViewById(R.id.sendAddr);
 
         sendAddr.getEditText().addTextChangedListener(new TextWatcher() {
@@ -66,6 +68,20 @@ public class RecipientActivity extends VeriActivity {
         });
 
         nextButton = findViewById(R.id.nextButton);
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String addressString = sendAddr.getEditText().getText().toString();
+                try {
+                    Address address = Address.fromString(kit.params(), addressString);
+                    startActivity(AmountActivity.createIntent(RecipientActivity.this, address));
+                } catch (AddressFormatException e) {
+                    e.printStackTrace();
+                    sendAddr.setError("Invalid address");
+                }
+            }
+        });
     }
 
     @Override
@@ -78,43 +94,6 @@ public class RecipientActivity extends VeriActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
-            @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                RecipientActivity.this.kit = kit;
-
-                nextButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String addressString = sendAddr.getEditText().getText().toString();
-                        try {
-                            Address address = Address.fromString(kit.params(), addressString);
-                            startActivity(AmountActivity.createIntent(RecipientActivity.this, address));
-                        }catch(AddressFormatException e){
-                            e.printStackTrace();
-                            sendAddr.setError("Invalid address");
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
-            }
-        });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
     }
 
 }

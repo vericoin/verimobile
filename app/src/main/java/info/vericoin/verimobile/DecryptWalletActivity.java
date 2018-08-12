@@ -42,6 +42,7 @@ public class DecryptWalletActivity extends VeriActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decrypt_wallet);
+        kit = WalletConnection.getKit();
         bitcoinApplication = (BitcoinApplication) getApplication();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
@@ -51,41 +52,18 @@ public class DecryptWalletActivity extends VeriActivity{
 
         passwordLayout = findViewById(R.id.passwordLayout);
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
+        unlockButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                DecryptWalletActivity.this.kit = kit;
-                unlockButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(isPasswordCorrect()){
-                            startActivity(ProcessTransactionActivity.createIntent(DecryptWalletActivity.this, address, amount, getPassword()));
-                            finish(); //Prevent app from going back to this activity after its finished.
-                        }else{
-                            passwordLayout.setError("Password is incorrect");
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
+            public void onClick(View v) {
+                if(isPasswordCorrect()){
+                    startActivity(ProcessTransactionActivity.createIntent(DecryptWalletActivity.this, address, amount, getPassword()));
+                    finish(); //Prevent app from going back to this activity after its finished.
+                }else{
+                    passwordLayout.setError("Password is incorrect");
+                }
             }
         });
 
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
     }
 
     public String getPassword(){

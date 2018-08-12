@@ -35,10 +35,6 @@ public class SplashActivity extends VeriActivity {
                     finish(); //Prevent app from going back to this activity after its finished.
                 }
 
-                @Override
-                public void OnSyncComplete() {
-
-                }
             });
         }else {
             startActivity(WelcomeActivity.createIntent(SplashActivity.this));
@@ -50,9 +46,4 @@ public class SplashActivity extends VeriActivity {
         return bitcoinApplication.doesPasswordExist();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
-    }
 }
