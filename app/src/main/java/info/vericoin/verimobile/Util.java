@@ -1,5 +1,10 @@
 package info.vericoin.verimobile;
 
+import android.graphics.Bitmap;
+import android.graphics.Color;
+
+import com.google.zxing.common.BitMatrix;
+
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
@@ -11,6 +16,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.util.Date;
+
+import static android.graphics.Color.BLACK;
+import static android.graphics.Color.WHITE;
 
 public class Util {
 
@@ -33,6 +41,22 @@ public class Util {
         } else{
             return R.drawable.transaction_unknown;
         }
+    }
+
+    public static Bitmap createBitmap(BitMatrix matrix) {
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+        int[] pixels = new int[width * height];
+        for (int y = 0; y < height; y++) {
+            int offset = y * width;
+            for (int x = 0; x < width; x++) {
+                pixels[offset + x] = matrix.get(x, y) ? BLACK : Color.TRANSPARENT;
+            }
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+        return bitmap;
     }
 
     public static String getConfidenceString(TransactionConfidence.ConfidenceType confidenceType){

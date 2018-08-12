@@ -17,7 +17,7 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.kits.WalletAppKit;
 
-public class ReceiveActivity extends VeriActivity {
+public class ReceiveActivity extends AppCompatActivity {
 
     private WalletAppKit kit;
 
@@ -54,8 +54,7 @@ public class ReceiveActivity extends VeriActivity {
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                 try {
                     BitMatrix bitMatrix = multiFormatWriter.encode(receiveAddrString, BarcodeFormat.QR_CODE,400,400);
-                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                    Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                    Bitmap bitmap = Util.createBitmap(bitMatrix);
                     qrImageView.setImageBitmap(bitmap);
                 } catch (WriterException e) {
                     e.printStackTrace();
