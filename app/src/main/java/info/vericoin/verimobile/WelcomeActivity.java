@@ -13,7 +13,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private Button importWalletButton;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, WelcomeActivity.class);
     }
 

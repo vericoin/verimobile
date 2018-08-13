@@ -12,19 +12,19 @@
 \u2022 Exponentially More Secure Than Traditional POS \n
 \u2022 Energy Efficient Network Consensus</string>
 
-<string name="verium_benefits">
+    <string name="verium_benefits">
 \u2022 Mine With Your CPU \n
 \u2022 ASIC and GPU Resistant Means True Decentralization \n
 \u2022 Variable Blocktime That Increases As Mining Power Increases \n
 </string>
 
-<string name="binary_desc">
+    <string name="binary_desc">
     The Binary Chain - Proof of Work + Proof of Stake - Paired By Design
 </string>
 
-<string name="change_password_button">changePassword</string>
-<string name="lock_transactions_key">lockTransactions</string>
-<string name="fingerprint_enabled_key">enableFingerprint</string>
-<string name="secure_window_key">secureWindow</string>
+    <string name="change_password_button">changePassword</string>
+    <string name="lock_transactions_key">lockTransactions</string>
+    <string name="fingerprint_enabled_key">enableFingerprint</string>
+    <string name="secure_window_key">secureWindow</string>
 
 </resources>

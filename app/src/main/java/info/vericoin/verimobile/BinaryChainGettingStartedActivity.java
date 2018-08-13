@@ -11,14 +11,14 @@ public class BinaryChainGettingStartedActivity extends AppCompatActivity {
 
     private Button nextButton;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, BinaryChainGettingStartedActivity.class);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.binary_chain_getting_started);
+        setContentView(R.layout.activity_binary_getting_started);
 
         nextButton = findViewById(R.id.nextButton);
         nextButton.setOnClickListener(new View.OnClickListener() {

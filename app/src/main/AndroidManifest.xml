@@ -3,8 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="info.vericoin.verimobile">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" /> <!--This is required to support Android API (23-27) -->
+    <uses-feature android:name="android.hardware.camera"/>
+
     <application
-        android:name="info.vericoin.verimobile.BitcoinApplication"
+        android:name="info.vericoin.verimobile.VeriMobileApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,8 +20,8 @@
         android:theme="@style/AppTheme.Light">
 
         <activity android:name="info.vericoin.verimobile.SplashActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,12 +50,13 @@
             android:screenOrientation="portrait"/>
 
         <activity android:name=".ProcessTransactionActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".ReceiveActivity"
             android:label="Receive Address"
             android:screenOrientation="portrait"/>
+
         <activity android:name=".TransactionDetailActivity"
             android:label="Transaction Details"
             android:screenOrientation="portrait"/>
@@ -99,10 +107,4 @@
             android:resource="@array/preloaded_fonts" />
 
     </application>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-    <uses-feature android:name="android.hardware.camera"/>
 </manifest>

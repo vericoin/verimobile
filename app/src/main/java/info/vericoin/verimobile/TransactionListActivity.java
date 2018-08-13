@@ -3,16 +3,14 @@ package info.vericoin.verimobile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +23,7 @@ public class TransactionListActivity extends VeriActivity {
     private TransactionListAdapter mAdapter;
     private WalletAppKit kit;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, TransactionListActivity.class);
     }
 
@@ -33,6 +31,8 @@ public class TransactionListActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_list);
+
+        kit = WalletConnection.getKit();
 
         mRecyclerView = findViewById(R.id.recyclerView);
 
@@ -47,57 +47,26 @@ public class TransactionListActivity extends VeriActivity {
         DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(),
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
+
+        List<Transaction> myDataset = getDataSet();
+        // specify an adapter (see also next example)
+        if (mAdapter == null) {
+            mAdapter = new TransactionListAdapter(TransactionListActivity.this, myDataset);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setmDataset(myDataset);
+        }
+
+        kit.wallet().addChangeEventListener(WalletConnection.getRunInUIThread(), new WalletChangeEventListener() {
+            @Override
+            public void onWalletChanged(Wallet wallet) {
+                mAdapter.setmDataset(getDataSet());
+            }
+        });
     }
 
-    public ArrayList<Transaction> getDataSet(){
+    public ArrayList<Transaction> getDataSet() {
         return new ArrayList<>(kit.wallet().getTransactionsByTime());
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
-
-            @Override
-            public void OnSetUpComplete(WalletAppKit kit) {
-                TransactionListActivity.this.kit = kit;
-
-                List<Transaction> myDataset = getDataSet();
-                // specify an adapter (see also next example)
-                if(mAdapter == null) {
-                    mAdapter = new TransactionListAdapter(TransactionListActivity.this, myDataset);
-                    mRecyclerView.setAdapter(mAdapter);
-                }else{
-                    mAdapter.setmDataset(myDataset);
-                }
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
-            }
-        });
-        WalletConnection.setOnCoinReceiveListener(new WalletConnection.OnCoinReceiveListener() {
-            @Override
-            public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-                mAdapter.setmDataset(getDataSet());
-            }
-
-            @Override
-            public void onSuccess(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance, TransactionConfidence result) {
-                mAdapter.setmDataset(getDataSet());
-            }
-
-            @Override
-            public void onFailure(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-                mAdapter.setmDataset(getDataSet());
-            }
-        });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
-    }
 }

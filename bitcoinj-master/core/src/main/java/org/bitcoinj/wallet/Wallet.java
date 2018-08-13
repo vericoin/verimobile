@@ -3389,9 +3389,7 @@ public class Wallet extends BaseTaggableObject
         long lastBlock = getLastBlockSeenTimeSecs();
         long currentTime = System.currentTimeMillis() / 1000; //Convert to seconds
 
-        double percent = (double)(lastBlock - start) / (double)(currentTime - start) * 100;
-
-        return (double)Math.round(percent * 100) / 100;
+        return lastBlock > 0 ? (double)(lastBlock - start) / (double)(currentTime - start) * 100 : 0;
     }
 
     /**

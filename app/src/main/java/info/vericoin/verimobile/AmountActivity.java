@@ -3,7 +3,6 @@ package info.vericoin.verimobile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,7 +15,7 @@ import org.bitcoinj.kits.WalletAppKit;
 
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
-public class AmountActivity extends VeriActivity implements View.OnClickListener{
+public class AmountActivity extends VeriActivity implements View.OnClickListener {
 
     private final static String ADDRESS_EXTRA = "address";
 
@@ -45,7 +44,7 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
 
     private WalletAppKit kit;
 
-    public static Intent createIntent(Context context, Address address){
+    public static Intent createIntent(Context context, Address address) {
         Intent intent = new Intent(context, AmountActivity.class);
         intent.putExtra(ADDRESS_EXTRA, address);
         return intent;
@@ -55,6 +54,8 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amount);
+
+        kit = WalletConnection.getKit();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
 
@@ -90,47 +91,24 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
         button9.setOnClickListener(this);
         dotButton.setOnClickListener(this);
         backSpace.setOnClickListener(this);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
+        nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                AmountActivity.this.kit = kit;
+            public void onClick(View v) {
+                Coin amount = Coin.parseCoin(amountParser.getAmount());
 
-                nextButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Coin amount = Coin.parseCoin(amountParser.getAmount());
-
-                        if(amount.isGreaterThan(kit.wallet().getBalance().add(BTC_TRANSACTION_FEE))){
-                            Toast.makeText(AmountActivity.this, "Wallet does not have enough funds", Toast.LENGTH_LONG).show();
-                        }else {
-                            startActivity(ReviewActivity.createIntent(AmountActivity.this, address, amount));
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
+                if (amount.isGreaterThan(kit.wallet().getBalance().add(BTC_TRANSACTION_FEE))) {
+                    Toast.makeText(AmountActivity.this, "Wallet does not have enough funds", Toast.LENGTH_LONG).show();
+                } else {
+                    startActivity(ReviewActivity.createIntent(AmountActivity.this, address, amount));
+                }
             }
         });
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
-    }
-
-    @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.button0:
                 amountParser.addDigit("0");
                 break;

@@ -5,17 +5,16 @@ import android.view.WindowManager;
 
 public class VeriActivity extends AppCompatActivity {
 
-    private BitcoinApplication bitcoinApplication;
+    private VeriMobileApplication veriMobileApplication;
 
     @Override
-    protected void onResume(){
-        super.onResume();
+    protected void onPause() {
+        super.onPause();
+        veriMobileApplication = (VeriMobileApplication) getApplication();
 
-        bitcoinApplication = (BitcoinApplication) getApplication();
-
-        if(bitcoinApplication.isSecureWindowEnabled()){
+        if (veriMobileApplication.isSecureWindowEnabled()) {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        }else{
+        } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_SECURE);
         }
     }

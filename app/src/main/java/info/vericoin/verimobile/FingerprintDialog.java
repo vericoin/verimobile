@@ -2,13 +2,11 @@ package info.vericoin.verimobile;
 
 import android.annotation.TargetApi;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,11 +17,6 @@ public class FingerprintDialog extends DialogFragment {
 
     private ImageView imageView;
     private TextView message;
-
-    public interface OnAuthListener{
-        void onSuccess();
-    }
-
     private OnAuthListener listener;
 
     public void setListener(OnAuthListener listener) {
@@ -38,10 +31,10 @@ public class FingerprintDialog extends DialogFragment {
             @Override
             public void onAuthenticationError(int errorCode, CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
-                if(errorCode == FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
+                if (errorCode == FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
                     message.setText("Touch Sensor");
                     imageView.setImageResource(R.drawable.ic_baseline_fingerprint_dark);
-                }else{
+                } else {
                     message.setText(errString);
                     imageView.setImageResource(R.drawable.ic_error);
                 }
@@ -60,7 +53,7 @@ public class FingerprintDialog extends DialogFragment {
                 message.setText("Authentication Success!");
                 imageView.setImageResource(R.drawable.ic_baseline_fingerprint_dark);
 
-                if(listener != null){
+                if (listener != null) {
                     listener.onSuccess();
                 }
             }
@@ -91,6 +84,10 @@ public class FingerprintDialog extends DialogFragment {
                     }
                 });
         return builder.create();
+    }
+
+    public interface OnAuthListener {
+        void onSuccess();
     }
 
 }

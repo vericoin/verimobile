@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -181,9 +180,9 @@
             android:id="@+id/backSpace"
             android:layout_width="0dp"
             android:layout_height="75dp"
+            android:background="?android:attr/selectableItemBackground"
             android:paddingBottom="24dp"
             android:paddingTop="24dp"
-            android:background="?android:attr/selectableItemBackground"
             app:srcCompat="@drawable/ic_baseline_backspace_24px"
             grid:layout_columnWeight="1"
             grid:layout_gravity="fill_horizontal" />

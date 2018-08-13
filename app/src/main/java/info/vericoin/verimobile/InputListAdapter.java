@@ -1,52 +1,24 @@
 package info.vericoin.verimobile;
 
-import android.content.Context;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
-import org.bitcoinj.core.Utils;
-import org.bitcoinj.crypto.PBKDF2SHA512;
 import org.bitcoinj.kits.WalletAppKit;
 
-import java.text.DateFormat;
 import java.util.List;
 
 public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.ViewHolder> {
 
     private List<TransactionInput> mDataset;
-    private Context context;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-
-        public TextView address;
-        public TextView amount;
-
-        public ViewHolder(ConstraintLayout v) {
-            super(v);
-            address = v.findViewById(R.id.address);
-            amount = v.findViewById(R.id.amount);
-        }
-    }
-
-    // Provide a suitable constructor (depends on the kind of dataset)
-    public InputListAdapter(Context context, List<TransactionInput> myDataset) {
+    public InputListAdapter(List<TransactionInput> myDataset) {
         mDataset = myDataset;
-        this.context = context;
     }
 
     public void setmDataset(List<TransactionInput> mDataset) {
@@ -57,7 +29,7 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
     // Create new views (invoked by the layout manager)
     @Override
     public InputListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                int viewType) {
+                                                          int viewType) {
         // create a new view
         ConstraintLayout v = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.transaction_put, parent, false);
@@ -77,16 +49,16 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
         WalletAppKit kit = WalletConnection.getKit();
 
         Coin value = put.getValue();
-        if(value == null){
+        if (value == null) {
             holder.amount.setText("N/A");
-        }else {
+        } else {
             holder.amount.setText(value.toFriendlyString());
         }
 
         TransactionOutput output = put.getConnectedOutput();
-        try{
+        try {
             holder.address.setText(output.getAddressFromP2PKHScript(kit.params()).toBase58());
-        }catch(Exception e){
+        } catch (Exception e) {
             holder.address.setText("N/A");
         }
 
@@ -96,5 +68,21 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    // Provide a reference to the views for each data item
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+
+        public TextView address;
+        public TextView amount;
+
+        public ViewHolder(ConstraintLayout v) {
+            super(v);
+            address = v.findViewById(R.id.address);
+            amount = v.findViewById(R.id.amount);
+        }
     }
 }

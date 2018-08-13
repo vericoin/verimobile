@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,7 +13,6 @@ import android.widget.Toast;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.Wallet;
@@ -46,11 +44,11 @@ public class ProcessTransactionActivity extends VeriActivity {
 
     private String password;
 
-    public static Intent createIntent(Context context, Address toAddr, Coin amount){
+    public static Intent createIntent(Context context, Address toAddr, Coin amount) {
         return createIntent(context, toAddr, amount, "");
     }
 
-    public static Intent createIntent(Context context, Address toAddr, Coin amount, String password){
+    public static Intent createIntent(Context context, Address toAddr, Coin amount, String password) {
         Intent intent = new Intent(context, ProcessTransactionActivity.class);
         intent.putExtra(ADDRESS_EXTRA, toAddr);
         intent.putExtra(AMOUNT_EXTRA, amount);
@@ -63,6 +61,7 @@ public class ProcessTransactionActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_process_transaction);
+        kit = WalletConnection.getKit();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
@@ -89,41 +88,18 @@ public class ProcessTransactionActivity extends VeriActivity {
                 finish();
             }
         });
+
+        sendTransaction();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
-            @Override
-            public void OnSetUpComplete(final WalletAppKit kit) {
-                ProcessTransactionActivity.this.kit = kit;
-                sendTransaction();
-            }
-
-            @Override
-            public void OnSyncComplete() {
-
-            }
-        });
-
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
-    }
-
-    public void sendTransaction(){
+    public void sendTransaction() {
         new Thread(new Runnable() {
             public void run() {
                 try {
                     SendRequest request = SendRequest.to(address, amount);
                     request.feeNeeded = BTC_TRANSACTION_FEE;
 
-                    if(!password.isEmpty()) { //If password is required to decrypt wallet add it to request.
+                    if (!password.isEmpty()) { //If password is required to decrypt wallet add it to request.
                         request.aesKey = kit.wallet().getKeyCrypter().deriveKey(password);
                     }
 
@@ -158,11 +134,11 @@ public class ProcessTransactionActivity extends VeriActivity {
         }).start();
     }
 
-    public void broadcastWaiting(){
+    public void broadcastWaiting() {
         statusView.setText("Broadcasting Transaction...");
     }
 
-    public void broadcastComplete(String txHash){
+    public void broadcastComplete(String txHash) {
         txHashView.setText(txHash);
         progressBar.setVisibility(GONE);
         doneButton.setVisibility(View.VISIBLE);
@@ -171,7 +147,7 @@ public class ProcessTransactionActivity extends VeriActivity {
         statusView.setText("Broadcast Complete!");
     }
 
-    public void broadcastFailed(String message){
+    public void broadcastFailed(String message) {
         Toast.makeText(ProcessTransactionActivity.this, message, Toast.LENGTH_LONG).show();
         progressBar.setVisibility(GONE);
         doneButton.setVisibility(View.VISIBLE);
@@ -179,7 +155,7 @@ public class ProcessTransactionActivity extends VeriActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         //Do nothing. (We don't want user to go back while a transaction is being processed.)
     }
 

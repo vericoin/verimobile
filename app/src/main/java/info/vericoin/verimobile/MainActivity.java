@@ -2,9 +2,8 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,20 +11,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionConfidence;
+import org.bitcoinj.core.VerificationException;
+import org.bitcoinj.core.listeners.NewBestBlockListener;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -44,7 +45,7 @@ public class MainActivity extends VeriActivity {
 
     private Button viewTransactionsButton;
 
-    private ConstraintLayout synchingBlock;
+    private ConstraintLayout syncingBlock;
 
     private TextView lastSeenBlockDate;
 
@@ -53,7 +54,7 @@ public class MainActivity extends VeriActivity {
 
     private TransactionListAdapter mAdapter;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
         return intent;
@@ -64,16 +65,17 @@ public class MainActivity extends VeriActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        kit = WalletConnection.getKit();
+
         unconfirmedBalance = findViewById(R.id.unconfirmedBalance);
         availableBalance = findViewById(R.id.availableBalance);
         blockHeight = findViewById(R.id.blockHeight);
         sendButton = findViewById(R.id.sendButton);
         receiveButton = findViewById(R.id.receiveButton);
         viewTransactionsButton = findViewById(R.id.viewTransactionsButton);
-        synchingBlock = findViewById(R.id.synchingBlock);
+        syncingBlock = findViewById(R.id.synchingBlock);
         percentComplete = findViewById(R.id.percentComplete);
         lastSeenBlockDate = findViewById(R.id.lastSeenBlockDate);
-
         mRecyclerView = findViewById(R.id.recyclerView);
 
         // use this setting to improve performance if you know that changes
@@ -108,88 +110,64 @@ public class MainActivity extends VeriActivity {
                 startActivity(ReceiveActivity.createIntent(MainActivity.this));
             }
         });
+
+        setBalances(kit.wallet());
+        updateBlockInformation();
+
+        List<Transaction> myDataset = getDataSet();
+        // specify an adapter (see also next example)
+        if (mAdapter == null) {
+            mAdapter = new TransactionListAdapter(MainActivity.this, myDataset);
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setmDataset(myDataset);
+        }
+
+        WalletConnection.setSyncCompleteListener(new WalletConnection.OnSyncCompleteListener() {
+            @Override
+            public void OnSyncComplete() {
+                syncingBlock.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
-    public ArrayList<Transaction> getDataSet(){
+    public ArrayList<Transaction> getDataSet() {
         List<Transaction> transactions = kit.wallet().getTransactionsByTime();
         return new ArrayList<>(transactions.subList(0, Math.min(RECENT_TRANSACTION_SIZE, transactions.size())));
+    }
+
+    public void updateBlockInformation() {
+        setBlockHeight(kit.wallet().getLastBlockSeenHeight());
+        setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
+        setPercentComplete(kit.wallet().getEstBlockchainPercentComplete());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        WalletConnection.connect(new WalletConnection.OnConnectListener() {
 
+        kit.wallet().addChangeEventListener(WalletConnection.getRunInUIThread(), new WalletChangeEventListener() {
             @Override
-            public void OnSetUpComplete(WalletAppKit kit) {
-                MainActivity.this.kit = kit;
-
-                setBalances(kit.wallet());
-                setBlockHeight(kit.wallet().getLastBlockSeenHeight());
-                setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
-                setPercentComplete(kit.wallet().getEstBlockchainPercentComplete());
-
-                List<Transaction> myDataset = getDataSet();
-                // specify an adapter (see also next example)
-                if(mAdapter == null) {
-                    mAdapter = new TransactionListAdapter(MainActivity.this, myDataset);
-                    mRecyclerView.setAdapter(mAdapter);
-                }else{
-                    mAdapter.setmDataset(myDataset);
-                }
-            }
-
-            @Override
-            public void OnSyncComplete() {
-                synchingBlock.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        WalletConnection.setOnWalletChangeListener(new WalletConnection.OnWalletChangeListener() {
-            @Override
-            public void walletChanged(Wallet wallet) {
+            public void onWalletChanged(Wallet wallet) {
                 setBalances(wallet);
-            }
-        });
-
-        WalletConnection.setOnNewBestBlockListener(new WalletConnection.OnNewBestBlockListener() {
-            @Override
-            public void newBlock(StoredBlock block) {
-                setBlockHeight(block.getHeight());
-                setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
-                setPercentComplete(kit.wallet().getEstBlockchainPercentComplete());
-            }
-        });
-
-        WalletConnection.setOnCoinReceiveListener(new WalletConnection.OnCoinReceiveListener() {
-            @Override
-            public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-                mAdapter.setmDataset(getDataSet());
-            }
-
-            @Override
-            public void onSuccess(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance, TransactionConfidence result) {
-                mAdapter.setmDataset(getDataSet());
-            }
-
-            @Override
-            public void onFailure(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
                 mAdapter.setmDataset(getDataSet());
             }
         });
+
+        kit.chain().addNewBestBlockListener(WalletConnection.getRunInUIThread(), new NewBestBlockListener() {
+            @Override
+            public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
+                updateBlockInformation();
+            }
+        });
+
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        WalletConnection.disconnect();
-    }
-
-    public void setBlockHeight(int height){
+    public void setBlockHeight(int height) {
         blockHeight.setText(String.valueOf(height));
     }
 
-    public void setBalances(Wallet wallet){
+    public void setBalances(Wallet wallet) {
         Coin available = wallet.getBalance(Wallet.BalanceType.AVAILABLE);
         Coin estimated = wallet.getBalance(Wallet.BalanceType.ESTIMATED);
         Coin unconfirmed = estimated.subtract(available);
@@ -197,19 +175,19 @@ public class MainActivity extends VeriActivity {
         setAvailableBalance(available);
     }
 
-    public void setPercentComplete(double percent){
-        percentComplete.setText(String.valueOf(percent) + " %");
+    public void setPercentComplete(double percent) {
+        percentComplete.setText(String.format(Locale.getDefault(), "%.2f %%", percent));
     }
 
-    public void setLastSeenBlockDate(Date date){
+    public void setLastSeenBlockDate(Date date) {
         lastSeenBlockDate.setText(Util.getDateTimeString(date));
     }
 
-    public void setUnconfirmedBalance(Coin coin){
+    public void setUnconfirmedBalance(Coin coin) {
         unconfirmedBalance.setText(coin.toFriendlyString());
     }
 
-    public void setAvailableBalance(Coin coin){
+    public void setAvailableBalance(Coin coin) {
         availableBalance.setText(coin.toFriendlyString());
     }
 
