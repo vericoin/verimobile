@@ -17,11 +17,6 @@ public class FingerprintDialog extends DialogFragment {
 
     private ImageView imageView;
     private TextView message;
-
-    public interface OnAuthListener{
-        void onSuccess();
-    }
-
     private OnAuthListener listener;
 
     public void setListener(OnAuthListener listener) {
@@ -36,10 +31,10 @@ public class FingerprintDialog extends DialogFragment {
             @Override
             public void onAuthenticationError(int errorCode, CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
-                if(errorCode == FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
+                if (errorCode == FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
                     message.setText("Touch Sensor");
                     imageView.setImageResource(R.drawable.ic_baseline_fingerprint_dark);
-                }else{
+                } else {
                     message.setText(errString);
                     imageView.setImageResource(R.drawable.ic_error);
                 }
@@ -58,7 +53,7 @@ public class FingerprintDialog extends DialogFragment {
                 message.setText("Authentication Success!");
                 imageView.setImageResource(R.drawable.ic_baseline_fingerprint_dark);
 
-                if(listener != null){
+                if (listener != null) {
                     listener.onSuccess();
                 }
             }
@@ -89,6 +84,10 @@ public class FingerprintDialog extends DialogFragment {
                     }
                 });
         return builder.create();
+    }
+
+    public interface OnAuthListener {
+        void onSuccess();
     }
 
 }

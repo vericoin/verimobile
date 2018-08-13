@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 
-public class BitcoinApplication extends MultiDexApplication {
+public class VeriMobileApplication extends MultiDexApplication {
 
     private final static String PASSWORD_HASH_PREF = "passwordHash";
 
@@ -24,11 +24,11 @@ public class BitcoinApplication extends MultiDexApplication {
         defaultPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
     }
 
-    public boolean checkPassword(String password){
-        String passwordHash = sharedPref.getString(PASSWORD_HASH_PREF,"");
-        if(passwordHash.isEmpty()){
+    public boolean checkPassword(String password) {
+        String passwordHash = sharedPref.getString(PASSWORD_HASH_PREF, "");
+        if (passwordHash.isEmpty()) {
             return true; //There is no password
-        }else {
+        } else {
             return passwordHash.equals(Util.hashStringSHA256(password));
         }
     }
@@ -37,32 +37,32 @@ public class BitcoinApplication extends MultiDexApplication {
         return defaultPref.getBoolean(getString(R.string.lock_transactions_key), false);
     }
 
-    public boolean doesPasswordExist(){
-        String password = sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
-        if(password.isEmpty()){
+    public boolean doesPasswordExist() {
+        String password = sharedPref.getString(VeriMobileApplication.PASSWORD_HASH_PREF, "");
+        if (password.isEmpty()) {
             return false;
-        }else{
+        } else {
             return true;
         }
     }
 
-    public void removePassword(){
-        sharedPref.edit().remove(BitcoinApplication.PASSWORD_HASH_PREF).apply();
+    public void removePassword() {
+        sharedPref.edit().remove(VeriMobileApplication.PASSWORD_HASH_PREF).apply();
     }
 
-    public void newPassword(String newPassword){
-        sharedPref.edit().putString(BitcoinApplication.PASSWORD_HASH_PREF, Util.hashStringSHA256(newPassword)).apply();
+    public void newPassword(String newPassword) {
+        sharedPref.edit().putString(VeriMobileApplication.PASSWORD_HASH_PREF, Util.hashStringSHA256(newPassword)).apply();
     }
 
-    public String getPasswordHash(){
-        return sharedPref.getString(BitcoinApplication.PASSWORD_HASH_PREF, "");
+    public String getPasswordHash() {
+        return sharedPref.getString(VeriMobileApplication.PASSWORD_HASH_PREF, "");
     }
 
-    public boolean isFingerPrintEnabled(){
+    public boolean isFingerPrintEnabled() {
         return defaultPref.getBoolean(getString(R.string.fingerprint_enabled_key), true);
     }
 
-    public boolean isSecureWindowEnabled(){
+    public boolean isSecureWindowEnabled() {
         return defaultPref.getBoolean(getString(R.string.secure_window_key), true);
     }
 

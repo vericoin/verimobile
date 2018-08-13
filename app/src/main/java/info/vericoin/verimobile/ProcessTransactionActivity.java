@@ -44,11 +44,11 @@ public class ProcessTransactionActivity extends VeriActivity {
 
     private String password;
 
-    public static Intent createIntent(Context context, Address toAddr, Coin amount){
+    public static Intent createIntent(Context context, Address toAddr, Coin amount) {
         return createIntent(context, toAddr, amount, "");
     }
 
-    public static Intent createIntent(Context context, Address toAddr, Coin amount, String password){
+    public static Intent createIntent(Context context, Address toAddr, Coin amount, String password) {
         Intent intent = new Intent(context, ProcessTransactionActivity.class);
         intent.putExtra(ADDRESS_EXTRA, toAddr);
         intent.putExtra(AMOUNT_EXTRA, amount);
@@ -92,14 +92,14 @@ public class ProcessTransactionActivity extends VeriActivity {
         sendTransaction();
     }
 
-    public void sendTransaction(){
+    public void sendTransaction() {
         new Thread(new Runnable() {
             public void run() {
                 try {
                     SendRequest request = SendRequest.to(address, amount);
                     request.feeNeeded = BTC_TRANSACTION_FEE;
 
-                    if(!password.isEmpty()) { //If password is required to decrypt wallet add it to request.
+                    if (!password.isEmpty()) { //If password is required to decrypt wallet add it to request.
                         request.aesKey = kit.wallet().getKeyCrypter().deriveKey(password);
                     }
 
@@ -134,11 +134,11 @@ public class ProcessTransactionActivity extends VeriActivity {
         }).start();
     }
 
-    public void broadcastWaiting(){
+    public void broadcastWaiting() {
         statusView.setText("Broadcasting Transaction...");
     }
 
-    public void broadcastComplete(String txHash){
+    public void broadcastComplete(String txHash) {
         txHashView.setText(txHash);
         progressBar.setVisibility(GONE);
         doneButton.setVisibility(View.VISIBLE);
@@ -147,7 +147,7 @@ public class ProcessTransactionActivity extends VeriActivity {
         statusView.setText("Broadcast Complete!");
     }
 
-    public void broadcastFailed(String message){
+    public void broadcastFailed(String message) {
         Toast.makeText(ProcessTransactionActivity.this, message, Toast.LENGTH_LONG).show();
         progressBar.setVisibility(GONE);
         doneButton.setVisibility(View.VISIBLE);
@@ -155,7 +155,7 @@ public class ProcessTransactionActivity extends VeriActivity {
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         //Do nothing. (We don't want user to go back while a transaction is being processed.)
     }
 

@@ -27,7 +27,7 @@ public class RecipientActivity extends VeriActivity {
 
     private ConstraintLayout scanButton;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, RecipientActivity.class);
     }
 
@@ -70,6 +70,7 @@ public class RecipientActivity extends VeriActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sendAddr.setErrorEnabled(false);
                 String addressString = sendAddr.getEditText().getText().toString();
                 try {
                     Address address = Address.fromString(kit.params(), addressString);
@@ -85,8 +86,8 @@ public class RecipientActivity extends VeriActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() != null) {
+        if (result != null) {
+            if (result.getContents() != null) {
                 sendAddr.getEditText().setText(result.getContents());
             }
         } else {

@@ -15,7 +15,7 @@ import org.bitcoinj.kits.WalletAppKit;
 
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
-public class AmountActivity extends VeriActivity implements View.OnClickListener{
+public class AmountActivity extends VeriActivity implements View.OnClickListener {
 
     private final static String ADDRESS_EXTRA = "address";
 
@@ -44,7 +44,7 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
 
     private WalletAppKit kit;
 
-    public static Intent createIntent(Context context, Address address){
+    public static Intent createIntent(Context context, Address address) {
         Intent intent = new Intent(context, AmountActivity.class);
         intent.putExtra(ADDRESS_EXTRA, address);
         return intent;
@@ -97,9 +97,9 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
             public void onClick(View v) {
                 Coin amount = Coin.parseCoin(amountParser.getAmount());
 
-                if(amount.isGreaterThan(kit.wallet().getBalance().add(BTC_TRANSACTION_FEE))){
+                if (amount.isGreaterThan(kit.wallet().getBalance().add(BTC_TRANSACTION_FEE))) {
                     Toast.makeText(AmountActivity.this, "Wallet does not have enough funds", Toast.LENGTH_LONG).show();
-                }else {
+                } else {
                     startActivity(ReviewActivity.createIntent(AmountActivity.this, address, amount));
                 }
             }
@@ -108,7 +108,7 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.button0:
                 amountParser.addDigit("0");
                 break;

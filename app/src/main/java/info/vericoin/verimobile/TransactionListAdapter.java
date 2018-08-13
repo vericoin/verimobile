@@ -20,27 +20,6 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
     private List<Transaction> mDataset;
     private Context context;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
-        public ConstraintLayout constraintLayout;
-        public TextView txHash;
-        public TextView date;
-        public TextView value;
-        public ImageView confidenceImage;
-
-        public ViewHolder(ConstraintLayout v) {
-            super(v);
-            constraintLayout = v;
-            txHash = v.findViewById(R.id.txHash);
-            date = v.findViewById(R.id.date);
-            value = v.findViewById(R.id.value);
-            confidenceImage = v.findViewById(R.id.confidenceImage);
-        }
-    }
-
     // Provide a suitable constructor (depends on the kind of dataset)
     public TransactionListAdapter(Context context, List<Transaction> myDataset) {
         mDataset = myDataset;
@@ -82,9 +61,9 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         holder.date.setText(Util.getDateString(tx.getUpdateTime()));
 
         Coin amount = tx.getValue(kit.wallet());
-        if(amount.isPositive()){
+        if (amount.isPositive()) {
             holder.value.setTextColor(context.getResources().getColor(R.color.greenNumber));
-        }else{
+        } else {
             holder.value.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
         }
         holder.value.setText(amount.toFriendlyString());
@@ -102,5 +81,26 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    // Provide a reference to the views for each data item
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public ConstraintLayout constraintLayout;
+        public TextView txHash;
+        public TextView date;
+        public TextView value;
+        public ImageView confidenceImage;
+
+        public ViewHolder(ConstraintLayout v) {
+            super(v);
+            constraintLayout = v;
+            txHash = v.findViewById(R.id.txHash);
+            date = v.findViewById(R.id.date);
+            value = v.findViewById(R.id.value);
+            confidenceImage = v.findViewById(R.id.confidenceImage);
+        }
     }
 }

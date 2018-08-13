@@ -14,7 +14,7 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.kits.WalletAppKit;
 
-public class TransactionDetailActivity extends VeriActivity{
+public class TransactionDetailActivity extends VeriActivity {
 
     private final static String TX_EXTRA = "Transaction";
 
@@ -41,7 +41,7 @@ public class TransactionDetailActivity extends VeriActivity{
     private LinearLayoutManager inputLayoutManager;
     private LinearLayoutManager outputLayoutManager;
 
-    public static Intent createIntent(Context context, String txString){
+    public static Intent createIntent(Context context, String txString) {
         Intent intent = new Intent(context, TransactionDetailActivity.class);
         intent.putExtra(TX_EXTRA, txString);
         return intent;
@@ -82,7 +82,7 @@ public class TransactionDetailActivity extends VeriActivity{
         setUpTransactionDetails();
     }
 
-    public void setUpTransactionDetails(){
+    public void setUpTransactionDetails() {
         tx = kit.wallet().getTransaction(Sha256Hash.wrap(txString));
 
         inputAdapter = new InputListAdapter(tx.getInputs());
@@ -92,7 +92,7 @@ public class TransactionDetailActivity extends VeriActivity{
         outputRecyclerView.setAdapter(outputAdapter);
 
         Coin amount = tx.getValue(kit.wallet());
-        if(amount.isPositive()){
+        if (amount.isPositive()) {
             amountView.setTextColor(getResources().getColor(R.color.greenNumber));
         }
 
@@ -105,9 +105,9 @@ public class TransactionDetailActivity extends VeriActivity{
         confidenceImageView.setImageResource(Util.getConfidenceResource(tx.getConfidence().getConfidenceType()));
 
         Coin fee = tx.getFee();
-        if(fee == null){
+        if (fee == null) {
             feeView.setText("N/A"); //If transaction wasn't sent by us we don't know fee.
-        }else {
+        } else {
             feeView.setText(fee.toFriendlyString());
         }
         confirmationView.setText(String.valueOf(tx.getConfidence().getDepthInBlocks()));

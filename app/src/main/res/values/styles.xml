@@ -1,25 +1,20 @@
 <resources>
 
     <style name="AppTheme.Light" parent="Theme.AppCompat.Light.DarkActionBar">
-
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent.Light</item>
-
         <item name="android:fontFamily">@font/lato</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat">
-
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorButtonNormal">@color/blueButton</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="textColorError">@color/errorColor</item>
-
-        <item name="alertDialogTheme">@style/Fingerprint.Dialog</item>
-
+        <item name="alertDialogTheme">@style/AppTheme.Light.Dialog</item>
         <item name="android:fontFamily">@font/lato</item>
     </style>
 
@@ -27,24 +22,21 @@
         <item name="colorPrimary">#2c2c2d</item>
         <item name="colorPrimaryDark">#1c1c1d</item>
         <item name="colorButtonNormal">#606060</item>
-        <item name="android:windowBackground">@color/darkWindowBackground</item>
+        <item name="android:windowBackground">@color/splashScreenBackground</item>
     </style>
 
-    <style name="Fingerprint.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="AppTheme.Light.Dialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">@color/colorAccent.Light</item>
-
         <item name="android:textViewStyle">@style/AppTheme.TextView</item>
         <item name="android:buttonStyle">@style/AppTheme.ButtonView</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="AppTheme">
-
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="AppTheme.NoActionBar.Light" parent="@style/AppTheme.Light">
-
+    <style name="AppTheme.Light.NoActionBar" parent="@style/AppTheme.Light">
         <item name="windowNoTitle">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>

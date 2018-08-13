@@ -11,22 +11,17 @@ import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 
 
-public class DecryptWalletActivity extends VeriActivity{
-
-    private TextInputLayout passwordLayout;
-
-    private Button unlockButton;
-
-    private Address address;
-
-    private Coin amount;
-
-    private BitcoinApplication bitcoinApplication;
+public class DecryptWalletActivity extends VeriActivity {
 
     private final static String ADDRESS_EXTRA = "address";
     private final static String AMOUNT_EXTRA = "amount";
+    private TextInputLayout passwordLayout;
+    private Button unlockButton;
+    private Address address;
+    private Coin amount;
+    private VeriMobileApplication veriMobileApplication;
 
-    public static Intent createIntent(Context context, Address toAddr, Coin amount){
+    public static Intent createIntent(Context context, Address toAddr, Coin amount) {
         Intent intent = new Intent(context, DecryptWalletActivity.class);
         intent.putExtra(ADDRESS_EXTRA, toAddr);
         intent.putExtra(AMOUNT_EXTRA, amount);
@@ -37,7 +32,7 @@ public class DecryptWalletActivity extends VeriActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decrypt_wallet);
-        bitcoinApplication = (BitcoinApplication) getApplication();
+        veriMobileApplication = (VeriMobileApplication) getApplication();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
@@ -49,10 +44,10 @@ public class DecryptWalletActivity extends VeriActivity{
         unlockButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isPasswordCorrect()){
+                if (isPasswordCorrect()) {
                     startActivity(ProcessTransactionActivity.createIntent(DecryptWalletActivity.this, address, amount, getPassword()));
                     finish(); //Prevent app from going back to this activity after its finished.
-                }else{
+                } else {
                     passwordLayout.setError("Password is incorrect");
                 }
             }
@@ -60,12 +55,12 @@ public class DecryptWalletActivity extends VeriActivity{
 
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return passwordLayout.getEditText().getText().toString();
     }
 
-    public boolean isPasswordCorrect(){
-        return bitcoinApplication.checkPassword(getPassword());
+    public boolean isPasswordCorrect() {
+        return veriMobileApplication.checkPassword(getPassword());
     }
 
 }

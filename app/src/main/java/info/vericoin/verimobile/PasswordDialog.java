@@ -13,23 +13,17 @@ import android.widget.Toast;
 public class PasswordDialog extends DialogFragment {
 
     private TextInputLayout passwordLayout;
-
-    public interface OnPasswordListener{
-        void onSuccess();
-    }
-
     private OnPasswordListener listener;
+    private VeriMobileApplication veriMobileApplication;
 
     public void setListener(OnPasswordListener listener) {
         this.listener = listener;
     }
 
-    private BitcoinApplication bitcoinApplication;
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        bitcoinApplication = (BitcoinApplication) getActivity().getApplication();
+        veriMobileApplication = (VeriMobileApplication) getActivity().getApplication();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         // Get the layout inflater
@@ -47,12 +41,12 @@ public class PasswordDialog extends DialogFragment {
                 .setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        if(isPasswordCorrect(getPasswordFromInput())){
-                            if(listener != null){
+                        if (isPasswordCorrect(getPasswordFromInput())) {
+                            if (listener != null) {
                                 listener.onSuccess();
                             }
                             dismiss();
-                        }else{
+                        } else {
                             Toast.makeText(getContext(), "Incorrect Password", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -65,19 +59,23 @@ public class PasswordDialog extends DialogFragment {
         return builder.create();
     }
 
-    public void setError(String error){
-        if(error.isEmpty()){
+    public void setError(String error) {
+        if (error.isEmpty()) {
             passwordLayout.setErrorEnabled(false);
-        }else{
+        } else {
             passwordLayout.setError(error);
         }
     }
 
-    public String getPasswordFromInput(){
+    public String getPasswordFromInput() {
         return passwordLayout.getEditText().getText().toString();
     }
 
-    public boolean isPasswordCorrect(String password){
-        return bitcoinApplication.checkPassword(password);
+    public boolean isPasswordCorrect(String password) {
+        return veriMobileApplication.checkPassword(password);
+    }
+
+    public interface OnPasswordListener {
+        void onSuccess();
     }
 }

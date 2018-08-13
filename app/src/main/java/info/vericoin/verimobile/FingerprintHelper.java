@@ -17,16 +17,11 @@ public class FingerprintHelper {
     private static final String TAG = MainActivity.class.getName();
 
     private AppCompatActivity context;
+    private OnAuthListener listener;
 
-    public FingerprintHelper(AppCompatActivity context){
+    public FingerprintHelper(AppCompatActivity context) {
         this.context = context;
     }
-
-    public interface OnAuthListener{
-        void onSuccess();
-    }
-
-    private OnAuthListener listener;
 
     public OnAuthListener getListener() {
         return listener;
@@ -36,7 +31,7 @@ public class FingerprintHelper {
         this.listener = listener;
     }
 
-    public boolean isFingerPrintSupported(){
+    public boolean isFingerPrintSupported() {
         // Check if we're running on Android 6.0 (M) or higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //Fingerprint API only available on from Android 6.0 (M)
@@ -61,7 +56,7 @@ public class FingerprintHelper {
         return false;
     }
 
-    private void unLockUsingBiometric(){
+    private void unLockUsingBiometric() {
         // Create biometricPrompt
         BiometricPrompt mBiometricPrompt = new BiometricPrompt.Builder(context)
                 .setTitle("Unlock Wallet")
@@ -72,7 +67,7 @@ public class FingerprintHelper {
                     }
                 })
                 .build();
-        mBiometricPrompt.authenticate(new CancellationSignal(), context.getMainExecutor(), new BiometricPrompt.AuthenticationCallback(){
+        mBiometricPrompt.authenticate(new CancellationSignal(), context.getMainExecutor(), new BiometricPrompt.AuthenticationCallback() {
             @Override
             public void onAuthenticationError(int errorCode, CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
@@ -86,7 +81,7 @@ public class FingerprintHelper {
             @Override
             public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                if(listener != null) {
+                if (listener != null) {
                     listener.onSuccess();
                 }
             }
@@ -98,24 +93,28 @@ public class FingerprintHelper {
         });
     }
 
-    public void attemptToUnlock(){
+    public void attemptToUnlock() {
         if (isSupportBiometricSupported()) {
             unLockUsingBiometric();
-        }else if(isFingerPrintSupported()){
+        } else if (isFingerPrintSupported()) {
             unLockUsingFingerprintManager();
         }
     }
 
-    private void unLockUsingFingerprintManager(){
+    private void unLockUsingFingerprintManager() {
         FingerprintDialog dialog = new FingerprintDialog();
         dialog.show(context.getSupportFragmentManager(), "Fingerprint Dialog");
         dialog.setListener(new FingerprintDialog.OnAuthListener() {
             @Override
             public void onSuccess() {
-                if(listener != null) {
+                if (listener != null) {
                     listener.onSuccess();
                 }
             }
         });
+    }
+
+    public interface OnAuthListener {
+        void onSuccess();
     }
 }

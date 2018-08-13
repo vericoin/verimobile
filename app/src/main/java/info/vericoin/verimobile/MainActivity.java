@@ -23,7 +23,6 @@ import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -137,7 +136,7 @@ public class MainActivity extends VeriActivity {
         return new ArrayList<>(transactions.subList(0, Math.min(RECENT_TRANSACTION_SIZE, transactions.size())));
     }
 
-    public void updateBlockInformation(){
+    public void updateBlockInformation() {
         setBlockHeight(kit.wallet().getLastBlockSeenHeight());
         setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
         setPercentComplete(kit.wallet().getEstBlockchainPercentComplete());

@@ -20,34 +20,30 @@ public class ReviewActivity extends VeriActivity {
 
     private final static String ADDRESS_EXTRA = "address";
     private final static String AMOUNT_EXTRA = "amount";
+    private VeriMobileApplication veriMobileApplication;
+    private Address address;
+    private Coin amount;
+    private WalletAppKit kit;
+    private Button sendButton;
+    private ProgressBar progressBar;
+    private TextView totalView;
+    private TextView feeView;
+    private TextView amountView;
+    private TextView addrView;
 
-    public static Intent createIntent(Context context, Address toAddr, Coin amount){
+    public static Intent createIntent(Context context, Address toAddr, Coin amount) {
         Intent intent = new Intent(context, ReviewActivity.class);
         intent.putExtra(ADDRESS_EXTRA, toAddr);
         intent.putExtra(AMOUNT_EXTRA, amount);
         return intent;
     }
 
-    private BitcoinApplication bitcoinApplication;
-
-    private Address address;
-    private Coin amount;
-    private WalletAppKit kit;
-
-    private Button sendButton;
-    private ProgressBar progressBar;
-
-    private TextView totalView;
-    private TextView feeView;
-    private TextView amountView;
-    private TextView addrView;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transaction_review);
         kit = WalletConnection.getKit();
-        bitcoinApplication = (BitcoinApplication) getApplication();
+        veriMobileApplication = (VeriMobileApplication) getApplication();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
@@ -84,20 +80,20 @@ public class ReviewActivity extends VeriActivity {
         return BTC_TRANSACTION_FEE;
     }
 
-    public boolean isWalletEncrypted(){
+    public boolean isWalletEncrypted() {
         return kit.wallet().isEncrypted();
     }
 
     public boolean isLockTransactions() {
-        return bitcoinApplication.isLockTransactions();
+        return veriMobileApplication.isLockTransactions();
     }
 
-    public void sendTransaction(){
-        if(isWalletEncrypted()) {
+    public void sendTransaction() {
+        if (isWalletEncrypted()) {
             startActivity(DecryptWalletActivity.createIntent(this, address, amount));
-        }else if(isLockTransactions()){
+        } else if (isLockTransactions()) {
             startActivity(UnlockActivity.createIntent(this, amount, address));
-        }else {
+        } else {
             startActivity(ProcessTransactionActivity.createIntent(this, address, amount));
         }
     }

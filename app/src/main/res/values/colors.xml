@@ -12,7 +12,6 @@
     <color name="buildingTransaction">#FF4081</color>
     <color name="unknownTransaction">#50000000</color>
     <color name="blueButton">#0f2f57</color>
-    <color name="darkWindowBackground">#2c2c2d</color>
-
-    <color name="errorColor">#FFC0C0</color>
+    <color name="splashScreenBackground">#2c2c2d</color>
+    <color name="errorColor">#FFA0A0</color>
 </resources>

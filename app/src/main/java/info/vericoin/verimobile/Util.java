@@ -17,7 +17,7 @@ import static android.graphics.Color.BLACK;
 
 public class Util {
 
-    public static String hashStringSHA256(String toHash){
+    public static String hashStringSHA256(String toHash) {
         MessageDigest messageDigest = Sha256Hash.newDigest();
         messageDigest.update(toHash.getBytes());
         byte[] hash = messageDigest.digest();
@@ -33,7 +33,7 @@ public class Util {
             return R.drawable.transaction_dead;
         } else if (confidenceType.equals(TransactionConfidence.ConfidenceType.IN_CONFLICT)) {
             return R.drawable.transaction_conflict;
-        } else{
+        } else {
             return R.drawable.transaction_unknown;
         }
     }
@@ -54,7 +54,7 @@ public class Util {
         return bitmap;
     }
 
-    public static String getConfidenceString(TransactionConfidence.ConfidenceType confidenceType){
+    public static String getConfidenceString(TransactionConfidence.ConfidenceType confidenceType) {
         if (confidenceType.equals(TransactionConfidence.ConfidenceType.BUILDING)) {
             return "Building";
         } else if (confidenceType.equals(TransactionConfidence.ConfidenceType.PENDING)) {
@@ -63,34 +63,24 @@ public class Util {
             return "Dead";
         } else if (confidenceType.equals(TransactionConfidence.ConfidenceType.IN_CONFLICT)) {
             return "In Conflict";
-        } else{
+        } else {
             return "Unknown";
         }
     }
 
-    public static Throwable getCause(Throwable e) {
-        Throwable cause = null;
-        Throwable result = e;
-
-        while(null != (cause = result.getCause())  && (result != cause) ) {
-            result = cause;
-        }
-        return result;
-    }
-
-    public static String getDateString(Date date){
-        if(date == null){
+    public static String getDateString(Date date) {
+        if (date == null) {
             return "Unknown";
-        }else {
+        } else {
             DateFormat format = DateFormat.getDateInstance();
             return format.format(date);
         }
     }
 
-    public static String getDateTimeString(Date date){
-        if(date == null){
+    public static String getDateTimeString(Date date) {
+        if (date == null) {
             return "Unknown";
-        }else {
+        } else {
             DateFormat format = DateFormat.getDateTimeInstance();
             return format.format(date);
         }

@@ -12,31 +12,20 @@ import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.utils.BriefLogFormatter;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.Executor;
 
 public class WalletConnection {
 
-    public interface OnConnectListener{
-        void OnSetUpComplete(WalletAppKit kit);
-    }
-
-    public interface OnSyncCompleteListener{
-        void OnSyncComplete();
-    }
-
+    public static final String filePrefix = "forwarding-service-testnet";
     private static boolean startUpComplete = false;
     private static boolean syncComplete = false;
-
     private static OnConnectListener connectListener;
     private static OnSyncCompleteListener syncCompleteListener;
-
     private static NetworkParameters params = TestNet3Params.get();
-    public static final String filePrefix = "forwarding-service-testnet";
     private static WalletAppKit kit;
     private static Executor runInUIThread = new Executor() {
-        @Override public void execute(Runnable runnable) {
+        @Override
+        public void execute(Runnable runnable) {
             Handler handler = new Handler(Looper.getMainLooper());
             // For Android: handler was created in an Activity.onCreate method.
             handler.post(runnable);
@@ -47,13 +36,13 @@ public class WalletConnection {
         return runInUIThread;
     }
 
-    public static void startAsync(final Context context){
+    public static void startAsync(final Context context) {
         startAsync(context, "");
     }
 
-    public static void startAsync(final Context context, final String password){
+    public static void startAsync(final Context context, final String password) {
 
-        if(kit == null) { //Only start async if it has not already started.
+        if (kit == null) { //Only start async if it has not already started.
             BriefLogFormatter.init();
             new Thread(new Runnable() {
                 public void run() {
@@ -64,11 +53,11 @@ public class WalletConnection {
 
     }
 
-    public static boolean doesWalletExist(Context context){
-        return new File( context.getFilesDir(), filePrefix + ".wallet").exists();
+    public static boolean doesWalletExist(Context context) {
+        return new File(context.getFilesDir(), filePrefix + ".wallet").exists();
     }
 
-    public static void connectToWallet(Context context, final String password){
+    public static void connectToWallet(Context context, final String password) {
 
         // Start up a basic app using a class that automates some boilerplate. Ensure we always have at least one key.
         kit = new WalletAppKit(params, context.getFilesDir(), filePrefix) {
@@ -81,7 +70,7 @@ public class WalletConnection {
                     wallet().importKey(new ECKey());
                 }
 
-                if(!password.isEmpty()){
+                if (!password.isEmpty()) {
                     wallet().encrypt(password);
                 }
 
@@ -96,23 +85,6 @@ public class WalletConnection {
             }
         };
 
-        List<String> mnemonicCode = new ArrayList<String>();
-        mnemonicCode.add("swallow");
-        mnemonicCode.add("inject");
-        mnemonicCode.add("snow");
-        mnemonicCode.add("liberty");
-        mnemonicCode.add("token");
-        mnemonicCode.add("sample");
-        mnemonicCode.add("zero");
-        mnemonicCode.add("front");
-        mnemonicCode.add("gas");
-        mnemonicCode.add("common");
-        mnemonicCode.add("daughter");
-        mnemonicCode.add("door");
-
-        long creationTimeSeconds = 1533600544;
-        //kit.restoreWalletFromSeed(new DeterministicSeed(mnemonicCode, null, "", creationTimeSeconds));
-
         if (params == RegTestParams.get()) {
             // Regression test mode is designed for testing and development only, so there's no public network for it.
             // If you pick this mode, you're expected to be running a local "bitcoind -regtest" instance.
@@ -126,7 +98,7 @@ public class WalletConnection {
         runInUIThread.execute(new Runnable() {
             @Override
             public void run() {
-                if(syncCompleteListener != null){
+                if (syncCompleteListener != null) {
                     syncCompleteListener.OnSyncComplete();
                 }
             }
@@ -135,10 +107,10 @@ public class WalletConnection {
 
     }
 
-    public static void connect(OnConnectListener newListener){
+    public static void connect(OnConnectListener newListener) {
 
         connectListener = newListener;
-        if(kit != null && startUpComplete){
+        if (kit != null && startUpComplete) {
             connectListener.OnSetUpComplete(kit);
         }
 
@@ -147,13 +119,21 @@ public class WalletConnection {
     public static void setSyncCompleteListener(OnSyncCompleteListener syncCompleteListener) {
         WalletConnection.syncCompleteListener = syncCompleteListener;
 
-        if(kit != null && syncComplete){
+        if (kit != null && syncComplete) {
             syncCompleteListener.OnSyncComplete();
         }
     }
 
-    public static WalletAppKit getKit(){
+    public static WalletAppKit getKit() {
         return kit;
+    }
+
+    public interface OnConnectListener {
+        void OnSetUpComplete(WalletAppKit kit);
+    }
+
+    public interface OnSyncCompleteListener {
+        void OnSyncComplete();
     }
 
 }

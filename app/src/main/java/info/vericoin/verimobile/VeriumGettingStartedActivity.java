@@ -11,7 +11,7 @@ public class VeriumGettingStartedActivity extends AppCompatActivity {
 
     private Button nextButton;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, VeriumGettingStartedActivity.class);
     }
 

@@ -23,7 +23,7 @@ public class ReceiveActivity extends VeriActivity {
 
     private ImageView qrImageView;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, ReceiveActivity.class);
     }
 
@@ -42,7 +42,7 @@ public class ReceiveActivity extends VeriActivity {
 
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
-            BitMatrix bitMatrix = multiFormatWriter.encode(receiveAddrString, BarcodeFormat.QR_CODE,400,400);
+            BitMatrix bitMatrix = multiFormatWriter.encode(receiveAddrString, BarcodeFormat.QR_CODE, 400, 400);
             Bitmap bitmap = Util.createBitmap(bitMatrix);
             qrImageView.setImageBitmap(bitmap);
         } catch (WriterException e) {
