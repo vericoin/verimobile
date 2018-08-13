@@ -3,7 +3,6 @@ package info.vericoin.verimobile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -86,8 +85,8 @@ public class TransactionDetailActivity extends VeriActivity{
     public void setUpTransactionDetails(){
         tx = kit.wallet().getTransaction(Sha256Hash.wrap(txString));
 
-        inputAdapter = new InputListAdapter(TransactionDetailActivity.this, tx.getInputs());
-        outputAdapter = new OutputListAdapter(TransactionDetailActivity.this, tx.getOutputs());
+        inputAdapter = new InputListAdapter(tx.getInputs());
+        outputAdapter = new OutputListAdapter(tx.getOutputs());
 
         inputRecyclerView.setAdapter(inputAdapter);
         outputRecyclerView.setAdapter(outputAdapter);

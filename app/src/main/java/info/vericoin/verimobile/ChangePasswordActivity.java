@@ -2,11 +2,8 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -194,11 +191,8 @@ public class ChangePasswordActivity extends VeriActivity {
     }
 
     public boolean isCurrentPasswordCorrect(String oldPassword){
-        if(getCurrentPasswordHash().isEmpty()){
-            return true;
-        }else{
-            return getCurrentPasswordHash().equals(Util.hashStringSHA256(oldPassword));
-        }
+        String passwordHash = getCurrentPasswordHash();
+        return (passwordHash.isEmpty() || passwordHash.equals(Util.hashStringSHA256(oldPassword)));
     }
 
 }

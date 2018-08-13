@@ -1,7 +1,6 @@
 package info.vericoin.verimobile;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -62,7 +61,7 @@ public class FingerprintHelper {
         return false;
     }
 
-    public void unLockUsingBiometric(){
+    private void unLockUsingBiometric(){
         // Create biometricPrompt
         BiometricPrompt mBiometricPrompt = new BiometricPrompt.Builder(context)
                 .setTitle("Unlock Wallet")
@@ -107,7 +106,7 @@ public class FingerprintHelper {
         }
     }
 
-    public void unLockUsingFingerprintManager(){
+    private void unLockUsingFingerprintManager(){
         FingerprintDialog dialog = new FingerprintDialog();
         dialog.show(context.getSupportFragmentManager(), "Fingerprint Dialog");
         dialog.setListener(new FingerprintDialog.OnAuthListener() {

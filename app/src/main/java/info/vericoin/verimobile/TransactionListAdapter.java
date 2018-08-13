@@ -14,7 +14,6 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.kits.WalletAppKit;
 
-import java.text.DateFormat;
 import java.util.List;
 
 public class TransactionListAdapter extends RecyclerView.Adapter<TransactionListAdapter.ViewHolder> {

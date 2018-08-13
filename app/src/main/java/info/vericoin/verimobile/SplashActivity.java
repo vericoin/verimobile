@@ -1,8 +1,6 @@
 package info.vericoin.verimobile;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import org.bitcoinj.kits.WalletAppKit;
 

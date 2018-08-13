@@ -2,16 +2,13 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.kits.WalletAppKit;
 
 
 public class DecryptWalletActivity extends VeriActivity{
@@ -23,8 +20,6 @@ public class DecryptWalletActivity extends VeriActivity{
     private Address address;
 
     private Coin amount;
-
-    private WalletAppKit kit;
 
     private BitcoinApplication bitcoinApplication;
 
@@ -42,7 +37,6 @@ public class DecryptWalletActivity extends VeriActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decrypt_wallet);
-        kit = WalletConnection.getKit();
         bitcoinApplication = (BitcoinApplication) getApplication();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);

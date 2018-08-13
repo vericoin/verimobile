@@ -23,9 +23,11 @@ import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -175,7 +177,7 @@ public class MainActivity extends VeriActivity {
     }
 
     public void setPercentComplete(double percent) {
-        percentComplete.setText(String.valueOf(percent) + " %");
+        percentComplete.setText(String.format(Locale.getDefault(), "%.2f %%", percent));
     }
 
     public void setLastSeenBlockDate(Date date) {

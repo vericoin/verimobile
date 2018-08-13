@@ -5,24 +5,17 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionConfidence;
-import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.kits.WalletAppKit;
 
-import java.text.DateFormat;
 import java.util.List;
 
 public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.ViewHolder> {
 
     private List<TransactionOutput> mDataset;
-    private Context context;
-
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -40,9 +33,8 @@ public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.Vi
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public OutputListAdapter(Context context, List<TransactionOutput> myDataset) {
+    public OutputListAdapter(List<TransactionOutput> myDataset) {
         mDataset = myDataset;
-        this.context = context;
     }
 
     public void setmDataset(List<TransactionOutput> mDataset) {

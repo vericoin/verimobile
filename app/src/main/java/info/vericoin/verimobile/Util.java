@@ -7,18 +7,13 @@ import com.google.zxing.common.BitMatrix;
 
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.util.Date;
 
 import static android.graphics.Color.BLACK;
-import static android.graphics.Color.WHITE;
 
 public class Util {
 

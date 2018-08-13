@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
-import android.view.WindowManager;
 
 public class BitcoinApplication extends MultiDexApplication {
 

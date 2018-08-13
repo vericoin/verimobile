@@ -68,7 +68,6 @@ public class AmountParser {
                     return false;
                 }else{
                     dot = true;
-                    continue;
                 }
             }
         }
