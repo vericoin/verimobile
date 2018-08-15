@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -53,6 +55,8 @@ public class MainActivity extends VeriActivity {
     private LinearLayoutManager mLayoutManager;
 
     private TransactionListAdapter mAdapter;
+
+    private Timer timer;
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -129,6 +133,49 @@ public class MainActivity extends VeriActivity {
                 syncingBlock.setVisibility(View.INVISIBLE);
             }
         });
+
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                //Update block information every 1 second while syncing.
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateBlockInformation();
+                    }
+                });
+            }
+        }, 0, 1_000);
+
+        kit.wallet().addChangeEventListener(WalletConnection.getRunInUIThread(), new WalletChangeEventListener() {
+            @Override
+            public void onWalletChanged(Wallet wallet) {
+                setBalances(wallet);
+                mAdapter.setmDataset(getDataSet());
+            }
+        });
+
+    }
+
+    protected void onResume(){
+        super.onResume();
+        WalletConnection.setSyncCompleteListener(new WalletConnection.OnSyncCompleteListener() {
+            @Override
+            public void OnSyncComplete() {
+
+                syncingBlock.setVisibility(View.INVISIBLE);
+
+                //Sync is done add block listener instead and turn off scheduled timer.
+                timer.cancel();
+                kit.chain().addNewBestBlockListener(WalletConnection.getRunInUIThread(), new NewBestBlockListener() {
+                    @Override
+                    public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
+                        updateBlockInformation();
+                    }
+                });
+            }
+        });
     }
 
     public ArrayList<Transaction> getDataSet() {
@@ -140,27 +187,6 @@ public class MainActivity extends VeriActivity {
         setBlockHeight(kit.wallet().getLastBlockSeenHeight());
         setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
         setPercentComplete(kit.wallet().getEstBlockchainPercentComplete());
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        kit.wallet().addChangeEventListener(WalletConnection.getRunInUIThread(), new WalletChangeEventListener() {
-            @Override
-            public void onWalletChanged(Wallet wallet) {
-                setBalances(wallet);
-                mAdapter.setmDataset(getDataSet());
-            }
-        });
-
-        kit.chain().addNewBestBlockListener(WalletConnection.getRunInUIThread(), new NewBestBlockListener() {
-            @Override
-            public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
-                updateBlockInformation();
-            }
-        });
-
     }
 
     public void setBlockHeight(int height) {

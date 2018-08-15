@@ -1,6 +1,7 @@
 package info.vericoin.verimobile;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -10,8 +11,14 @@ import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.utils.BriefLogFormatter;
+import org.bitcoinj.wallet.Wallet;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.concurrent.Executor;
 
 public class WalletConnection {
@@ -55,6 +62,27 @@ public class WalletConnection {
 
     public static boolean doesWalletExist(Context context) {
         return new File(context.getFilesDir(), filePrefix + ".wallet").exists();
+    }
+
+    public static void importWallet(Context context, Uri uri) throws IOException, NullPointerException{
+        File file = new File(context.getFilesDir(), filePrefix + ".wallet");
+
+        if(file.exists()){
+            file.delete();
+        }
+
+        file.createNewFile();
+
+        InputStream inputStream = context.getContentResolver().openInputStream(uri);
+        FileOutputStream fop = new FileOutputStream(file);
+
+        int data = inputStream.read();
+        while (data != -1) {
+            fop.write(data);
+            data = inputStream.read();
+        }
+        inputStream.close();
+        fop.close();
     }
 
     public static void connectToWallet(Context context, final String password) {

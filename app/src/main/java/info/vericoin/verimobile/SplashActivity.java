@@ -1,5 +1,7 @@
 package info.vericoin.verimobile;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import org.bitcoinj.kits.WalletAppKit;
@@ -7,6 +9,10 @@ import org.bitcoinj.kits.WalletAppKit;
 public class SplashActivity extends VeriActivity {
 
     private VeriMobileApplication veriMobileApplication;
+
+    public static Intent createIntent(Context context){
+        return new Intent(context, SplashActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

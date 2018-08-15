@@ -22,5 +22,8 @@
             android:summary="Prevents device from taking screenshots of app, and hides content when minimized."
             android:title="Secure Window"
             android:defaultValue="true"/>
+        <Preference
+            android:key="@string/export_wallet_button"
+            android:title="Export Wallet" />
     </PreferenceCategory>
 </PreferenceScreen>
