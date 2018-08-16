@@ -28,7 +28,7 @@
         android:id="@+id/setPasswordButton"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:text="Set Password"
+        android:text="Import"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

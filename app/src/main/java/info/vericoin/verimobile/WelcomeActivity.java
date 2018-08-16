@@ -8,16 +8,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.bitcoinj.wallet.Wallet;
-
-import java.io.IOException;
 
 public class WelcomeActivity extends AppCompatActivity {
 
     private Button getStartedButton;
 
     private Button importWalletButton;
+
+    private ProgressBar progressBar;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, WelcomeActivity.class);
@@ -27,6 +29,9 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.GONE);
 
         getStartedButton = findViewById(R.id.getStartedButton);
         getStartedButton.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +65,25 @@ public class WelcomeActivity extends AppCompatActivity {
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
+    private void loadingWalletFailed(String error){
+        getStartedButton.setEnabled(true);
+        importWalletButton.setEnabled(true);
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void loadingWallet(){
+        getStartedButton.setEnabled(false);
+        importWalletButton.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void loadComplete(){
+        getStartedButton.setEnabled(true);
+        importWalletButton.setEnabled(true);
+        progressBar.setVisibility(View.GONE);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent resultData) {
@@ -73,19 +97,36 @@ public class WelcomeActivity extends AppCompatActivity {
             // Instead, a URI to that document will be contained in the return intent
             // provided to this method as a parameter.
             // Pull that URI using resultData.getData().
-            Uri uri = null;
             if (resultData != null) {
-                uri = resultData.getData();
-                try {
-                    Wallet importWallet = Wallet.loadFromFileStream(getContentResolver().openInputStream(uri));
-                    if(importWallet.isEncrypted()){
-                        startActivity(SetUpEncryptedWallet.createIntent(this, uri));
-                    }else{
-
+                final Uri uri = resultData.getData();
+                loadingWallet();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Wallet importWallet = Wallet.loadFromFileStream(getContentResolver().openInputStream(uri));
+                            if(importWallet.isEncrypted()){
+                                startActivity(SetUpEncryptedWallet.createIntent(WelcomeActivity.this, uri));
+                            }else{
+                                startActivity(SetUpDecryptedWallet.createIntent(WelcomeActivity.this, uri));
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loadComplete();
+                                }
+                            });
+                        } catch (final Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loadingWalletFailed(e.toString());
+                                }
+                            });
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                }).start();
             }
         }
     }

@@ -12,17 +12,7 @@ import android.widget.Toast;
 
 import org.bitcoinj.wallet.Wallet;
 
-import java.io.FileNotFoundException;
-
 public class SetUpEncryptedWallet extends VeriActivity {
-
-    //Send URI to this activity.
-    //Create Wallet object using URI.
-    //Check if Wallet is encrypted.
-    //If encrypted ask user for current password and check that its valid.
-    //If not encrypted give user option to enter in password for wallet and if they want it encrypted, and a no password checkbox.
-    //Write wallet to directory so bitcoinJ can access it.
-    //Start Splash Activity.
 
     private final static String URI_EXTRA = "uri";
 
@@ -30,7 +20,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
 
     private TextInputLayout passwordLayout;
 
-    private Button setPasswordButton;
+    private Button importButton;
 
     private Uri uri;
 
@@ -55,9 +45,9 @@ public class SetUpEncryptedWallet extends VeriActivity {
             passwordLayout = findViewById(R.id.walletPasswordInputLayout);
             progressBar = findViewById(R.id.progressBar);
             progressBar.setVisibility(View.GONE);
-            setPasswordButton = findViewById(R.id.setPasswordButton);
+            importButton = findViewById(R.id.setPasswordButton);
 
-            setPasswordButton.setOnClickListener(new View.OnClickListener() {
+            importButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     resetError();
@@ -72,8 +62,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
     }
 
     public void checkPassword(final Wallet wallet, final String password){
-        progressBar.setVisibility(View.VISIBLE);
-        setPasswordButton.setText("");
+        importing();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -82,7 +71,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
                     if (isPasswordCorrect) {
                         WalletConnection.importWallet(SetUpEncryptedWallet.this, uri);
                         veriMobileApplication.newPassword(password);
-                        passwordSetUpSuccess();
+                        importComplete();
                     } else {
                         setError("Password is incorrect");
                     }
@@ -98,13 +87,16 @@ public class SetUpEncryptedWallet extends VeriActivity {
         passwordLayout.setErrorEnabled(false);
     }
 
-    public void passwordSetUpSuccess(){
+    public void importing(){
+        progressBar.setVisibility(View.VISIBLE);
+        importButton.setText("");
+    }
+
+    public void importComplete(){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                progressBar.setVisibility(View.GONE);
-                setPasswordButton.setText("Set Password");
-                Toast.makeText(SetUpEncryptedWallet.this, "Password success!", Toast.LENGTH_LONG).show();
+                Toast.makeText(SetUpEncryptedWallet.this, "Wallet has been imported!", Toast.LENGTH_LONG).show();
                 startActivity(SplashActivity.createIntent(SetUpEncryptedWallet.this));
             }
         });
@@ -116,7 +108,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
             public void run() {
                 progressBar.setVisibility(View.GONE);
                 passwordLayout.setError(error);
-                setPasswordButton.setText("Set Password");
+                importButton.setText("Import");
             }
         });
     }
