@@ -9,6 +9,7 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import org.bitcoinj.kits.WalletAppKit;
@@ -35,6 +36,8 @@ public class SettingsActivity extends VeriActivity {
         private Preference changePasswordRow;
 
         private Preference exportWallet;
+
+        private Preference viewSeed;
 
         private CheckBoxPreference lockTransactions;
 
@@ -88,6 +91,8 @@ public class SettingsActivity extends VeriActivity {
             if (!fingerprintHelper.isFingerPrintSupported()) { //Device doesn't support fingerprint remove preference
                 categoryAccount.removePreference(fingerPrint);
             }
+
+            viewSeed = findPreference(getString(R.string.view_seed_button));
         }
 
         public void changeCheckBoxUsingPassword(final CheckBoxPreference checkBoxPreference) {
@@ -99,7 +104,7 @@ public class SettingsActivity extends VeriActivity {
 
             passwordDialog.setListener(new PasswordDialog.OnPasswordListener() {
                 @Override
-                public void onSuccess() {
+                public void onSuccess(String password) {
                     checkBoxPreference.setChecked(after);
                 }
             });
@@ -107,6 +112,10 @@ public class SettingsActivity extends VeriActivity {
 
         public boolean doesPasswordExist() {
             return veriMobileApplication.doesPasswordExist();
+        }
+
+        public void openViewSeedActivity(String password){
+            startActivity(ViewSeedActivity.createIntent(getActivity(), password));
         }
 
         @Override
@@ -138,7 +147,29 @@ public class SettingsActivity extends VeriActivity {
                         return true;
                     }
                 });
+                viewSeed.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        PasswordDialog passwordDialog = new PasswordDialog();
+                        passwordDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "PasswordDialog");
+                        passwordDialog.setListener(new PasswordDialog.OnPasswordListener() {
+                            @Override
+                            public void onSuccess(String password) {
+                                openViewSeedActivity(password);
+                            }
+
+                        });
+                        return true;
+                    }
+                });
             } else {
+                viewSeed.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        openViewSeedActivity("");
+                        return true;
+                    }
+                });
                 lockTransactions.setOnPreferenceClickListener(null);
                 secureWindow.setOnPreferenceClickListener(null);
                 fingerPrint.setOnPreferenceClickListener(null);

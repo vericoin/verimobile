@@ -25,5 +25,8 @@
         <Preference
             android:key="@string/export_wallet_button"
             android:title="Export Wallet" />
+        <Preference
+            android:key="@string/view_seed_button"
+            android:title="View Seed" />
     </PreferenceCategory>
 </PreferenceScreen>

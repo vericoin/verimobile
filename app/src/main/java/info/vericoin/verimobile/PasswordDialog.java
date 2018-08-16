@@ -43,7 +43,7 @@ public class PasswordDialog extends DialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (isPasswordCorrect(getPasswordFromInput())) {
                             if (listener != null) {
-                                listener.onSuccess();
+                                listener.onSuccess(getPasswordFromInput());
                             }
                             dismiss();
                         } else {
@@ -76,6 +76,6 @@ public class PasswordDialog extends DialogFragment {
     }
 
     public interface OnPasswordListener {
-        void onSuccess();
+        void onSuccess(String password);
     }
 }

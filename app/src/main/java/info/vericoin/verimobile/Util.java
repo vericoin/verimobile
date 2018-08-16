@@ -12,8 +12,10 @@ import org.bitcoinj.core.TransactionConfidence;
 import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static android.graphics.Color.BLACK;
+import static android.graphics.Color.red;
 
 public class Util {
 
@@ -36,6 +38,14 @@ public class Util {
         } else {
             return R.drawable.transaction_unknown;
         }
+    }
+
+    public static  String mnemonicToString(List<String> mnemonics){
+        String mnemonicText = mnemonics.get(0);
+        for(int i = 1; i < mnemonics.size(); i++){
+            mnemonicText = mnemonicText.concat(" " + mnemonics.get(i));
+        }
+        return mnemonicText;
     }
 
     public static Bitmap createBitmap(BitMatrix matrix) {
