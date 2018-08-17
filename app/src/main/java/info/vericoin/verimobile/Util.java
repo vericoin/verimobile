@@ -9,8 +9,10 @@ import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.TransactionConfidence;
 
+import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -50,8 +52,7 @@ public class Util {
     }
 
     public static List<String> stringToMnemonic(String mnemonicString){
-        List<String> mnemonicList = Arrays.asList(mnemonicString.split("\\s+"));
-        return mnemonicList;
+        return Arrays.asList(mnemonicString.split("\\s+"));
     }
 
     public static Bitmap createBitmap(BitMatrix matrix) {

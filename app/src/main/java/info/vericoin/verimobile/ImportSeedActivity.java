@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImportSeedActivity extends VeriActivity {
 
@@ -32,12 +35,23 @@ public class ImportSeedActivity extends VeriActivity {
         importButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WalletConnection.importFromSeed(ImportSeedActivity.this, "", Util.stringToMnemonic(getSeed()), getCreationTime());
-                Toast.makeText(ImportSeedActivity.this, "Wallet imported!", Toast.LENGTH_LONG).show();
-                startActivity(SplashActivity.createIntent(ImportSeedActivity.this));
+                seedLayout.setErrorEnabled(false);
+                creationTimeLayout.setErrorEnabled(false);
+                try {
+                    long creationTime = getCreationTime();
+                    try{
+                        ArrayList<String> mnemonicList = new ArrayList<>(Util.stringToMnemonic(getSeed()));
+                        startActivity(SetUpSeedWallet.createIntent(ImportSeedActivity.this, mnemonicList, creationTime));
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        seedLayout.setError("Invalid input");
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                    creationTimeLayout.setError("Invalid input");
+                }
             }
         });
-
     }
 
     public String getSeed(){
@@ -45,6 +59,11 @@ public class ImportSeedActivity extends VeriActivity {
     }
 
     public long getCreationTime(){
-        return Long.parseLong(creationTimeLayout.getEditText().getText().toString());
+        String creationString = creationTimeLayout.getEditText().getText().toString();
+        if(creationString.isEmpty()){
+            return 0;
+        }else {
+            return Long.parseLong(creationTimeLayout.getEditText().getText().toString());
+        }
     }
 }
