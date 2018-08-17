@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 public abstract class SetUpWallet extends VeriActivity {
 
-
     private ProgressBar progressBar;
 
     protected VeriMobileApplication veriMobileApplication;

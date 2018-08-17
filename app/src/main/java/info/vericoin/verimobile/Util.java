@@ -9,16 +9,13 @@ import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.TransactionConfidence;
 
-import java.lang.reflect.Array;
 import java.security.MessageDigest;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static android.graphics.Color.BLACK;
-import static android.graphics.Color.red;
 
 public class Util {
 

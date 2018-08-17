@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.DeterministicKeyChain;
-import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.Wallet;
 
 public class ViewSeedActivity extends VeriActivity{

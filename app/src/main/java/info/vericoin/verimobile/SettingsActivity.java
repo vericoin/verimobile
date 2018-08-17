@@ -85,7 +85,18 @@ public class SettingsActivity extends VeriActivity {
             deleteWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    deleteWallet();
+                    PasswordDialog dialog = new PasswordDialog();
+                    dialog.setListener(new PasswordDialog.OnPasswordListener() {
+                        @Override
+                        public void onSuccess(String password) {
+                            deleteWallet();
+                        }
+                    });
+                    if(veriMobileApplication.doesPasswordExist()){
+                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "passwordRequired");
+                    }else{
+                        deleteWallet();
+                    }
                     return true;
                 }
             });

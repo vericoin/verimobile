@@ -7,9 +7,7 @@ import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ImportSeedActivity extends VeriActivity {
 
