@@ -25,6 +25,7 @@
     <string name="change_password_button">changePassword</string>
     <string name="export_wallet_button">exportWallet</string>
     <string name="view_seed_button">viewSeed</string>
+    <string name="delete_wallet_button">deleteWallet</string>
     <string name="lock_transactions_key">lockTransactions</string>
     <string name="fingerprint_enabled_key">enableFingerprint</string>
     <string name="secure_window_key">secureWindow</string>

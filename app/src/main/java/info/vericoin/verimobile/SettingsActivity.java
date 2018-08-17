@@ -1,6 +1,7 @@
 package info.vericoin.verimobile;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -37,6 +39,8 @@ public class SettingsActivity extends VeriActivity {
         private Preference exportWallet;
 
         private Preference viewSeed;
+
+        private Preference deleteWallet;
 
         private CheckBoxPreference lockTransactions;
 
@@ -77,6 +81,15 @@ public class SettingsActivity extends VeriActivity {
                 }
             });
 
+            deleteWallet = findPreference(getString(R.string.delete_wallet_button));
+            deleteWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    deleteWallet();
+                    return true;
+                }
+            });
+
             securityCategory = (PreferenceCategory) findPreference("security");
 
             lockTransactions = (CheckBoxPreference) findPreference(getString(R.string.lock_transactions_key));
@@ -92,6 +105,32 @@ public class SettingsActivity extends VeriActivity {
             }
 
             viewSeed = findPreference(getString(R.string.view_seed_button));
+        }
+
+        public void deleteWallet(){
+            // 1. Instantiate an AlertDialog.Builder with its constructor
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+            // 2. Chain together various setter methods to set the dialog characteristics
+            builder.setMessage("Are you sure you want to delete your wallet? This action can not be undone.")
+                    .setTitle("Delete Wallet")
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //Do nothing
+                        }
+                    })
+                    .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            WalletConnection.deleteWallet(getActivity());
+                            startActivity(WelcomeActivity.createIntent(getActivity()));
+                        }
+                    });
+
+            // 3. Get the AlertDialog from create()
+            AlertDialog dialog = builder.create();
+            dialog.show();
         }
 
         public void changeCheckBoxUsingPassword(final CheckBoxPreference checkBoxPreference) {

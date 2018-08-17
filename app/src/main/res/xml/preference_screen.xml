@@ -24,14 +24,17 @@
             android:defaultValue="true"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Back Up"
-        android:key="backup">
+    <PreferenceCategory android:title="Wallet"
+        android:key="wallet">
         <Preference
             android:key="@string/export_wallet_button"
             android:title="Export Wallet" />
         <Preference
             android:key="@string/view_seed_button"
             android:title="View Seed" />
+        <Preference
+            android:key="@string/delete_wallet_button"
+            android:title="Delete Wallet" />
     </PreferenceCategory>
 
 </PreferenceScreen>

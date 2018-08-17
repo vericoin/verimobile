@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import org.bitcoinj.wallet.Wallet;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class WelcomeActivity extends AppCompatActivity {
 
     private Button getStartedButton;
@@ -24,7 +26,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     public static Intent createIntent(Context context) {
-        return new Intent(context, WelcomeActivity.class);
+        return new Intent(context, WelcomeActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
     }
 
     @Override

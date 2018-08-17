@@ -88,6 +88,15 @@ public class WalletConnection {
         fop.close();
     }
 
+    public static boolean deleteWallet(Context context){
+        File file = new File(context.getFilesDir(), filePrefix + ".wallet");
+
+        if(file.exists()){
+            return file.delete();
+        }
+        return false;
+    }
+
     public static void importFromSeed(final Context context, final String password, final List<String> mnemonicList, final long creationTime){
         if(kit == null) {
             new Thread(new Runnable() {
