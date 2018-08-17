@@ -19,6 +19,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private Button importWalletButton;
 
+    private Button importSeedButton;
+
     private ProgressBar progressBar;
 
     public static Intent createIntent(Context context) {
@@ -48,6 +50,14 @@ public class WelcomeActivity extends AppCompatActivity {
                 openFile();
             }
         });
+
+        importSeedButton = findViewById(R.id.importSeedButton);
+        importSeedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(ImportSeedActivity.createIntent(WelcomeActivity.this));
+            }
+        });
     }
 
     private final static int READ_REQUEST_CODE = 65;
@@ -68,6 +78,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private void loadingWalletFailed(String error){
         getStartedButton.setEnabled(true);
         importWalletButton.setEnabled(true);
+        importSeedButton.setEnabled(true);
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         progressBar.setVisibility(View.GONE);
     }
@@ -75,12 +86,14 @@ public class WelcomeActivity extends AppCompatActivity {
     private void loadingWallet(){
         getStartedButton.setEnabled(false);
         importWalletButton.setEnabled(false);
+        importSeedButton.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
     }
 
     private void loadComplete(){
         getStartedButton.setEnabled(true);
         importWalletButton.setEnabled(true);
+        importSeedButton.setEnabled(true);
         progressBar.setVisibility(View.GONE);
     }
 

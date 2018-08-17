@@ -7,10 +7,12 @@ import android.os.Looper;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.utils.BriefLogFormatter;
+import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.Wallet;
 
 import java.io.File;
@@ -19,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 public class WalletConnection {
@@ -61,7 +64,7 @@ public class WalletConnection {
     }
 
     public static boolean doesWalletExist(Context context) {
-        return new File(context.getFilesDir(), filePrefix + ".wallet").exists();
+        return (new File(context.getFilesDir(), filePrefix + ".wallet").exists() || kit != null);
     }
 
     public static void importWallet(Context context, Uri uri) throws IOException, NullPointerException{
@@ -85,8 +88,20 @@ public class WalletConnection {
         fop.close();
     }
 
-    public static void connectToWallet(Context context, final String password) {
+    public static void importFromSeed(final Context context, final String password, final List<String> mnemonicList, final long creationTime){
+        if(kit == null) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    initWalletAppKit(context, password);
+                    kit.restoreWalletFromSeed(new DeterministicSeed(mnemonicList, null, "", creationTime));
+                    startWalletAsync();
+                }
+            }).start();
+        }
+    }
 
+    public static void initWalletAppKit(Context context, final String password){
         // Start up a basic app using a class that automates some boilerplate. Ensure we always have at least one key.
         kit = new WalletAppKit(params, context.getFilesDir(), filePrefix) {
             @Override
@@ -106,12 +121,17 @@ public class WalletConnection {
                 runInUIThread.execute(new Runnable() {
                     @Override
                     public void run() {
-                        connectListener.OnSetUpComplete(kit);
+                        if(connectListener != null) {
+                            connectListener.OnSetUpComplete(kit);
+                        }
                     }
                 });
                 startUpComplete = true;
             }
         };
+    }
+
+    public static void startWalletAsync(){
 
         if (params == RegTestParams.get()) {
             // Regression test mode is designed for testing and development only, so there's no public network for it.
@@ -132,6 +152,13 @@ public class WalletConnection {
             }
         });
         syncComplete = true;
+    }
+
+    public static void connectToWallet(Context context, final String password) {
+
+        initWalletAppKit(context, password);
+
+        startWalletAsync();
 
     }
 

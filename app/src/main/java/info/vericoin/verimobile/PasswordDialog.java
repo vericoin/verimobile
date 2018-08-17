@@ -37,8 +37,7 @@ public class PasswordDialog extends DialogFragment {
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
                 .setTitle("Password Required")
-                .setMessage("Please provide your password to modify this setting.")
-                .setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Enter", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (isPasswordCorrect(getPasswordFromInput())) {

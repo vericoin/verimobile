@@ -9,7 +9,6 @@ import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Toast;
 
 import org.bitcoinj.kits.WalletAppKit;
@@ -18,7 +17,7 @@ import java.io.IOException;
 
 public class SettingsActivity extends VeriActivity {
 
-    public final static String BTC_WALLET_FILE_NAME = "Bitcoin_Testnet3_Wallet.dat";
+    public final static String BTC_WALLET_FILE_NAME = "Bitcoin_Testnet3_Wallet";
 
     public static Intent createIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -47,7 +46,7 @@ public class SettingsActivity extends VeriActivity {
 
         private FingerprintHelper fingerprintHelper;
 
-        private PreferenceCategory categoryAccount;
+        private PreferenceCategory securityCategory;
 
         private CheckBoxPreference secureWindow;
 
@@ -78,7 +77,7 @@ public class SettingsActivity extends VeriActivity {
                 }
             });
 
-            categoryAccount = (PreferenceCategory) findPreference("account");
+            securityCategory = (PreferenceCategory) findPreference("security");
 
             lockTransactions = (CheckBoxPreference) findPreference(getString(R.string.lock_transactions_key));
 
@@ -89,7 +88,7 @@ public class SettingsActivity extends VeriActivity {
             fingerprintHelper = new FingerprintHelper((AppCompatActivity) getActivity());
 
             if (!fingerprintHelper.isFingerPrintSupported()) { //Device doesn't support fingerprint remove preference
-                categoryAccount.removePreference(fingerPrint);
+                securityCategory.removePreference(fingerPrint);
             }
 
             viewSeed = findPreference(getString(R.string.view_seed_button));

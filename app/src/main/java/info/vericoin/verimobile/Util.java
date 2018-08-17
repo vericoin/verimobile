@@ -11,6 +11,7 @@ import org.bitcoinj.core.TransactionConfidence;
 
 import java.security.MessageDigest;
 import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -40,12 +41,17 @@ public class Util {
         }
     }
 
-    public static  String mnemonicToString(List<String> mnemonics){
+    public static String mnemonicToString(List<String> mnemonics){
         String mnemonicText = mnemonics.get(0);
         for(int i = 1; i < mnemonics.size(); i++){
             mnemonicText = mnemonicText.concat(" " + mnemonics.get(i));
         }
         return mnemonicText;
+    }
+
+    public static List<String> stringToMnemonic(String mnemonicString){
+        List<String> mnemonicList = Arrays.asList(mnemonicString.split("\\s+"));
+        return mnemonicList;
     }
 
     public static Bitmap createBitmap(BitMatrix matrix) {
