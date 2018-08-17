@@ -71,8 +71,8 @@ public class WelcomeActivity extends AppCompatActivity {
         // a file (as opposed to a list of contacts or timezones).
         intent.addCategory(Intent.CATEGORY_OPENABLE);
 
-        // Create a file with the requested MIME type.
-        intent.setType("text/plain");
+        // Open a file with the requested MIME type.
+        intent.setType("application/x-bitcoin");
 
         startActivityForResult(intent, READ_REQUEST_CODE);
     }

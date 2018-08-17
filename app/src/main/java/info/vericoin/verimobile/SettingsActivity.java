@@ -76,7 +76,7 @@ public class SettingsActivity extends VeriActivity {
             exportWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    createFile("text/plain", BTC_WALLET_FILE_NAME);
+                    createFile("application/x-bitcoin", BTC_WALLET_FILE_NAME);
                     return true;
                 }
             });
