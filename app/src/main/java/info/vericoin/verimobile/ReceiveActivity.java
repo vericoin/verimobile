@@ -3,7 +3,6 @@ package info.vericoin.verimobile;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,11 +12,8 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
 import org.bitcoinj.core.Address;
-import org.bitcoinj.kits.WalletAppKit;
 
-public class ReceiveActivity extends VeriActivity {
-
-    private WalletAppKit kit;
+public class ReceiveActivity extends WalletAppKitActivity {
 
     private TextView receiveView;
 
@@ -28,10 +24,8 @@ public class ReceiveActivity extends VeriActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         setContentView(R.layout.activity_receive);
-        kit = WalletConnection.getKit();
 
         receiveView = findViewById(R.id.receiveAddr);
         qrImageView = findViewById(R.id.qrImage);

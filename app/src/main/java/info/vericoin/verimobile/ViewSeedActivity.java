@@ -4,16 +4,14 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.DeterministicKeyChain;
 import org.bitcoinj.wallet.Wallet;
 
-public class ViewSeedActivity extends VeriActivity{
+public class ViewSeedActivity extends WalletAppKitActivity{
 
     private final static String PASSWORD_EXTRA = "password";
 
@@ -23,15 +21,12 @@ public class ViewSeedActivity extends VeriActivity{
 
     private TextView timeCreated;
 
-    private WalletAppKit kit;
-
     public static Intent createIntent(Context context, String password){
         return new Intent(context, ViewSeedActivity.class).putExtra(PASSWORD_EXTRA, password);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         setContentView(R.layout.activity_view_seed);
 
         seedText = findViewById(R.id.seedTextView);
@@ -39,10 +34,7 @@ public class ViewSeedActivity extends VeriActivity{
 
         password = getIntent().getStringExtra(PASSWORD_EXTRA);
 
-        kit = WalletConnection.getKit();
-
         Wallet wallet = kit.wallet();
-
         DeterministicKeyChain deterministicKeyChain = wallet.getActiveKeyChain();
 
         if(wallet.isEncrypted()){

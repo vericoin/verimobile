@@ -2,7 +2,6 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -11,19 +10,17 @@ import android.widget.Toast;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.kits.WalletAppKit;
 
 import static android.view.View.GONE;
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
-public class ReviewActivity extends VeriActivity {
+public class ReviewActivity extends WalletAppKitActivity {
 
     private final static String ADDRESS_EXTRA = "address";
     private final static String AMOUNT_EXTRA = "amount";
     private VeriMobileApplication veriMobileApplication;
     private Address address;
     private Coin amount;
-    private WalletAppKit kit;
     private Button sendButton;
     private ProgressBar progressBar;
     private TextView totalView;
@@ -39,10 +36,8 @@ public class ReviewActivity extends VeriActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         setContentView(R.layout.activity_transaction_review);
-        kit = WalletConnection.getKit();
         veriMobileApplication = (VeriMobileApplication) getApplication();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
@@ -68,6 +63,7 @@ public class ReviewActivity extends VeriActivity {
             Toast.makeText(ReviewActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
+
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

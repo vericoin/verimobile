@@ -16,8 +16,11 @@ public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.Vi
 
     private List<TransactionOutput> mDataset;
 
+    private WalletAppKit kit;
+
     // Provide a suitable constructor (depends on the kind of dataset)
-    public OutputListAdapter(List<TransactionOutput> myDataset) {
+    public OutputListAdapter(WalletAppKit kit, List<TransactionOutput> myDataset) {
+        this.kit = kit;
         mDataset = myDataset;
     }
 
@@ -45,8 +48,6 @@ public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.Vi
         // - replace the contents of the view with that element
 
         TransactionOutput put = mDataset.get(position);
-
-        WalletAppKit kit = WalletConnection.getKit();
 
         Coin amount = put.getValue();
         if (amount == null) {

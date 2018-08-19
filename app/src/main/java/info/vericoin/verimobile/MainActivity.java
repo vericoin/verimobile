@@ -2,7 +2,6 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +18,6 @@ import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.core.listeners.NewBestBlockListener;
-import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
@@ -32,7 +30,7 @@ import java.util.TimerTask;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class MainActivity extends VeriActivity {
+public class MainActivity extends WalletAppKitActivity {
 
     private final static int RECENT_TRANSACTION_SIZE = 5;
 
@@ -41,7 +39,6 @@ public class MainActivity extends VeriActivity {
     private TextView blockHeight;
     private Button sendButton;
     private Button receiveButton;
-    private WalletAppKit kit;
 
     private TextView percentComplete;
 
@@ -65,11 +62,8 @@ public class MainActivity extends VeriActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         setContentView(R.layout.activity_main);
-
-        kit = WalletConnection.getKit();
 
         unconfirmedBalance = findViewById(R.id.unconfirmedBalance);
         availableBalance = findViewById(R.id.availableBalance);
@@ -121,7 +115,7 @@ public class MainActivity extends VeriActivity {
         List<Transaction> myDataset = getDataSet();
         // specify an adapter (see also next example)
         if (mAdapter == null) {
-            mAdapter = new TransactionListAdapter(MainActivity.this, myDataset);
+            mAdapter = new TransactionListAdapter(kit,MainActivity.this, myDataset);
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.setmDataset(myDataset);
@@ -155,11 +149,6 @@ public class MainActivity extends VeriActivity {
                 mAdapter.setmDataset(getDataSet());
             }
         });
-
-    }
-
-    protected void onResume(){
-        super.onResume();
         WalletConnection.setSyncCompleteListener(new WalletConnection.OnSyncCompleteListener() {
             @Override
             public void OnSyncComplete() {

@@ -2,7 +2,6 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.Button;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.Wallet;
 
@@ -21,7 +19,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.view.View.GONE;
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
-public class ProcessTransactionActivity extends VeriActivity {
+public class ProcessTransactionActivity extends WalletAppKitActivity {
 
     private final static String ADDRESS_EXTRA = "address";
     private final static String AMOUNT_EXTRA = "amount";
@@ -39,7 +37,6 @@ public class ProcessTransactionActivity extends VeriActivity {
 
     private Address address;
     private Coin amount;
-    private WalletAppKit kit;
     private ProgressBar progressBar;
 
     private String password;
@@ -58,10 +55,8 @@ public class ProcessTransactionActivity extends VeriActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         setContentView(R.layout.activity_process_transaction);
-        kit = WalletConnection.getKit();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);

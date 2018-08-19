@@ -2,7 +2,6 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
@@ -11,17 +10,13 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import org.bitcoinj.kits.WalletAppKit;
-
-public class ChangePasswordActivity extends VeriActivity {
+public class ChangePasswordActivity extends WalletAppKitActivity {
 
     private TextInputLayout currentPasswordLayout;
     private TextInputLayout newPasswordLayout;
     private TextInputLayout reNewPasswordLayout;
     private Button changePasswordButton;
     private CheckBox encryptWalletBox;
-
-    private WalletAppKit kit;
 
     private ProgressBar progressBar;
 
@@ -34,10 +29,8 @@ public class ChangePasswordActivity extends VeriActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         setContentView(R.layout.activity_change_password);
-        kit = WalletConnection.getKit();
         veriMobileApplication = (VeriMobileApplication) getApplication();
 
         currentPasswordLayout = findViewById(R.id.currentPasswordInputLayout);

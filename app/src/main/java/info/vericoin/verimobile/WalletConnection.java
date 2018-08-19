@@ -42,23 +42,6 @@ public class WalletConnection {
         return runInUIThread;
     }
 
-    public static void startAsync(final Context context) {
-        startAsync(context, "");
-    }
-
-    public static void startAsync(final Context context, final String password) {
-
-        if (kit == null) { //Only start async if it has not already started.
-            BriefLogFormatter.init();
-            new Thread(new Runnable() {
-                public void run() {
-                    connectToWallet(context.getApplicationContext(), password);
-                }
-            }).start();
-        }
-
-    }
-
     public static boolean doesWalletExist(Context context) {
         return (new File(context.getFilesDir(), filePrefix + ".wallet").exists() || kit != null);
     }
@@ -159,19 +142,34 @@ public class WalletConnection {
         syncComplete = true;
     }
 
-    public static void connectToWallet(Context context, final String password) {
 
-        initWalletAppKit(context, password);
-
-        startWalletAsync();
-
+    public static void startWallet(Context context) {
+        startWallet(context, "");
     }
 
-    public static void connect(OnConnectListener newListener) {
+    public static void startWallet(Context context, final String password) {
+
+        if (kit == null) { //Only start async if it has not already started.
+            initWalletAppKit(context, password);
+
+            BriefLogFormatter.init();
+
+            new Thread(new Runnable() {
+                public void run() {
+                    startWalletAsync();
+                }
+            }).start();
+        }
+    }
+
+    public static void connect(Context context, OnConnectListener newListener) {
 
         connectListener = newListener;
-        if (kit != null && startUpComplete) {
+        if (kit != null && startUpComplete) { //Check to see if Wallet is already running.
             connectListener.OnSetUpComplete(kit);
+        }
+        if(kit == null) {
+            startWallet(context, "");
         }
 
     }
@@ -182,10 +180,6 @@ public class WalletConnection {
         if (kit != null && syncComplete) {
             syncCompleteListener.OnSyncComplete();
         }
-    }
-
-    public static WalletAppKit getKit() {
-        return kit;
     }
 
     public interface OnConnectListener {

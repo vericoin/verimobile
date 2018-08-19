@@ -88,16 +88,16 @@ public class CreateWalletActivity extends VeriActivity {
                     progressBar.setVisibility(View.VISIBLE);
 
                     if (noPasswordBox.isChecked()) {
-                        WalletConnection.startAsync(CreateWalletActivity.this);
+                        WalletConnection.startWallet(CreateWalletActivity.this);
                     } else if (shouldEncryptWallet()) {
                         savePassword(getPassword());
-                        WalletConnection.startAsync(CreateWalletActivity.this, getPassword());
+                        WalletConnection.startWallet(CreateWalletActivity.this, getPassword());
                     } else {
                         savePassword(getPassword());
-                        WalletConnection.startAsync(CreateWalletActivity.this);
+                        WalletConnection.startWallet(CreateWalletActivity.this);
                     }
 
-                    WalletConnection.connect(new WalletConnection.OnConnectListener() {
+                    WalletConnection.connect(CreateWalletActivity.this, new WalletConnection.OnConnectListener() {
 
                         @Override
                         public void OnSetUpComplete(WalletAppKit kit) {

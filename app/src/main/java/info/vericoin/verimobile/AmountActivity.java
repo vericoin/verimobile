@@ -2,7 +2,6 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -11,11 +10,10 @@ import android.widget.Toast;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.kits.WalletAppKit;
 
 import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
-public class AmountActivity extends VeriActivity implements View.OnClickListener {
+public class AmountActivity extends WalletAppKitActivity implements View.OnClickListener {
 
     private final static String ADDRESS_EXTRA = "address";
 
@@ -42,8 +40,6 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
 
     private Button nextButton;
 
-    private WalletAppKit kit;
-
     public static Intent createIntent(Context context, Address address) {
         Intent intent = new Intent(context, AmountActivity.class);
         intent.putExtra(ADDRESS_EXTRA, address);
@@ -51,11 +47,8 @@ public class AmountActivity extends VeriActivity implements View.OnClickListener
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         setContentView(R.layout.activity_amount);
-
-        kit = WalletConnection.getKit();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
 

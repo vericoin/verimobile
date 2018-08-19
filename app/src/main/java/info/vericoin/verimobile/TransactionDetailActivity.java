@@ -2,7 +2,6 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,13 +11,10 @@ import android.widget.TextView;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.kits.WalletAppKit;
 
-public class TransactionDetailActivity extends VeriActivity {
+public class TransactionDetailActivity extends WalletAppKitActivity {
 
     private final static String TX_EXTRA = "Transaction";
-
-    private WalletAppKit kit;
 
     private Transaction tx;
 
@@ -48,10 +44,8 @@ public class TransactionDetailActivity extends VeriActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         setContentView(R.layout.activity_transaction_details);
-        kit = WalletConnection.getKit();
 
         amountView = findViewById(R.id.amount);
         txHashView = findViewById(R.id.txHash);
@@ -85,8 +79,8 @@ public class TransactionDetailActivity extends VeriActivity {
     public void setUpTransactionDetails() {
         tx = kit.wallet().getTransaction(Sha256Hash.wrap(txString));
 
-        inputAdapter = new InputListAdapter(tx.getInputs());
-        outputAdapter = new OutputListAdapter(tx.getOutputs());
+        inputAdapter = new InputListAdapter(kit, tx.getInputs());
+        outputAdapter = new OutputListAdapter(kit, tx.getOutputs());
 
         inputRecyclerView.setAdapter(inputAdapter);
         outputRecyclerView.setAdapter(outputAdapter);

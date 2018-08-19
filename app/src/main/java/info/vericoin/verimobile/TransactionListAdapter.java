@@ -20,8 +20,11 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
     private List<Transaction> mDataset;
     private Context context;
 
+    private WalletAppKit kit;
+
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TransactionListAdapter(Context context, List<Transaction> myDataset) {
+    public TransactionListAdapter(WalletAppKit kit, Context context, List<Transaction> myDataset) {
+        this.kit = kit;
         mDataset = myDataset;
         this.context = context;
     }
@@ -54,8 +57,6 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         TransactionConfidence.ConfidenceType confidenceType = tx.getConfidence().getConfidenceType();
         holder.confidenceImage.setImageResource(Util.getConfidenceResource(confidenceType));
 
-
-        WalletAppKit kit = WalletConnection.getKit();
         holder.txHash.setText(tx.getHashAsString());
 
         holder.date.setText(Util.getDateString(tx.getUpdateTime()));

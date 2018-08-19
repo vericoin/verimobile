@@ -2,7 +2,6 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
@@ -15,15 +14,12 @@ import com.google.zxing.integration.android.IntentResult;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
-import org.bitcoinj.kits.WalletAppKit;
 
-public class RecipientActivity extends VeriActivity {
+public class RecipientActivity extends WalletAppKitActivity {
 
     private TextInputLayout sendAddr;
 
     private Button nextButton;
-
-    private WalletAppKit kit;
 
     private ConstraintLayout scanButton;
 
@@ -32,11 +28,8 @@ public class RecipientActivity extends VeriActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         setContentView(R.layout.activity_recipient);
-
-        kit = WalletConnection.getKit();
 
         sendAddr = findViewById(R.id.sendAddr);
 

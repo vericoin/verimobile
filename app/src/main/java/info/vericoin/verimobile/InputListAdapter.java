@@ -17,7 +17,10 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
 
     private List<TransactionInput> mDataset;
 
-    public InputListAdapter(List<TransactionInput> myDataset) {
+    private WalletAppKit kit;
+
+    public InputListAdapter(WalletAppKit kit, List<TransactionInput> myDataset) {
+        this.kit = kit;
         mDataset = myDataset;
     }
 
@@ -45,8 +48,6 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
         // - replace the contents of the view with that element
 
         TransactionInput put = mDataset.get(position);
-
-        WalletAppKit kit = WalletConnection.getKit();
 
         Coin value = put.getValue();
         if (value == null) {

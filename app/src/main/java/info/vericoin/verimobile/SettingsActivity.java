@@ -17,7 +17,7 @@ import org.bitcoinj.kits.WalletAppKit;
 
 import java.io.IOException;
 
-public class SettingsActivity extends VeriActivity {
+public class SettingsActivity extends WalletAppKitActivity {
 
     public final static String BTC_WALLET_FILE_NAME = "Bitcoin_Testnet3_Wallet";
 
@@ -26,10 +26,8 @@ public class SettingsActivity extends VeriActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onWalletKitReady() {
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
-
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment {
@@ -56,12 +54,15 @@ public class SettingsActivity extends VeriActivity {
 
         private WalletAppKit kit;
 
+        private SettingsActivity settingsActivity;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_screen);
             veriMobileApplication = (VeriMobileApplication) getActivity().getApplication();
-            kit = WalletConnection.getKit();
+            settingsActivity = (SettingsActivity) getActivity();
+            kit = settingsActivity.kit;
 
             changePasswordRow = findPreference(getString(R.string.change_password_button));
             changePasswordRow.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
