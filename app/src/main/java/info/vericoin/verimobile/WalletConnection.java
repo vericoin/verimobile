@@ -149,7 +149,7 @@ public class WalletConnection {
 
     public static void startWallet(Context context, final String password) {
 
-        if (kit == null) { //Only start async if it has not already started.
+        if (kit == null) { //Only start wallet if it has not already started.
             initWalletAppKit(context, password);
 
             BriefLogFormatter.init();
