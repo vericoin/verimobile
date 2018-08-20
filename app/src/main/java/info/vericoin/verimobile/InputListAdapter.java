@@ -47,16 +47,16 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        TransactionInput put = mDataset.get(position);
+        TransactionInput input = mDataset.get(position);
 
-        Coin value = put.getValue();
+        Coin value = input.getValue();
         if (value == null) {
             holder.amount.setText("N/A");
         } else {
             holder.amount.setText(value.toFriendlyString());
         }
 
-        TransactionOutput output = put.getConnectedOutput();
+        TransactionOutput output = input.getConnectedOutput();
         try {
             holder.address.setText(output.getAddressFromP2PKHScript(kit.params()).toBase58());
         } catch (Exception e) {

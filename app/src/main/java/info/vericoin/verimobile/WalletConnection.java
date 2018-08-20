@@ -67,13 +67,16 @@ public class WalletConnection {
         fop.close();
     }
 
-    public static boolean deleteWallet(Context context){
+    public static void deleteWallet(Context context){
         File file = new File(context.getFilesDir(), filePrefix + ".wallet");
 
         if(file.exists()){
-            return file.delete();
+            file.delete();
         }
-        return false;
+
+        kit.wallet().reset();
+        kit.stopAsync();
+        kit = null;
     }
 
     public static void importFromSeed(final Context context, final String password, final List<String> mnemonicList, final long creationTime){
@@ -89,7 +92,7 @@ public class WalletConnection {
         }
     }
 
-    public static void initWalletAppKit(Context context, final String password){
+    private static void initWalletAppKit(Context context, final String password){
         // Start up a basic app using a class that automates some boilerplate. Ensure we always have at least one key.
         kit = new WalletAppKit(params, context.getFilesDir(), filePrefix) {
             @Override
@@ -119,7 +122,7 @@ public class WalletConnection {
         };
     }
 
-    public static void startWalletAsync(){
+    private static void startWalletAsync(){
 
         if (params == RegTestParams.get()) {
             // Regression test mode is designed for testing and development only, so there's no public network for it.

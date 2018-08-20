@@ -32,6 +32,8 @@ public class SetUpSeedWallet extends SetUpWallet {
     void importWallet(String password) {
         if(!isNoPassword()){
             veriMobileApplication.newPassword(password);
+        }else{
+            veriMobileApplication.removePassword();
         }
         WalletConnection.importFromSeed(SetUpSeedWallet.this, password, mnemonicList, creationTime);
         Toast.makeText(SetUpSeedWallet.this, "Wallet imported!", Toast.LENGTH_LONG).show();

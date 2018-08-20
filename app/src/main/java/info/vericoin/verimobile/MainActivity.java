@@ -14,10 +14,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.VerificationException;
 import org.bitcoinj.core.listeners.NewBestBlockListener;
+import org.bitcoinj.core.listeners.PeerConnectedEventListener;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
@@ -37,6 +39,7 @@ public class MainActivity extends WalletAppKitActivity {
     private TextView unconfirmedBalance;
     private TextView availableBalance;
     private TextView blockHeight;
+    private TextView connectedPeers;
     private Button sendButton;
     private Button receiveButton;
 
@@ -72,6 +75,7 @@ public class MainActivity extends WalletAppKitActivity {
         receiveButton = findViewById(R.id.receiveButton);
         viewTransactionsButton = findViewById(R.id.viewTransactionsButton);
         syncingBlock = findViewById(R.id.synchingBlock);
+        connectedPeers = findViewById(R.id.connectedPeers);
         percentComplete = findViewById(R.id.percentComplete);
         lastSeenBlockDate = findViewById(R.id.lastSeenBlockDate);
         mRecyclerView = findViewById(R.id.recyclerView);
@@ -165,6 +169,18 @@ public class MainActivity extends WalletAppKitActivity {
                 });
             }
         });
+        kit.peerGroup().addConnectedEventListener(WalletConnection.getRunInUIThread(), new PeerConnectedEventListener() {
+            @Override
+            public void onPeerConnected(Peer peer, int peerCount) {
+                connectedPeers.setText(Integer.toString(peerCount));
+            }
+        });
+
+        connectedPeers.setText(Integer.toString(getConnectedPeerSize()));
+    }
+
+    public int getConnectedPeerSize(){
+        return kit.peerGroup().getConnectedPeers().size();
     }
 
     public ArrayList<Transaction> getDataSet() {

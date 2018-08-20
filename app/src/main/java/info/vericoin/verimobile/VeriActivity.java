@@ -3,7 +3,7 @@ package info.vericoin.verimobile;
 import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
-public class VeriActivity extends AppCompatActivity {
+public abstract class VeriActivity extends AppCompatActivity {
 
     private VeriMobileApplication veriMobileApplication;
 
