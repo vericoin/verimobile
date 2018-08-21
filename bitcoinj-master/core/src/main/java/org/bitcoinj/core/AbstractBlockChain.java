@@ -106,6 +106,12 @@ public abstract class AbstractBlockChain {
     private final CopyOnWriteArrayList<ListenerRegistration<ReorganizeListener>> reorganizeListeners;
     private final CopyOnWriteArrayList<ListenerRegistration<TransactionReceivedInBlockListener>> transactionReceivedListeners;
 
+    public void clearAllListeners(){
+        newBestBlockListeners.clear();
+        reorganizeListeners.clear();
+        transactionReceivedListeners.clear();
+    }
+
     // Holds a block header and, optionally, a list of tx hashes or block's transactions
     class OrphanBlock {
         final Block block;
@@ -854,6 +860,14 @@ public abstract class AbstractBlockChain {
             }
         }
         return currentChainCursor;
+    }
+
+    public double getEstBlockchainPercentComplete(){
+        long start = params.getGenesisBlock().getTimeSeconds();
+        long lastBlock = getChainHead().getHeader().getTimeSeconds();
+        long currentTime = System.currentTimeMillis() / 1000; //Convert to seconds
+
+        return lastBlock > 0 ? (double)(lastBlock - start) / (double)(currentTime - start) * 100 : 0;
     }
 
     /**

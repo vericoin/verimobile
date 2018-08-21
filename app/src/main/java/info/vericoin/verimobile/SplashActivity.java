@@ -27,7 +27,7 @@ public class SplashActivity extends VeriActivity {
 
         if (WalletConnection.doesWalletExist(SplashActivity.this)) {
             WalletConnection.startWallet(SplashActivity.this);
-            WalletConnection.connect(this, new WalletConnection.OnConnectListener() {
+            WalletConnection.setConnectListener(new WalletConnection.OnConnectListener() {
 
                 @Override
                 public void OnSetUpComplete(WalletAppKit kit) {

@@ -43,10 +43,16 @@ public abstract class SetUpWallet extends VeriActivity {
             @Override
             public void onClick(View view) {
                 resetError();
-                if(arePaswordsEqual()) {
-                    importWallet(getPassword());
+                if(isNoPassword()){
+                    importWallet("");
                 }else{
-                    setRePasswordError("Passwords do not match.");
+                    if(isPasswordEmpty()){
+                        setPasswordError("Password can not be empty");
+                    }else if(arePaswordsEqual()) {
+                        importWallet(getPassword());
+                    }else{
+                        setRePasswordError("Passwords do not match.");
+                    }
                 }
             }
         });
@@ -66,6 +72,10 @@ public abstract class SetUpWallet extends VeriActivity {
             }
         });
 
+    }
+
+    public boolean isPasswordEmpty(){
+        return passwordLayout.getEditText().getText().toString().isEmpty();
     }
 
     abstract void importWallet(String password);
@@ -100,6 +110,8 @@ public abstract class SetUpWallet extends VeriActivity {
     public boolean isNoPassword(){
         return noPassword.isChecked();
     }
+
+    public void setPasswordError(String error){ passwordLayout.setError(error);}
 
     public void setRePasswordError(String error){
         rePasswordLayout.setError(error);

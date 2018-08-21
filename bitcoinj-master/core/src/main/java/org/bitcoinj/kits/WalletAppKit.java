@@ -500,6 +500,14 @@ public class WalletAppKit extends AbstractIdleService {
         });
     }
 
+    public void stopImmediately(){
+        try {
+            shutDown();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void shutDown() throws Exception {
         // Runs in a separate thread.

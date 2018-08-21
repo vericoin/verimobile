@@ -201,6 +201,15 @@ public class Wallet extends BaseTaggableObject
     private final CopyOnWriteArrayList<ListenerRegistration<TransactionConfidenceEventListener>> transactionConfidenceListeners
         = new CopyOnWriteArrayList<>();
 
+    public void clearAllListeners(){
+        changeListeners.clear();
+        coinsSentListeners.clear();
+        coinsReceivedListeners.clear();
+        reorganizeListeners.clear();
+        scriptChangeListeners.clear();
+        transactionConfidenceListeners.clear();
+    }
+
     // A listener that relays confidence changes from the transaction confidence object to the wallet event listener,
     // as a convenience to API users so they don't have to register on every transaction themselves.
     private TransactionConfidence.Listener txConfidenceListener;
@@ -3382,14 +3391,6 @@ public class Wallet extends BaseTaggableObject
             return null;
         else
             return new Date(secs * 1000);
-    }
-
-    public double getEstBlockchainPercentComplete(){
-        long start = params.getGenesisBlock().getTimeSeconds();
-        long lastBlock = getLastBlockSeenTimeSecs();
-        long currentTime = System.currentTimeMillis() / 1000; //Convert to seconds
-
-        return lastBlock > 0 ? (double)(lastBlock - start) / (double)(currentTime - start) * 100 : 0;
     }
 
     /**

@@ -135,8 +135,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                     .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            WalletConnection.deleteWallet(getActivity());
-                            startActivity(WelcomeActivity.createIntent(getActivity()));
+                            startActivity(DeleteWalletActivity.createIntent(getActivity()));
                         }
                     });
 

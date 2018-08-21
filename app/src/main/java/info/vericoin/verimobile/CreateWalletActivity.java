@@ -96,15 +96,17 @@ public class CreateWalletActivity extends VeriActivity {
                         savePassword(getPassword());
                         WalletConnection.startWallet(CreateWalletActivity.this);
                     }
-
-                    WalletConnection.connect(CreateWalletActivity.this, new WalletConnection.OnConnectListener() {
-
+                    if(encryptWallet.isChecked()) {
+                        WalletConnection.startWallet(CreateWalletActivity.this, getPassword());
+                    }else{
+                        WalletConnection.startWallet(CreateWalletActivity.this);
+                    }
+                    WalletConnection.setConnectListener(new WalletConnection.OnConnectListener() {
                         @Override
                         public void OnSetUpComplete(WalletAppKit kit) {
                             startActivity(MainActivity.createIntent(CreateWalletActivity.this));
                             ActivityCompat.finishAffinity(CreateWalletActivity.this); //Prevent app from going back to previous activities.
                         }
-
                     });
                 }
             }

@@ -18,6 +18,7 @@ import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.VerificationException;
+import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.core.listeners.NewBestBlockListener;
 import org.bitcoinj.core.listeners.PeerConnectedEventListener;
 import org.bitcoinj.wallet.Wallet;
@@ -27,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -55,8 +54,6 @@ public class MainActivity extends WalletAppKitActivity {
     private LinearLayoutManager mLayoutManager;
 
     private TransactionListAdapter mAdapter;
-
-    private Timer timer;
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -114,7 +111,6 @@ public class MainActivity extends WalletAppKitActivity {
         });
 
         setBalances(kit.wallet());
-        updateBlockInformation();
 
         List<Transaction> myDataset = getDataSet();
         // specify an adapter (see also next example)
@@ -125,27 +121,6 @@ public class MainActivity extends WalletAppKitActivity {
             mAdapter.setmDataset(myDataset);
         }
 
-        WalletConnection.setSyncCompleteListener(new WalletConnection.OnSyncCompleteListener() {
-            @Override
-            public void OnSyncComplete() {
-                syncingBlock.setVisibility(View.INVISIBLE);
-            }
-        });
-
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                //Update block information every 1 second while syncing.
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateBlockInformation();
-                    }
-                });
-            }
-        }, 0, 1_000);
-
         kit.wallet().addChangeEventListener(WalletConnection.getRunInUIThread(), new WalletChangeEventListener() {
             @Override
             public void onWalletChanged(Wallet wallet) {
@@ -153,18 +128,21 @@ public class MainActivity extends WalletAppKitActivity {
                 mAdapter.setmDataset(getDataSet());
             }
         });
-        WalletConnection.setSyncCompleteListener(new WalletConnection.OnSyncCompleteListener() {
+
+        setBlockInformation();
+        WalletConnection.addBlockDownloadListener(new WalletConnection.BlockDownloadListener() {
             @Override
-            public void OnSyncComplete() {
+            public void progress(double pct, int blocksSoFar, Date date) {
+                setBlockInformation();
+            }
 
+            @Override
+            public void doneDownload() {
                 syncingBlock.setVisibility(View.INVISIBLE);
-
-                //Sync is done add block listener instead and turn off scheduled timer.
-                timer.cancel();
-                kit.chain().addNewBestBlockListener(WalletConnection.getRunInUIThread(), new NewBestBlockListener() {
+                kit.chain().addNewBestBlockListener(new NewBestBlockListener() {
                     @Override
                     public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
-                        updateBlockInformation();
+                        setBlockInformation();
                     }
                 });
             }
@@ -179,6 +157,12 @@ public class MainActivity extends WalletAppKitActivity {
         connectedPeers.setText(Integer.toString(getConnectedPeerSize()));
     }
 
+    public void setBlockInformation(){
+        setPercentComplete(kit.chain().getEstBlockchainPercentComplete());
+        setBlockHeight(kit.chain().getBestChainHeight());
+        setLastSeenBlockDate(kit.chain().getChainHead().getHeader().getTime());
+    }
+
     public int getConnectedPeerSize(){
         return kit.peerGroup().getConnectedPeers().size();
     }
@@ -186,12 +170,6 @@ public class MainActivity extends WalletAppKitActivity {
     public ArrayList<Transaction> getDataSet() {
         List<Transaction> transactions = kit.wallet().getTransactionsByTime();
         return new ArrayList<>(transactions.subList(0, Math.min(RECENT_TRANSACTION_SIZE, transactions.size())));
-    }
-
-    public void updateBlockInformation() {
-        setBlockHeight(kit.wallet().getLastBlockSeenHeight());
-        setLastSeenBlockDate(kit.wallet().getLastBlockSeenTime());
-        setPercentComplete(kit.wallet().getEstBlockchainPercentComplete());
     }
 
     public void setBlockHeight(int height) {

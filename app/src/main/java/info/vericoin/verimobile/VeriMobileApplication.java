@@ -20,6 +20,8 @@ public class VeriMobileApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        WalletConnection.setVeriMobileApplication(this);
+
         sharedPref = getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
         defaultPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
     }

@@ -12,7 +12,7 @@ public abstract class WalletAppKitActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WalletConnection.connect(this, new WalletConnection.OnConnectListener() {
+        WalletConnection.setConnectListener(new WalletConnection.OnConnectListener() {
             @Override
             public void OnSetUpComplete(WalletAppKit walletAppKit) {
                 WalletAppKitActivity.this.kit = walletAppKit;
