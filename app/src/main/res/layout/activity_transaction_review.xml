@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="@+id/sendButton" />
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/card_view2"
+        android:id="@+id/blockChainCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -106,7 +106,7 @@
         android:text="Fee:"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_view2" />
+        app:layout_constraintTop_toBottomOf="@+id/blockChainCard" />
 
     <TextView
         android:id="@+id/fee"
@@ -117,7 +117,7 @@
         android:text="0.01 BTC"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/card_view2" />
+        app:layout_constraintTop_toBottomOf="@+id/blockChainCard" />
 
     <TextView
         android:id="@+id/textView15"

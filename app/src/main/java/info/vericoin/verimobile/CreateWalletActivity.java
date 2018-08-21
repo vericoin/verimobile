@@ -13,7 +13,9 @@ import android.widget.ProgressBar;
 
 import org.bitcoinj.kits.WalletAppKit;
 
-public class CreateWalletActivity extends VeriActivity {
+import info.vericoin.verimobile.Listeners.OnConnectListener;
+
+public class CreateWalletActivity extends VeriActivity implements OnConnectListener {
 
     private Button createWalletButton;
 
@@ -101,16 +103,22 @@ public class CreateWalletActivity extends VeriActivity {
                     }else{
                         WalletConnection.startWallet(CreateWalletActivity.this);
                     }
-                    WalletConnection.setConnectListener(new WalletConnection.OnConnectListener() {
-                        @Override
-                        public void OnSetUpComplete(WalletAppKit kit) {
-                            startActivity(MainActivity.createIntent(CreateWalletActivity.this));
-                            ActivityCompat.finishAffinity(CreateWalletActivity.this); //Prevent app from going back to previous activities.
-                        }
-                    });
+                    WalletConnection.addConnectListener(CreateWalletActivity.this);
                 }
             }
         });
+    }
+
+    @Override
+    public void OnSetUpComplete(WalletAppKit kit) {
+        startActivity(MainActivity.createIntent(CreateWalletActivity.this));
+        ActivityCompat.finishAffinity(CreateWalletActivity.this); //Prevent app from going back to previous activities.
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        WalletConnection.removeConnectListener(this);
     }
 
     public void savePassword(String password) {

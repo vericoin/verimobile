@@ -127,6 +127,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
+        <activity android:name=".PeerGroupListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Light"
+            android:label="Connected Peers"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

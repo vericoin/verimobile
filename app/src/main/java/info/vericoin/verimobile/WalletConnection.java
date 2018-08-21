@@ -23,6 +23,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import info.vericoin.verimobile.Listeners.BlockDownloadListener;
+import info.vericoin.verimobile.Listeners.OnConnectListener;
+
 public class WalletConnection {
 
     private static VeriMobileApplication veriMobileApplication;
@@ -31,11 +34,13 @@ public class WalletConnection {
         WalletConnection.veriMobileApplication = veriMobileApplication;
     }
 
-    public static final String filePrefix = "forwarding-service-testnet";
+    private static final String FILE_PREFIX = "forwarding-service-testnet";
+    private static final String WALLET_FILE_NAME = FILE_PREFIX + ".wallet";
+    private static final String CHAIN_FILE_NAME = FILE_PREFIX + ".spvchain";
     private static boolean startUpComplete = false;
     private static boolean starting = false;
-    private static boolean finishedDownloading = false;
-    private static OnConnectListener connectListener;
+    private static boolean finishedDownloadingBlockchain = false;
+    private static List<OnConnectListener> connectListeners = new ArrayList<>();
     private static NetworkParameters params = TestNet3Params.get();
     private static WalletAppKit kit;
     private static Executor runInUIThread = new Executor() {
@@ -46,29 +51,17 @@ public class WalletConnection {
             handler.post(runnable);
         }
     };
-    /*
-    private static HandlerThread backgroundHandler = new HandlerThread("backgroundHandler");
-    private static Executor runInBackgroundThread = new Executor() {
-        @Override
-        public void execute(@NonNull Runnable runnable) {
-            if(!backgroundHandler.isAlive()){
-                backgroundHandler.start();
-            }
-            Handler handler = new Handler(backgroundHandler.getLooper());
-            handler.post(runnable);
-        }
-    };*/
 
     public static Executor getRunInUIThread() {
         return runInUIThread;
     }
 
     public static boolean doesWalletExist(Context context) {
-        return (new File(context.getFilesDir(), filePrefix + ".wallet").exists() || kit != null);
+        return (new File(context.getFilesDir(), WALLET_FILE_NAME).exists() || kit != null);
     }
 
     public static void importWallet(Context context, Uri uri) throws IOException, NullPointerException{
-        File file = new File(context.getFilesDir(), filePrefix + ".wallet");
+        File file = new File(context.getFilesDir(), WALLET_FILE_NAME);
 
         if(file.exists()){
             file.delete();
@@ -88,52 +81,67 @@ public class WalletConnection {
         fop.close();
     }
 
-    public static void deleteWallet(final Context c){
+    public static void deleteWallet(final Context context){
         new Thread(new Runnable() {
             @Override
             public void run() {
-                kit.wallet().clearAllListeners();
-                kit.chain().clearAllListeners();
                 kit.stopImmediately();
+
+                clearListeners();
 
                 veriMobileApplication.removePassword();
 
-                kit = null;
-                starting = false;
-                startUpComplete = false;
-                connectListener = null;
-                finishedDownloading = false;
-                blockDownloadListeners.clear();
+                resetVariables();
 
-                File walletFile = new File(c.getFilesDir(), filePrefix + ".wallet");
-                walletFile.delete();
+                deleteWalletFile(context);
+                deleteChainFile(context);
 
-                File chainFile = new File(c.getFilesDir(), filePrefix + ".spvchain");
-                chainFile.delete();
-
-                c.startActivity(WelcomeActivity.createIntent(c));
+                context.startActivity(WelcomeActivity.createIntent(context));
             }
         }).start();
+    }
+
+    private static void clearListeners(){
+        kit.wallet().clearAllListeners();
+        kit.chain().clearAllListeners();
+        connectListeners.clear();
+        blockDownloadListeners.clear();
+    }
+
+    private static void resetVariables(){
+        kit = null;
+        starting = false;
+        startUpComplete = false;
+        finishedDownloadingBlockchain = false;
+    }
+
+    private static void deleteWalletFile(Context context){
+        File walletFile = new File(context.getFilesDir(), WALLET_FILE_NAME);
+        walletFile.delete();
+    }
+
+    private static void deleteChainFile(Context context){
+        File chainFile = new File(context.getFilesDir(), CHAIN_FILE_NAME);
+        chainFile.delete();
     }
 
     private static ArrayList<BlockDownloadListener> blockDownloadListeners = new ArrayList<>();
 
     public static void addBlockDownloadListener(BlockDownloadListener listener) {
-        if(finishedDownloading){
+        if(finishedDownloadingBlockchain){
             listener.doneDownload();
         }
         blockDownloadListeners.add(listener);
     }
 
-    public interface BlockDownloadListener {
-        void progress(double pct, int blocksSoFar, Date date);
-        void doneDownload();
+    public static void removeBlockDownloadListener(BlockDownloadListener listener){
+        blockDownloadListeners.remove(listener);
     }
 
     private static void initWalletAppKit(Context context, final String password){
         BriefLogFormatter.init();
         // Start up a basic app using a class that automates some boilerplate. Ensure we always have at least one key.
-        kit = new WalletAppKit(params, context.getFilesDir(), filePrefix) {
+        kit = new WalletAppKit(params, context.getFilesDir(), FILE_PREFIX) {
             @Override
             protected void onSetupCompleted() {
                 // This is called in a background thread after startAndWait is called, as setting up various objects
@@ -151,8 +159,8 @@ public class WalletConnection {
                 runInUIThread.execute(new Runnable() {
                     @Override
                     public void run() {
-                        if(connectListener != null) {
-                            connectListener.OnSetUpComplete(kit);
+                        for(OnConnectListener onConnectListener: connectListeners){
+                            onConnectListener.OnSetUpComplete(kit);
                         }
                     }
                 });
@@ -163,17 +171,27 @@ public class WalletConnection {
         kit.setBlockingStartup(false);
         kit.setDownloadListener(new DownloadProgressTracker(){
             @Override
-            protected void progress(double pct, int blocksSoFar, Date date) {
-                for(BlockDownloadListener listener: blockDownloadListeners){
-                    listener.progress(pct, blocksSoFar, date);
-                }
+            protected void progress(final double pct, final int blocksSoFar, final Date date) {
+                runInUIThread.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(BlockDownloadListener listener: blockDownloadListeners){
+                            listener.progress(pct, blocksSoFar, date);
+                        }
+                    }
+                });
             }
             @Override
             protected void doneDownload(){
-                finishedDownloading = true;
-                for(BlockDownloadListener listener: blockDownloadListeners){
-                    listener.doneDownload();
-                }
+                runInUIThread.execute(new Runnable() {
+                    @Override
+                    public void run() {
+                        finishedDownloadingBlockchain = true;
+                        for(BlockDownloadListener listener: blockDownloadListeners){
+                            listener.doneDownload();
+                        }
+                    }
+                });
             }
         });
     }
@@ -225,15 +243,15 @@ public class WalletConnection {
         }
     }
 
-    public static void setConnectListener(OnConnectListener newListener) {
-        connectListener = newListener;
+    public static void addConnectListener(OnConnectListener listener) {
         if (kit != null && startUpComplete) { //Check to see if Wallet is already running.
-            connectListener.OnSetUpComplete(kit);
+            listener.OnSetUpComplete(kit);
         }
+        connectListeners.add(listener);
     }
 
-    public interface OnConnectListener {
-        void OnSetUpComplete(WalletAppKit kit);
+    public static void removeConnectListener(OnConnectListener listener){
+        connectListeners.remove(listener);
     }
 
 }

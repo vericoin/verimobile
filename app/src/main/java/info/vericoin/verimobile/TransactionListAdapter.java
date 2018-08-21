@@ -23,9 +23,8 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
     private WalletAppKit kit;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TransactionListAdapter(WalletAppKit kit, Context context, List<Transaction> myDataset) {
+    public TransactionListAdapter(WalletAppKit kit, Context context) {
         this.kit = kit;
-        mDataset = myDataset;
         this.context = context;
     }
 

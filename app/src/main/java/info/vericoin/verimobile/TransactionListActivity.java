@@ -6,12 +6,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
+import info.vericoin.verimobile.Updaters.TransactionListUpdater;
 
 public class TransactionListActivity extends WalletAppKitActivity {
 
@@ -19,6 +14,8 @@ public class TransactionListActivity extends WalletAppKitActivity {
     private LinearLayoutManager mLayoutManager;
 
     private TransactionListAdapter mAdapter;
+
+    private TransactionListUpdater transactionListUpdater;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, TransactionListActivity.class);
@@ -42,25 +39,24 @@ public class TransactionListActivity extends WalletAppKitActivity {
                 mLayoutManager.getOrientation());
         mRecyclerView.addItemDecoration(mDividerItemDecoration);
 
-        List<Transaction> myDataset = getDataSet();
         // specify an adapter (see also next example)
         if (mAdapter == null) {
-            mAdapter = new TransactionListAdapter(kit,TransactionListActivity.this, myDataset);
+            mAdapter = new TransactionListAdapter(kit,TransactionListActivity.this);
             mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setmDataset(myDataset);
         }
 
-        kit.wallet().addChangeEventListener(WalletConnection.getRunInUIThread(), new WalletChangeEventListener() {
-            @Override
-            public void onWalletChanged(Wallet wallet) {
-                mAdapter.setmDataset(getDataSet());
-            }
-        });
+        if(transactionListUpdater == null){
+            transactionListUpdater = new TransactionListUpdater(kit.wallet(), mAdapter);
+        }
+
+        transactionListUpdater.updateTransactionList();
+        transactionListUpdater.listenForTransactions();
     }
 
-    public ArrayList<Transaction> getDataSet() {
-        return new ArrayList<>(kit.wallet().getTransactionsByTime());
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        transactionListUpdater.stopListening();
     }
 
 }

@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import org.bitcoinj.kits.WalletAppKit;
 
-public abstract class WalletAppKitActivity extends VeriActivity {
+import info.vericoin.verimobile.Listeners.OnConnectListener;
+
+public abstract class WalletAppKitActivity extends VeriActivity implements OnConnectListener {
 
     protected WalletAppKit kit;
 
@@ -12,13 +14,19 @@ public abstract class WalletAppKitActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WalletConnection.setConnectListener(new WalletConnection.OnConnectListener() {
-            @Override
-            public void OnSetUpComplete(WalletAppKit walletAppKit) {
-                WalletAppKitActivity.this.kit = walletAppKit;
-                onWalletKitReady();
-            }
-        });
+        WalletConnection.addConnectListener(this);
+    }
+
+    @Override
+    public void OnSetUpComplete(WalletAppKit walletAppKit) {
+        WalletAppKitActivity.this.kit = walletAppKit;
+        onWalletKitReady();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        WalletConnection.removeConnectListener(this);
     }
 
     protected abstract void onWalletKitReady();

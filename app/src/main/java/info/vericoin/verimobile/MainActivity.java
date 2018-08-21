@@ -3,6 +3,7 @@ package info.vericoin.verimobile;
 import android.content.Context;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,21 +14,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Peer;
-import org.bitcoinj.core.StoredBlock;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.VerificationException;
-import org.bitcoinj.core.listeners.DownloadProgressTracker;
-import org.bitcoinj.core.listeners.NewBestBlockListener;
-import org.bitcoinj.core.listeners.PeerConnectedEventListener;
-import org.bitcoinj.wallet.Wallet;
-import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import info.vericoin.verimobile.Updaters.BlockchainUpdater;
+import info.vericoin.verimobile.Updaters.PeerGroupUpdater;
+import info.vericoin.verimobile.Updaters.TransactionListUpdater;
+import info.vericoin.verimobile.Updaters.WalletValueUpdater;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -39,6 +29,7 @@ public class MainActivity extends WalletAppKitActivity {
     private TextView availableBalance;
     private TextView blockHeight;
     private TextView connectedPeers;
+    private CardView blockChainView;
     private Button sendButton;
     private Button receiveButton;
 
@@ -54,6 +45,11 @@ public class MainActivity extends WalletAppKitActivity {
     private LinearLayoutManager mLayoutManager;
 
     private TransactionListAdapter mAdapter;
+
+    private TransactionListUpdater transactionListUpdater;
+    private WalletValueUpdater walletValueUpdater;
+    private BlockchainUpdater blockchainUpdater;
+    private PeerGroupUpdater peerGroupUpdater;
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -76,6 +72,14 @@ public class MainActivity extends WalletAppKitActivity {
         percentComplete = findViewById(R.id.percentComplete);
         lastSeenBlockDate = findViewById(R.id.lastSeenBlockDate);
         mRecyclerView = findViewById(R.id.recyclerView);
+        blockChainView = findViewById(R.id.blockChainCard);
+
+        blockChainView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(PeerGroupListActivity.createIntent(MainActivity.this));
+            }
+        });
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -110,97 +114,49 @@ public class MainActivity extends WalletAppKitActivity {
             }
         });
 
-        setBalances(kit.wallet());
-
-        List<Transaction> myDataset = getDataSet();
         // specify an adapter (see also next example)
         if (mAdapter == null) {
-            mAdapter = new TransactionListAdapter(kit,MainActivity.this, myDataset);
+            mAdapter = new TransactionListAdapter(kit,MainActivity.this);
             mRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setmDataset(myDataset);
         }
 
-        kit.wallet().addChangeEventListener(WalletConnection.getRunInUIThread(), new WalletChangeEventListener() {
-            @Override
-            public void onWalletChanged(Wallet wallet) {
-                setBalances(wallet);
-                mAdapter.setmDataset(getDataSet());
-            }
-        });
+        if(transactionListUpdater == null){
+            transactionListUpdater = new TransactionListUpdater(kit.wallet(), mAdapter, RECENT_TRANSACTION_SIZE);
+        }
 
-        setBlockInformation();
+        transactionListUpdater.updateTransactionList();
+        transactionListUpdater.listenForTransactions();
 
-        WalletConnection.addBlockDownloadListener(new WalletConnection.BlockDownloadListener() {
-            @Override
-            public void progress(double pct, int blocksSoFar, Date date) {
-                setBlockInformation();
-            }
+        if(walletValueUpdater == null){
+            walletValueUpdater = new WalletValueUpdater(kit.wallet(), availableBalance, unconfirmedBalance);
+        }
 
-            @Override
-            public void doneDownload() {
-                setBlockInformation();
-                syncingBlock.setVisibility(View.INVISIBLE);
-                kit.chain().addNewBestBlockListener(WalletConnection.getRunInUIThread(), new NewBestBlockListener() {
-                    @Override
-                    public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
-                        setBlockInformation();
-                    }
-                });
-            }
-        });
+        walletValueUpdater.updateWalletView();
+        walletValueUpdater.listenForBalanceChanges();
 
-        kit.peerGroup().addConnectedEventListener(WalletConnection.getRunInUIThread(), new PeerConnectedEventListener() {
-            @Override
-            public void onPeerConnected(Peer peer, int peerCount) {
-                connectedPeers.setText(Integer.toString(peerCount));
-            }
-        });
+        if(blockchainUpdater == null){
+            blockchainUpdater = new BlockchainUpdater(kit.chain(), syncingBlock, percentComplete, blockHeight, lastSeenBlockDate);
+        }
 
-        connectedPeers.setText(Integer.toString(getConnectedPeerSize()));
+        blockchainUpdater.updateBlockChainView();
+        blockchainUpdater.listenForBlocks();
+
+        if(peerGroupUpdater == null){
+            peerGroupUpdater = new PeerGroupUpdater(kit.peerGroup(), connectedPeers);
+        }
+
+        peerGroupUpdater.updatePeerView();
+        peerGroupUpdater.listenForPeerConnections();
     }
 
-    public void setBlockInformation(){
-        setPercentComplete(kit.chain().getEstBlockchainPercentComplete());
-        setBlockHeight(kit.chain().getBestChainHeight());
-        setLastSeenBlockDate(kit.chain().getChainHead().getHeader().getTime());
-    }
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
 
-    public int getConnectedPeerSize(){
-        return kit.peerGroup().getConnectedPeers().size();
-    }
-
-    public ArrayList<Transaction> getDataSet() {
-        List<Transaction> transactions = kit.wallet().getTransactionsByTime();
-        return new ArrayList<>(transactions.subList(0, Math.min(RECENT_TRANSACTION_SIZE, transactions.size())));
-    }
-
-    public void setBlockHeight(int height) {
-        blockHeight.setText(String.valueOf(height));
-    }
-
-    public void setBalances(Wallet wallet) {
-        Coin available = wallet.getBalance(Wallet.BalanceType.AVAILABLE);
-        Coin estimated = wallet.getBalance(Wallet.BalanceType.ESTIMATED);
-        Coin unconfirmed = estimated.subtract(available);
-        setUnconfirmedBalance(unconfirmed);
-        setAvailableBalance(available);
-    }
-
-    public void setPercentComplete(double percent) {
-        percentComplete.setText(String.format(Locale.getDefault(), "%.2f %%", percent));
-    }
-
-    public void setLastSeenBlockDate(Date date) {
-        lastSeenBlockDate.setText(Util.getDateTimeString(date));
-    }
-
-    public void setUnconfirmedBalance(Coin coin) {
-        unconfirmedBalance.setText(coin.toFriendlyString());
-    }
-
-    public void setAvailableBalance(Coin coin) {
-        availableBalance.setText(coin.toFriendlyString());
+        transactionListUpdater.stopListening();
+        walletValueUpdater.stopListening();
+        blockchainUpdater.stopListening();
+        peerGroupUpdater.stopListening();
     }
 
     @Override
@@ -222,4 +178,5 @@ public class MainActivity extends WalletAppKitActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
 }

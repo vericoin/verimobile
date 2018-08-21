@@ -21,6 +21,8 @@ public class SettingsActivity extends WalletAppKitActivity {
 
     public final static String BTC_WALLET_FILE_NAME = "Bitcoin_Testnet3_Wallet";
 
+    public final static String MIME_TYPE = "application/x-bitcoin";
+
     public static Intent createIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
     }
@@ -77,7 +79,18 @@ public class SettingsActivity extends WalletAppKitActivity {
             exportWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    createFile("application/x-bitcoin", BTC_WALLET_FILE_NAME);
+                    PasswordDialog dialog = new PasswordDialog();
+                    dialog.setListener(new PasswordDialog.OnPasswordListener() {
+                        @Override
+                        public void onSuccess(String password) {
+                            createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);;
+                        }
+                    });
+                    if(veriMobileApplication.doesPasswordExist()){
+                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "passwordRequired");
+                    }else{
+                        createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
+                    }
                     return true;
                 }
             });
