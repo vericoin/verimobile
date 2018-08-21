@@ -130,6 +130,7 @@ public class MainActivity extends WalletAppKitActivity {
         });
 
         setBlockInformation();
+
         WalletConnection.addBlockDownloadListener(new WalletConnection.BlockDownloadListener() {
             @Override
             public void progress(double pct, int blocksSoFar, Date date) {
@@ -138,8 +139,9 @@ public class MainActivity extends WalletAppKitActivity {
 
             @Override
             public void doneDownload() {
+                setBlockInformation();
                 syncingBlock.setVisibility(View.INVISIBLE);
-                kit.chain().addNewBestBlockListener(new NewBestBlockListener() {
+                kit.chain().addNewBestBlockListener(WalletConnection.getRunInUIThread(), new NewBestBlockListener() {
                     @Override
                     public void notifyNewBestBlock(StoredBlock block) throws VerificationException {
                         setBlockInformation();
@@ -147,6 +149,7 @@ public class MainActivity extends WalletAppKitActivity {
                 });
             }
         });
+
         kit.peerGroup().addConnectedEventListener(WalletConnection.getRunInUIThread(), new PeerConnectedEventListener() {
             @Override
             public void onPeerConnected(Peer peer, int peerCount) {

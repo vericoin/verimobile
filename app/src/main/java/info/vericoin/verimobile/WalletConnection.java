@@ -34,6 +34,7 @@ public class WalletConnection {
     public static final String filePrefix = "forwarding-service-testnet";
     private static boolean startUpComplete = false;
     private static boolean starting = false;
+    private static boolean finishedDownloading = false;
     private static OnConnectListener connectListener;
     private static NetworkParameters params = TestNet3Params.get();
     private static WalletAppKit kit;
@@ -101,6 +102,7 @@ public class WalletConnection {
                 starting = false;
                 startUpComplete = false;
                 connectListener = null;
+                finishedDownloading = false;
                 blockDownloadListeners.clear();
 
                 File walletFile = new File(c.getFilesDir(), filePrefix + ".wallet");
@@ -117,6 +119,9 @@ public class WalletConnection {
     private static ArrayList<BlockDownloadListener> blockDownloadListeners = new ArrayList<>();
 
     public static void addBlockDownloadListener(BlockDownloadListener listener) {
+        if(finishedDownloading){
+            listener.doneDownload();
+        }
         blockDownloadListeners.add(listener);
     }
 
@@ -165,6 +170,7 @@ public class WalletConnection {
             }
             @Override
             protected void doneDownload(){
+                finishedDownloading = true;
                 for(BlockDownloadListener listener: blockDownloadListeners){
                     listener.doneDownload();
                 }
