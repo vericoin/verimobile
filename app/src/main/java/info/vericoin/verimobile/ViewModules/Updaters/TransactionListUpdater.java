@@ -1,4 +1,4 @@
-package info.vericoin.verimobile.Updaters;
+package info.vericoin.verimobile.ViewModules.Updaters;
 
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.wallet.Wallet;
@@ -6,8 +6,8 @@ import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
 import java.util.List;
 
-import info.vericoin.verimobile.TransactionListAdapter;
-import info.vericoin.verimobile.WalletConnection;
+import info.vericoin.verimobile.Adapters.TransactionListAdapter;
+import info.vericoin.verimobile.WalletSingleton;
 
 public class TransactionListUpdater implements WalletChangeEventListener {
 
@@ -27,11 +27,11 @@ public class TransactionListUpdater implements WalletChangeEventListener {
         this.size = size;
     }
 
-    public void listenForTransactions(){
-        wallet.addChangeEventListener(WalletConnection.getRunInUIThread(), this);
+    public void listenForTransactions() {
+        wallet.addChangeEventListener(WalletSingleton.getRunInUIThread(), this);
     }
 
-    public void updateTransactionList(){
+    public void updateTransactionList() {
         List<Transaction> transactionList = wallet.getTransactionsByTime();
         adapter.setmDataset(transactionList.subList(0, Math.min(size, transactionList.size())));
     }
@@ -41,7 +41,7 @@ public class TransactionListUpdater implements WalletChangeEventListener {
         updateTransactionList();
     }
 
-    public void stopListening(){
+    public void stopListening() {
         wallet.removeChangeEventListener(this);
     }
 }

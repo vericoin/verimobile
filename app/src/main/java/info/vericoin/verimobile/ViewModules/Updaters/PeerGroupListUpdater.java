@@ -1,12 +1,12 @@
-package info.vericoin.verimobile.Updaters;
+package info.vericoin.verimobile.ViewModules.Updaters;
 
 import org.bitcoinj.core.PeerGroup;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import info.vericoin.verimobile.PeerGroupListAdapter;
-import info.vericoin.verimobile.WalletConnection;
+import info.vericoin.verimobile.Adapters.PeerGroupListAdapter;
+import info.vericoin.verimobile.WalletSingleton;
 
 public class PeerGroupListUpdater {
 
@@ -21,25 +21,25 @@ public class PeerGroupListUpdater {
         this.adapter = adapter;
     }
 
-    public void updateListView(){
-       adapter.setPeerList(peerGroup.getConnectedPeers());
+    public void updateListView() {
+        adapter.setPeerList(peerGroup.getConnectedPeers());
     }
 
-    public void startPeriodicUpdate(){
+    public void startPeriodicUpdate() {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                WalletConnection.getRunInUIThread().execute(new Runnable() {
+                WalletSingleton.getRunInUIThread().execute(new Runnable() {
                     @Override
                     public void run() {
                         updateListView();
                     }
                 });
             }
-        },0, 1_000);
+        }, 0, 1_000);
     }
 
-    public void stopPeriodicUpdate(){
+    public void stopPeriodicUpdate() {
         timer.cancel();
     }
 }

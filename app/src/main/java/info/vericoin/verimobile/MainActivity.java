@@ -14,10 +14,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import info.vericoin.verimobile.Updaters.BlockchainUpdater;
-import info.vericoin.verimobile.Updaters.PeerGroupUpdater;
-import info.vericoin.verimobile.Updaters.TransactionListUpdater;
-import info.vericoin.verimobile.Updaters.WalletValueUpdater;
+import info.vericoin.verimobile.Adapters.TransactionListAdapter;
+import info.vericoin.verimobile.ViewModules.Updaters.BlockchainUpdater;
+import info.vericoin.verimobile.ViewModules.Updaters.PeerGroupUpdater;
+import info.vericoin.verimobile.ViewModules.Updaters.TransactionListUpdater;
+import info.vericoin.verimobile.ViewModules.Updaters.WalletValueUpdater;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
@@ -116,32 +117,32 @@ public class MainActivity extends WalletAppKitActivity {
 
         // specify an adapter (see also next example)
         if (mAdapter == null) {
-            mAdapter = new TransactionListAdapter(kit,MainActivity.this);
+            mAdapter = new TransactionListAdapter(kit, MainActivity.this);
             mRecyclerView.setAdapter(mAdapter);
         }
 
-        if(transactionListUpdater == null){
+        if (transactionListUpdater == null) {
             transactionListUpdater = new TransactionListUpdater(kit.wallet(), mAdapter, RECENT_TRANSACTION_SIZE);
         }
 
         transactionListUpdater.updateTransactionList();
         transactionListUpdater.listenForTransactions();
 
-        if(walletValueUpdater == null){
+        if (walletValueUpdater == null) {
             walletValueUpdater = new WalletValueUpdater(kit.wallet(), availableBalance, unconfirmedBalance);
         }
 
         walletValueUpdater.updateWalletView();
         walletValueUpdater.listenForBalanceChanges();
 
-        if(blockchainUpdater == null){
+        if (blockchainUpdater == null) {
             blockchainUpdater = new BlockchainUpdater(kit.chain(), syncingBlock, percentComplete, blockHeight, lastSeenBlockDate);
         }
 
         blockchainUpdater.updateBlockChainView();
         blockchainUpdater.listenForBlocks();
 
-        if(peerGroupUpdater == null){
+        if (peerGroupUpdater == null) {
             peerGroupUpdater = new PeerGroupUpdater(kit.peerGroup(), connectedPeers);
         }
 
@@ -150,9 +151,17 @@ public class MainActivity extends WalletAppKitActivity {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
+        stopListeners();
+    }
 
+    @Override
+    protected void onWalletKitStop() {
+        stopListeners();
+    }
+
+    public void stopListeners() {
         transactionListUpdater.stopListening();
         walletValueUpdater.stopListening();
         blockchainUpdater.stopListening();

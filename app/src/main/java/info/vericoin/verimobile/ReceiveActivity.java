@@ -13,6 +13,8 @@ import com.google.zxing.common.BitMatrix;
 
 import org.bitcoinj.core.Address;
 
+import info.vericoin.verimobile.Util.UtilMethods;
+
 public class ReceiveActivity extends WalletAppKitActivity {
 
     private TextView receiveView;
@@ -21,6 +23,11 @@ public class ReceiveActivity extends WalletAppKitActivity {
 
     public static Intent createIntent(Context context) {
         return new Intent(context, ReceiveActivity.class);
+    }
+
+    @Override
+    protected void onWalletKitStop() {
+
     }
 
     @Override
@@ -37,7 +44,7 @@ public class ReceiveActivity extends WalletAppKitActivity {
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
         try {
             BitMatrix bitMatrix = multiFormatWriter.encode(receiveAddrString, BarcodeFormat.QR_CODE, 400, 400);
-            Bitmap bitmap = Util.createBitmap(bitMatrix);
+            Bitmap bitmap = UtilMethods.createBitmap(bitMatrix);
             qrImageView.setImageBitmap(bitmap);
         } catch (WriterException e) {
             e.printStackTrace();

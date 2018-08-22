@@ -1,4 +1,4 @@
-package info.vericoin.verimobile;
+package info.vericoin.verimobile.Adapters;
 
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +12,8 @@ import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.kits.WalletAppKit;
 
 import java.util.List;
+
+import info.vericoin.verimobile.R;
 
 public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.ViewHolder> {
 

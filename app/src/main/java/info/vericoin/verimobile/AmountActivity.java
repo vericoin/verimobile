@@ -47,6 +47,11 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
     }
 
     @Override
+    protected void onWalletKitStop() {
+        nextButton.setOnClickListener(null);
+    }
+
+    @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_amount);
 

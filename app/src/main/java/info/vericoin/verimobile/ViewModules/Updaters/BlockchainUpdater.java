@@ -1,4 +1,4 @@
-package info.vericoin.verimobile.Updaters;
+package info.vericoin.verimobile.ViewModules.Updaters;
 
 import android.support.constraint.ConstraintLayout;
 import android.view.View;
@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import info.vericoin.verimobile.Listeners.BlockDownloadListener;
-import info.vericoin.verimobile.Util;
-import info.vericoin.verimobile.WalletConnection;
+import info.vericoin.verimobile.Util.UtilMethods;
+import info.vericoin.verimobile.WalletSingleton;
 
 public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadListener {
 
@@ -36,14 +36,14 @@ public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadLis
         this.blockChain = blockChain;
     }
 
-    public void updateBlockChainView(){
+    public void updateBlockChainView() {
         setPercentComplete(blockChain.getEstBlockchainPercentComplete());
         setBlockHeight(blockChain.getBestChainHeight());
         setLastSeenBlockDate(blockChain.getChainHead().getHeader().getTime());
     }
 
-    public void listenForBlocks(){
-        WalletConnection.addBlockDownloadListener(this);
+    public void listenForBlocks() {
+        WalletSingleton.addBlockDownloadListener(this);
     }
 
     public void setBlockHeight(int height) {
@@ -55,7 +55,7 @@ public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadLis
     }
 
     public void setLastSeenBlockDate(Date date) {
-        lastSeenBlockDate.setText(Util.getDateTimeString(date));
+        lastSeenBlockDate.setText(UtilMethods.getDateTimeString(date));
     }
 
     @Override
@@ -64,10 +64,10 @@ public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadLis
     }
 
     @Override
-    public void doneDownload() {
+    public void finishedDownload() {
         updateBlockChainView();
         syncingBlock.setVisibility(View.INVISIBLE);
-        blockChain.addNewBestBlockListener(WalletConnection.getRunInUIThread(),this);
+        blockChain.addNewBestBlockListener(WalletSingleton.getRunInUIThread(), this);
     }
 
     @Override
@@ -75,9 +75,9 @@ public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadLis
         updateBlockChainView();
     }
 
-    public void stopListening(){
+    public void stopListening() {
         blockChain.removeNewBestBlockListener(this);
-        WalletConnection.removeBlockDownloadListener(this);
+        WalletSingleton.removeBlockDownloadListener(this);
     }
 
 }

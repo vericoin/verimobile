@@ -12,6 +12,8 @@ import android.widget.Button;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 
+import info.vericoin.verimobile.Util.FingerprintHelper;
+
 
 @TargetApi(28)
 public class UnlockActivity extends VeriActivity {

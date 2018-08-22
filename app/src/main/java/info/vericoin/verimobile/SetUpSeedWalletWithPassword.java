@@ -8,7 +8,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SetUpSeedWallet extends SetUpWallet {
+public class SetUpSeedWalletWithPassword extends SetUpWalletWithPassword {
 
     private final static String MNEMONIC_LIST_EXTRA = "mnemonicList";
     private final static String CREATION_TIME_EXTRA = "creationTime";
@@ -16,8 +16,8 @@ public class SetUpSeedWallet extends SetUpWallet {
     private List<String> mnemonicList;
     private long creationTime;
 
-    public static Intent createIntent(Context context, ArrayList<String> mnemonicList, long creationTime){
-        return new Intent(context, SetUpSeedWallet.class).putExtra(MNEMONIC_LIST_EXTRA, mnemonicList).putExtra(CREATION_TIME_EXTRA, creationTime);
+    public static Intent createIntent(Context context, ArrayList<String> mnemonicList, long creationTime) {
+        return new Intent(context, SetUpSeedWalletWithPassword.class).putExtra(MNEMONIC_LIST_EXTRA, mnemonicList).putExtra(CREATION_TIME_EXTRA, creationTime);
     }
 
     @Override
@@ -30,14 +30,14 @@ public class SetUpSeedWallet extends SetUpWallet {
 
     @Override
     void importWallet(String password) {
-        if(!isNoPassword()){
+        if (!isNoPasswordChecked()) {
             veriMobileApplication.newPassword(password);
-        }else{
+        } else {
             veriMobileApplication.removePassword();
         }
-        WalletConnection.importFromSeed(SetUpSeedWallet.this, password, mnemonicList, creationTime);
-        Toast.makeText(SetUpSeedWallet.this, "Wallet imported!", Toast.LENGTH_LONG).show();
-        startActivity(SplashActivity.createIntent(SetUpSeedWallet.this));
+        WalletSingleton.importFromSeed(SetUpSeedWalletWithPassword.this, password, mnemonicList, creationTime);
+        Toast.makeText(SetUpSeedWalletWithPassword.this, "Wallet imported!", Toast.LENGTH_LONG).show();
+        startActivity(SplashActivity.createIntent(SetUpSeedWalletWithPassword.this));
     }
 
 }

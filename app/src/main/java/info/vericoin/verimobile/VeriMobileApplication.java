@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 
+import info.vericoin.verimobile.Util.UtilMethods;
+
 public class VeriMobileApplication extends MultiDexApplication {
 
     private final static String PASSWORD_HASH_PREF = "passwordHash";
@@ -20,7 +22,11 @@ public class VeriMobileApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        WalletConnection.setVeriMobileApplication(this);
+        WalletSingleton.setVeriMobileApplication(this);
+
+        if (WalletSingleton.doesWalletExist(this)) {
+            WalletSingleton.startWallet(this);
+        }
 
         sharedPref = getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
         defaultPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -31,7 +37,7 @@ public class VeriMobileApplication extends MultiDexApplication {
         if (passwordHash.isEmpty()) {
             return true; //There is no password
         } else {
-            return passwordHash.equals(Util.hashStringSHA256(password));
+            return passwordHash.equals(UtilMethods.hashStringSHA256(password));
         }
     }
 
@@ -53,7 +59,7 @@ public class VeriMobileApplication extends MultiDexApplication {
     }
 
     public void newPassword(String newPassword) {
-        sharedPref.edit().putString(VeriMobileApplication.PASSWORD_HASH_PREF, Util.hashStringSHA256(newPassword)).apply();
+        sharedPref.edit().putString(VeriMobileApplication.PASSWORD_HASH_PREF, UtilMethods.hashStringSHA256(newPassword)).apply();
     }
 
     public String getPasswordHash() {

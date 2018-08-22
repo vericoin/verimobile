@@ -12,6 +12,10 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 
+import info.vericoin.verimobile.Adapters.InputListAdapter;
+import info.vericoin.verimobile.Adapters.OutputListAdapter;
+import info.vericoin.verimobile.Util.UtilMethods;
+
 public class TransactionDetailActivity extends WalletAppKitActivity {
 
     private final static String TX_EXTRA = "Transaction";
@@ -41,6 +45,11 @@ public class TransactionDetailActivity extends WalletAppKitActivity {
         Intent intent = new Intent(context, TransactionDetailActivity.class);
         intent.putExtra(TX_EXTRA, txString);
         return intent;
+    }
+
+    @Override
+    protected void onWalletKitStop() {
+
     }
 
     @Override
@@ -94,9 +103,9 @@ public class TransactionDetailActivity extends WalletAppKitActivity {
 
         txHashView.setText(tx.getHashAsString());
 
-        dateView.setText(Util.getDateTimeString(tx.getUpdateTime()));
-        confidenceTypeView.setText(Util.getConfidenceString(tx.getConfidence().getConfidenceType()));
-        confidenceImageView.setImageResource(Util.getConfidenceResource(tx.getConfidence().getConfidenceType()));
+        dateView.setText(UtilMethods.getDateTimeString(tx.getUpdateTime()));
+        confidenceTypeView.setText(UtilMethods.getConfidenceString(tx.getConfidence().getConfidenceType()));
+        confidenceImageView.setImageResource(UtilMethods.getConfidenceResource(tx.getConfidence().getConfidenceType()));
 
         Coin fee = tx.getFee();
         if (fee == null) {

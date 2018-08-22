@@ -286,7 +286,7 @@
 
                         <TextView
                             android:id="@+id/percentComplete"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:layout_marginEnd="8dp"
@@ -327,7 +327,7 @@
 
                     <TextView
                         android:id="@+id/connectedPeers"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
                         android:layout_marginEnd="8dp"

@@ -14,20 +14,27 @@ public abstract class WalletAppKitActivity extends VeriActivity implements OnCon
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        WalletConnection.addConnectListener(this);
+        WalletSingleton.addConnectListener(this);
     }
 
     @Override
-    public void OnSetUpComplete(WalletAppKit walletAppKit) {
+    public void onSetUpComplete(WalletAppKit walletAppKit) {
         WalletAppKitActivity.this.kit = walletAppKit;
         onWalletKitReady();
     }
 
     @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        WalletConnection.removeConnectListener(this);
+    public void onStopAsync() {
+        onWalletKitStop();
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        WalletSingleton.removeConnectListener(this);
+    }
+
+    protected abstract void onWalletKitStop();
 
     protected abstract void onWalletKitReady();
 

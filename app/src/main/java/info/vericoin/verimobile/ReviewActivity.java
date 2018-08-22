@@ -36,6 +36,11 @@ public class ReviewActivity extends WalletAppKitActivity {
     }
 
     @Override
+    protected void onWalletKitStop() {
+        sendButton.setOnClickListener(null);
+    }
+
+    @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_transaction_review);
         veriMobileApplication = (VeriMobileApplication) getApplication();

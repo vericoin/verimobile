@@ -12,7 +12,7 @@ public class SplashActivity extends VeriActivity implements OnConnectListener {
 
     private VeriMobileApplication veriMobileApplication;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, SplashActivity.class);
     }
 
@@ -27,9 +27,9 @@ public class SplashActivity extends VeriActivity implements OnConnectListener {
     protected void onResume() {
         super.onResume();
 
-        if (WalletConnection.doesWalletExist(SplashActivity.this)) {
-            WalletConnection.startWallet(SplashActivity.this);
-            WalletConnection.addConnectListener(this);
+        if (WalletSingleton.doesWalletExist(SplashActivity.this)) {
+            WalletSingleton.startWallet(SplashActivity.this);
+            WalletSingleton.addConnectListener(this);
         } else {
             startActivity(WelcomeActivity.createIntent(SplashActivity.this));
             finish();
@@ -37,19 +37,24 @@ public class SplashActivity extends VeriActivity implements OnConnectListener {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        WalletConnection.removeConnectListener(this);
+        WalletSingleton.removeConnectListener(this);
     }
 
     @Override
-    public void OnSetUpComplete(WalletAppKit kit) {
+    public void onSetUpComplete(WalletAppKit kit) {
         if (doesPasswordExist()) {
             startActivity(UnlockActivity.createIntent(SplashActivity.this)); //Ask for password;
         } else {
             startActivity(MainActivity.createIntent(SplashActivity.this));
         }
         finish(); //Prevent app from going back to this activity after its finished.
+    }
+
+    @Override
+    public void onStopAsync() {
+
     }
 
     public boolean doesPasswordExist() {

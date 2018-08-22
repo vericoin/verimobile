@@ -4,18 +4,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
-import info.vericoin.verimobile.Updaters.PeerGroupListUpdater;
+import info.vericoin.verimobile.Adapters.PeerGroupListAdapter;
+import info.vericoin.verimobile.Util.RecyclerViewEmptySupport;
+import info.vericoin.verimobile.ViewModules.Updaters.PeerGroupListUpdater;
 
 public class PeerGroupListActivity extends WalletAppKitActivity {
 
-    private RecyclerView recyclerView;
+    private RecyclerViewEmptySupport recyclerView;
     private PeerGroupListAdapter adapter;
     private LinearLayoutManager layoutManager;
     private PeerGroupListUpdater peerGroupListUpdater;
+    private TextView emptyTextView;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, PeerGroupListActivity.class);
     }
 
@@ -23,8 +26,12 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_recycler_view);
 
+        emptyTextView = findViewById(R.id.emptyTextView);
+        emptyTextView.setText("No peers connected yet.");
         recyclerView = findViewById(R.id.recyclerView);
-        if(adapter == null){
+        recyclerView.setEmptyView(emptyTextView);
+
+        if (adapter == null) {
             adapter = new PeerGroupListAdapter();
         }
         // use a linear layout manager
@@ -37,7 +44,7 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
 
         recyclerView.setAdapter(adapter);
 
-        if(peerGroupListUpdater == null){
+        if (peerGroupListUpdater == null) {
             peerGroupListUpdater = new PeerGroupListUpdater(kit.peerGroup(), adapter);
         }
         peerGroupListUpdater.updateListView();
@@ -45,8 +52,13 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
+        peerGroupListUpdater.stopPeriodicUpdate();
+    }
+
+    @Override
+    protected void onWalletKitStop() {
         peerGroupListUpdater.stopPeriodicUpdate();
     }
 

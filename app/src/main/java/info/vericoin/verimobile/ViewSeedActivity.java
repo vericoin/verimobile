@@ -11,7 +11,9 @@ import android.widget.Toast;
 import org.bitcoinj.wallet.DeterministicKeyChain;
 import org.bitcoinj.wallet.Wallet;
 
-public class ViewSeedActivity extends WalletAppKitActivity{
+import info.vericoin.verimobile.Util.UtilMethods;
+
+public class ViewSeedActivity extends WalletAppKitActivity {
 
     private final static String PASSWORD_EXTRA = "password";
 
@@ -21,8 +23,13 @@ public class ViewSeedActivity extends WalletAppKitActivity{
 
     private TextView timeCreated;
 
-    public static Intent createIntent(Context context, String password){
+    public static Intent createIntent(Context context, String password) {
         return new Intent(context, ViewSeedActivity.class).putExtra(PASSWORD_EXTRA, password);
+    }
+
+    @Override
+    protected void onWalletKitStop() {
+
     }
 
     @Override
@@ -37,11 +44,11 @@ public class ViewSeedActivity extends WalletAppKitActivity{
         Wallet wallet = kit.wallet();
         DeterministicKeyChain deterministicKeyChain = wallet.getActiveKeyChain();
 
-        if(wallet.isEncrypted()){
+        if (wallet.isEncrypted()) {
             deterministicKeyChain = deterministicKeyChain.toDecrypted(password);
         }
 
-        setSeedText(Util.mnemonicToString(deterministicKeyChain.getMnemonicCode()));
+        setSeedText(UtilMethods.mnemonicToString(deterministicKeyChain.getMnemonicCode()));
         setTimeCreated(deterministicKeyChain.getEarliestKeyCreationTime());
 
         seedText.setOnClickListener(new View.OnClickListener() {
@@ -67,19 +74,19 @@ public class ViewSeedActivity extends WalletAppKitActivity{
         });
     }
 
-    public String getSeedText(){
+    public String getSeedText() {
         return seedText.getText().toString();
     }
 
-    public String getCreatedTime(){
-        return timeCreated.getText().toString();
-    }
-
-    public void setSeedText(String seed){
+    public void setSeedText(String seed) {
         seedText.setText(seed);
     }
 
-    public void setTimeCreated(long time){
+    public String getCreatedTime() {
+        return timeCreated.getText().toString();
+    }
+
+    public void setTimeCreated(long time) {
         timeCreated.setText(Long.toString(time));
     }
 

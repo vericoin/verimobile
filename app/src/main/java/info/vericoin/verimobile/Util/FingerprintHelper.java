@@ -1,4 +1,4 @@
-package info.vericoin.verimobile;
+package info.vericoin.verimobile.Util;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -10,6 +10,9 @@ import android.os.Build;
 import android.os.CancellationSignal;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import info.vericoin.verimobile.Dialogs.FingerprintDialog;
+import info.vericoin.verimobile.MainActivity;
 
 @TargetApi(28)
 public class FingerprintHelper {

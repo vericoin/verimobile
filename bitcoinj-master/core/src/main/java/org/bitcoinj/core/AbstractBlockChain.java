@@ -106,12 +106,6 @@ public abstract class AbstractBlockChain {
     private final CopyOnWriteArrayList<ListenerRegistration<ReorganizeListener>> reorganizeListeners;
     private final CopyOnWriteArrayList<ListenerRegistration<TransactionReceivedInBlockListener>> transactionReceivedListeners;
 
-    public void clearAllListeners(){
-        newBestBlockListeners.clear();
-        reorganizeListeners.clear();
-        transactionReceivedListeners.clear();
-    }
-
     // Holds a block header and, optionally, a list of tx hashes or block's transactions
     class OrphanBlock {
         final Block block;

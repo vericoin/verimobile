@@ -14,8 +14,9 @@ import android.widget.ProgressBar;
 import org.bitcoinj.kits.WalletAppKit;
 
 import info.vericoin.verimobile.Listeners.OnConnectListener;
+import info.vericoin.verimobile.ViewModules.NewPasswordValidation;
 
-public class CreateWalletActivity extends VeriActivity implements OnConnectListener {
+public class CreateWalletActivity extends VeriActivity {
 
     private Button createWalletButton;
 
@@ -30,6 +31,8 @@ public class CreateWalletActivity extends VeriActivity implements OnConnectListe
     private CheckBox noPasswordBox;
 
     private VeriMobileApplication veriMobileApplication;
+
+    private NewPasswordValidation newPasswordValidation;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, CreateWalletActivity.class);
@@ -63,6 +66,8 @@ public class CreateWalletActivity extends VeriActivity implements OnConnectListe
 
         noPasswordBox = findViewById(R.id.noPasswordBox);
 
+        newPasswordValidation = new NewPasswordValidation(passwordLayout, rePasswordLayout);
+
         noPasswordBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -77,72 +82,38 @@ public class CreateWalletActivity extends VeriActivity implements OnConnectListe
         createWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!arePasswordsEqual() && !noPasswordBox.isChecked()) {
-                    rePasswordLayout.setError("Passwords do not match");
-                } else if (passwordsAreEmpty() && !noPasswordBox.isChecked()) {
-                    passwordLayout.setError("Password can not be empty");
-                } else {
-                    passwordLayout.setErrorEnabled(false);
-                    rePasswordLayout.setErrorEnabled(false);
-
+                newPasswordValidation.resetErrors();
+                if (noPasswordBox.isChecked()) {
+                    WalletSingleton.startWallet(CreateWalletActivity.this);
+                    startApp();
+                } else if (newPasswordValidation.checkValidity()) {
+                    String password = newPasswordValidation.getPassword();
                     createWalletButton.setEnabled(false);
                     createWalletButton.setText("");
                     progressBar.setVisibility(View.VISIBLE);
-
-                    if (noPasswordBox.isChecked()) {
-                        WalletConnection.startWallet(CreateWalletActivity.this);
-                    } else if (shouldEncryptWallet()) {
-                        savePassword(getPassword());
-                        WalletConnection.startWallet(CreateWalletActivity.this, getPassword());
+                    savePassword(password);
+                    if (shouldEncryptWallet()) {
+                        WalletSingleton.startWallet(CreateWalletActivity.this, password);
                     } else {
-                        savePassword(getPassword());
-                        WalletConnection.startWallet(CreateWalletActivity.this);
+                        WalletSingleton.startWallet(CreateWalletActivity.this);
                     }
-                    if(encryptWallet.isChecked()) {
-                        WalletConnection.startWallet(CreateWalletActivity.this, getPassword());
-                    }else{
-                        WalletConnection.startWallet(CreateWalletActivity.this);
-                    }
-                    WalletConnection.addConnectListener(CreateWalletActivity.this);
+                    startApp();
                 }
             }
         });
     }
 
-    @Override
-    public void OnSetUpComplete(WalletAppKit kit) {
-        startActivity(MainActivity.createIntent(CreateWalletActivity.this));
+    public void startApp(){
+        startActivity(SplashActivity.createIntent(CreateWalletActivity.this));
         ActivityCompat.finishAffinity(CreateWalletActivity.this); //Prevent app from going back to previous activities.
-    }
-
-    @Override
-    protected void onDestroy(){
-        super.onDestroy();
-        WalletConnection.removeConnectListener(this);
     }
 
     public void savePassword(String password) {
         veriMobileApplication.newPassword(password);
     }
 
-    public String getPassword() {
-        return passwordLayout.getEditText().getText().toString();
-    }
-
     public boolean shouldEncryptWallet() {
         return encryptWallet.isChecked();
-    }
-
-    public boolean passwordsAreEmpty() {
-        String password = passwordLayout.getEditText().getText().toString();
-        String rePassword = rePasswordLayout.getEditText().getText().toString();
-        return (password.isEmpty() || rePassword.isEmpty());
-    }
-
-    public boolean arePasswordsEqual() {
-        String password = passwordLayout.getEditText().getText().toString();
-        String rePassword = rePasswordLayout.getEditText().getText().toString();
-        return (password.equals(rePassword));
     }
 
 }

@@ -107,7 +107,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".SetUpDecryptedWallet"
+        <activity android:name=".SetUpDecryptedWalletWithPassword"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
@@ -119,7 +119,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 
-        <activity android:name=".SetUpSeedWallet"
+        <activity android:name=".SetUpSeedWalletWithPassword"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
 

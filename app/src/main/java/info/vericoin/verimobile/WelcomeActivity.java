@@ -17,12 +17,10 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class WelcomeActivity extends AppCompatActivity {
 
+    private final static int READ_REQUEST_CODE = 65;
     private Button getStartedButton;
-
     private Button importWalletButton;
-
     private Button importSeedButton;
-
     private ProgressBar progressBar;
 
     public static Intent createIntent(Context context) {
@@ -62,8 +60,6 @@ public class WelcomeActivity extends AppCompatActivity {
         });
     }
 
-    private final static int READ_REQUEST_CODE = 65;
-
     private void openFile() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 
@@ -77,7 +73,7 @@ public class WelcomeActivity extends AppCompatActivity {
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    private void loadingWalletFailed(String error){
+    private void loadingWalletFailed(String error) {
         getStartedButton.setEnabled(true);
         importWalletButton.setEnabled(true);
         importSeedButton.setEnabled(true);
@@ -85,14 +81,14 @@ public class WelcomeActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
     }
 
-    private void loadingWallet(){
+    private void loadingWallet() {
         getStartedButton.setEnabled(false);
         importWalletButton.setEnabled(false);
         importSeedButton.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
     }
 
-    private void loadComplete(){
+    private void loadComplete() {
         getStartedButton.setEnabled(true);
         importWalletButton.setEnabled(true);
         importSeedButton.setEnabled(true);
@@ -120,10 +116,10 @@ public class WelcomeActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             Wallet importWallet = Wallet.loadFromFileStream(getContentResolver().openInputStream(uri));
-                            if(importWallet.isEncrypted()){
+                            if (importWallet.isEncrypted()) {
                                 startActivity(SetUpEncryptedWallet.createIntent(WelcomeActivity.this, uri));
-                            }else{
-                                startActivity(SetUpDecryptedWallet.createIntent(WelcomeActivity.this, uri));
+                            } else {
+                                startActivity(SetUpDecryptedWalletWithPassword.createIntent(WelcomeActivity.this, uri));
                             }
                             runOnUiThread(new Runnable() {
                                 @Override

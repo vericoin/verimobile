@@ -17,11 +17,16 @@ import org.bitcoinj.kits.WalletAppKit;
 
 import java.io.IOException;
 
+import info.vericoin.verimobile.Dialogs.PasswordDialog;
+import info.vericoin.verimobile.Util.FingerprintHelper;
+
 public class SettingsActivity extends WalletAppKitActivity {
 
     public final static String BTC_WALLET_FILE_NAME = "Bitcoin_Testnet3_Wallet";
 
     public final static String MIME_TYPE = "application/x-bitcoin";
+
+    private MyPreferenceFragment fragment;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, SettingsActivity.class);
@@ -29,33 +34,34 @@ public class SettingsActivity extends WalletAppKitActivity {
 
     @Override
     protected void onWalletKitReady() {
-        getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
+
+        if (fragment == null) {
+            fragment = new MyPreferenceFragment();
+        }
+
+        getFragmentManager().beginTransaction().replace(android.R.id.content, fragment).commit();
+    }
+
+    @Override
+    protected void onWalletKitStop() {
+        getFragmentManager().beginTransaction().remove(fragment);
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment {
 
+        // Unique request code.
+        private static final int WRITE_REQUEST_CODE = 43;
         private Preference changePasswordRow;
-
         private Preference exportWallet;
-
         private Preference viewSeed;
-
         private Preference deleteWallet;
-
         private CheckBoxPreference lockTransactions;
-
         private CheckBoxPreference fingerPrint;
-
         private VeriMobileApplication veriMobileApplication;
-
         private FingerprintHelper fingerprintHelper;
-
         private PreferenceCategory securityCategory;
-
         private CheckBoxPreference secureWindow;
-
         private WalletAppKit kit;
-
         private SettingsActivity settingsActivity;
 
         @Override
@@ -83,12 +89,13 @@ public class SettingsActivity extends WalletAppKitActivity {
                     dialog.setListener(new PasswordDialog.OnPasswordListener() {
                         @Override
                         public void onSuccess(String password) {
-                            createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);;
+                            createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
+                            ;
                         }
                     });
-                    if(veriMobileApplication.doesPasswordExist()){
+                    if (veriMobileApplication.doesPasswordExist()) {
                         dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "passwordRequired");
-                    }else{
+                    } else {
                         createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
                     }
                     return true;
@@ -106,9 +113,9 @@ public class SettingsActivity extends WalletAppKitActivity {
                             deleteWallet();
                         }
                     });
-                    if(veriMobileApplication.doesPasswordExist()){
+                    if (veriMobileApplication.doesPasswordExist()) {
                         dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "passwordRequired");
-                    }else{
+                    } else {
                         deleteWallet();
                     }
                     return true;
@@ -132,7 +139,7 @@ public class SettingsActivity extends WalletAppKitActivity {
             viewSeed = findPreference(getString(R.string.view_seed_button));
         }
 
-        public void deleteWallet(){
+        public void deleteWallet() {
             // 1. Instantiate an AlertDialog.Builder with its constructor
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -176,9 +183,16 @@ public class SettingsActivity extends WalletAppKitActivity {
             return veriMobileApplication.doesPasswordExist();
         }
 
-        public void openViewSeedActivity(String password){
+        public void openViewSeedActivity(String password) {
             startActivity(ViewSeedActivity.createIntent(getActivity(), password));
         }
+
+        // Here are some examples of how you might call this method.
+        // The first parameter is the MIME type, and the second parameter is the name
+        // of the file you are creating:
+        //
+        // createFile("text/plain", "foobar.txt");
+        // createFile("image/png", "mypicture.png");
 
         @Override
         public void onResume() {
@@ -249,16 +263,6 @@ public class SettingsActivity extends WalletAppKitActivity {
             }
         }
 
-        // Here are some examples of how you might call this method.
-        // The first parameter is the MIME type, and the second parameter is the name
-        // of the file you are creating:
-        //
-        // createFile("text/plain", "foobar.txt");
-        // createFile("image/png", "mypicture.png");
-
-        // Unique request code.
-        private static final int WRITE_REQUEST_CODE = 43;
-
         private void createFile(String mimeType, String fileName) {
             Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
 
@@ -273,7 +277,7 @@ public class SettingsActivity extends WalletAppKitActivity {
         }
 
         @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data){
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
             // The ACTION_OPEN_DOCUMENT intent was sent with the request code
             // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
             // response to some other intent, and the code below shouldn't run at all.

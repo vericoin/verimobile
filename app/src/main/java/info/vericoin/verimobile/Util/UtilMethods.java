@@ -1,4 +1,4 @@
-package info.vericoin.verimobile;
+package info.vericoin.verimobile.Util;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -15,9 +15,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import info.vericoin.verimobile.R;
+
 import static android.graphics.Color.BLACK;
 
-public class Util {
+public class UtilMethods {
 
     public static String hashStringSHA256(String toHash) {
         MessageDigest messageDigest = Sha256Hash.newDigest();
@@ -40,15 +42,15 @@ public class Util {
         }
     }
 
-    public static String mnemonicToString(List<String> mnemonics){
+    public static String mnemonicToString(List<String> mnemonics) {
         String mnemonicText = mnemonics.get(0);
-        for(int i = 1; i < mnemonics.size(); i++){
+        for (int i = 1; i < mnemonics.size(); i++) {
             mnemonicText = mnemonicText.concat(" " + mnemonics.get(i));
         }
         return mnemonicText;
     }
 
-    public static List<String> stringToMnemonic(String mnemonicString){
+    public static List<String> stringToMnemonic(String mnemonicString) {
         return Arrays.asList(mnemonicString.split("\\s+"));
     }
 

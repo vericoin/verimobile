@@ -10,6 +10,9 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import info.vericoin.verimobile.Util.UtilMethods;
+import info.vericoin.verimobile.ViewModules.NewPasswordValidation;
+
 public class ChangePasswordActivity extends WalletAppKitActivity {
 
     private TextInputLayout currentPasswordLayout;
@@ -24,8 +27,15 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
 
     private VeriMobileApplication veriMobileApplication;
 
+    private NewPasswordValidation newPasswordValidation;
+
     public static Intent createIntent(Context context) {
         return new Intent(context, ChangePasswordActivity.class);
+    }
+
+    @Override
+    protected void onWalletKitStop() {
+        changePasswordButton.setOnClickListener(null);
     }
 
     @Override
@@ -54,19 +64,17 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
             }
         });
 
+        newPasswordValidation = new NewPasswordValidation(newPasswordLayout, reNewPasswordLayout);
+
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resetErrors();
-
+                newPasswordValidation.resetErrors();
+                currentPasswordLayout.setErrorEnabled(false);
                 if (!isCurrentPasswordCorrect(getCurrentPassword())) {
                     currentPasswordLayout.setError("Current password is not correct");
-                } else if (!doPasswordsMatch() && !noPasswordBox.isChecked()) {
-                    reNewPasswordLayout.setError("Passwords do not match");
-                } else if (isNewPasswordEmpty() && !noPasswordBox.isChecked()) {
-                    newPasswordLayout.setError("Password can not be empty");
-                } else {
-                    updatePassword(getNewPassword());
+                } else if (newPasswordValidation.checkValidity()) {
+                    updatePassword(newPasswordValidation.getPassword());
                 }
             }
         });
@@ -100,7 +108,7 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
         return veriMobileApplication.doesPasswordExist();
     }
 
-    public void updatePassword(String password) {
+    public void updatePassword(final String password) {
 
         if (noPasswordBox.isChecked()) {
             veriMobileApplication.removePassword();
@@ -121,7 +129,7 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
                 }
 
                 if (encryptWalletBox.isChecked() && !noPasswordBox.isChecked()) {
-                    encryptWallet(getNewPassword());
+                    encryptWallet(password);
                 }
 
                 runOnUiThread(new Runnable() {
@@ -133,10 +141,6 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
                 });
             }
         }).start();
-    }
-
-    public boolean isNewPasswordEmpty() {
-        return newPasswordLayout.getEditText().getText().toString().isEmpty();
     }
 
     public String getCurrentPasswordHash() {
@@ -151,31 +155,13 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
         kit.wallet().encrypt(password);
     }
 
-    public void resetErrors() {
-        currentPasswordLayout.setErrorEnabled(false);
-        newPasswordLayout.setErrorEnabled(false);
-        reNewPasswordLayout.setErrorEnabled(false);
-    }
-
     public String getCurrentPassword() {
         return currentPasswordLayout.getEditText().getText().toString();
     }
 
-    public String getNewPassword() {
-        return newPasswordLayout.getEditText().getText().toString();
-    }
-
-    public String getReNewPassword() {
-        return reNewPasswordLayout.getEditText().getText().toString();
-    }
-
-    public boolean doPasswordsMatch() {
-        return getNewPassword().equals(getReNewPassword());
-    }
-
     public boolean isCurrentPasswordCorrect(String oldPassword) {
         String passwordHash = getCurrentPasswordHash();
-        return (passwordHash.isEmpty() || passwordHash.equals(Util.hashStringSHA256(oldPassword)));
+        return (passwordHash.isEmpty() || passwordHash.equals(UtilMethods.hashStringSHA256(oldPassword)));
     }
 
 }

@@ -1,4 +1,4 @@
-package info.vericoin.verimobile;
+package info.vericoin.verimobile.Adapters;
 
 import android.content.Context;
 import android.support.constraint.ConstraintLayout;
@@ -14,10 +14,15 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.kits.WalletAppKit;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import info.vericoin.verimobile.R;
+import info.vericoin.verimobile.TransactionDetailActivity;
+import info.vericoin.verimobile.Util.UtilMethods;
+
 public class TransactionListAdapter extends RecyclerView.Adapter<TransactionListAdapter.ViewHolder> {
-    private List<Transaction> mDataset;
+    private List<Transaction> mDataset = new ArrayList<>();
     private Context context;
 
     private WalletAppKit kit;
@@ -54,11 +59,11 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         final Transaction tx = mDataset.get(position);
 
         TransactionConfidence.ConfidenceType confidenceType = tx.getConfidence().getConfidenceType();
-        holder.confidenceImage.setImageResource(Util.getConfidenceResource(confidenceType));
+        holder.confidenceImage.setImageResource(UtilMethods.getConfidenceResource(confidenceType));
 
         holder.txHash.setText(tx.getHashAsString());
 
-        holder.date.setText(Util.getDateString(tx.getUpdateTime()));
+        holder.date.setText(UtilMethods.getDateString(tx.getUpdateTime()));
 
         Coin amount = tx.getValue(kit.wallet());
         if (amount.isPositive()) {

@@ -55,6 +55,11 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
     }
 
     @Override
+    protected void onWalletKitStop() {
+
+    }
+
+    @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_process_transaction);
 
@@ -115,7 +120,7 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
                         public void run() {
                             broadcastComplete(sendResult.tx.getHashAsString()); //Broadcast complete show user TX hash.
                         }
-                    }, WalletConnection.getRunInUIThread());
+                    }, WalletSingleton.getRunInUIThread());
                 } catch (final Exception e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {

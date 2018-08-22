@@ -1,4 +1,4 @@
-package info.vericoin.verimobile;
+package info.vericoin.verimobile.Dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -9,6 +9,9 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
+
+import info.vericoin.verimobile.R;
+import info.vericoin.verimobile.VeriMobileApplication;
 
 public class PasswordDialog extends DialogFragment {
 

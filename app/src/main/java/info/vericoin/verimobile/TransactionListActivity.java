@@ -4,18 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.widget.TextView;
 
-import info.vericoin.verimobile.Updaters.TransactionListUpdater;
+import info.vericoin.verimobile.Adapters.TransactionListAdapter;
+import info.vericoin.verimobile.Util.RecyclerViewEmptySupport;
+import info.vericoin.verimobile.ViewModules.Updaters.TransactionListUpdater;
 
 public class TransactionListActivity extends WalletAppKitActivity {
 
-    private RecyclerView mRecyclerView;
+    private RecyclerViewEmptySupport mRecyclerView;
     private LinearLayoutManager mLayoutManager;
 
     private TransactionListAdapter mAdapter;
 
     private TransactionListUpdater transactionListUpdater;
+
+    private TextView emptyTextView;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, TransactionListActivity.class);
@@ -23,9 +27,12 @@ public class TransactionListActivity extends WalletAppKitActivity {
 
     @Override
     protected void onWalletKitReady() {
-        setContentView(R.layout.activity_transaction_list);
+        setContentView(R.layout.activity_recycler_view);
 
         mRecyclerView = findViewById(R.id.recyclerView);
+        emptyTextView = findViewById(R.id.emptyTextView);
+        emptyTextView.setText("No transactions yet.");
+        mRecyclerView.setEmptyView(emptyTextView);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -41,11 +48,11 @@ public class TransactionListActivity extends WalletAppKitActivity {
 
         // specify an adapter (see also next example)
         if (mAdapter == null) {
-            mAdapter = new TransactionListAdapter(kit,TransactionListActivity.this);
+            mAdapter = new TransactionListAdapter(kit, TransactionListActivity.this);
             mRecyclerView.setAdapter(mAdapter);
         }
 
-        if(transactionListUpdater == null){
+        if (transactionListUpdater == null) {
             transactionListUpdater = new TransactionListUpdater(kit.wallet(), mAdapter);
         }
 
@@ -54,8 +61,13 @@ public class TransactionListActivity extends WalletAppKitActivity {
     }
 
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
+        transactionListUpdater.stopListening();
+    }
+
+    @Override
+    protected void onWalletKitStop() {
         transactionListUpdater.stopListening();
     }
 

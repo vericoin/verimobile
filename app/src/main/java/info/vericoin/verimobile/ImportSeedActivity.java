@@ -9,20 +9,20 @@ import android.widget.Button;
 
 import java.util.ArrayList;
 
+import info.vericoin.verimobile.Util.UtilMethods;
+
 public class ImportSeedActivity extends VeriActivity {
 
-    public static Intent createIntent(Context context){
+    private TextInputLayout seedLayout;
+    private TextInputLayout creationTimeLayout;
+    private Button importButton;
+
+    public static Intent createIntent(Context context) {
         return new Intent(context, ImportSeedActivity.class);
     }
 
-    private TextInputLayout seedLayout;
-
-    private TextInputLayout creationTimeLayout;
-
-    private Button importButton;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_import_seed);
 
@@ -37,14 +37,14 @@ public class ImportSeedActivity extends VeriActivity {
                 creationTimeLayout.setErrorEnabled(false);
                 try {
                     long creationTime = getCreationTime();
-                    try{
-                        ArrayList<String> mnemonicList = new ArrayList<>(Util.stringToMnemonic(getSeed()));
-                        startActivity(SetUpSeedWallet.createIntent(ImportSeedActivity.this, mnemonicList, creationTime));
-                    }catch(Exception e){
+                    try {
+                        ArrayList<String> mnemonicList = new ArrayList<>(UtilMethods.stringToMnemonic(getSeed()));
+                        startActivity(SetUpSeedWalletWithPassword.createIntent(ImportSeedActivity.this, mnemonicList, creationTime));
+                    } catch (Exception e) {
                         e.printStackTrace();
                         seedLayout.setError("Invalid input");
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     creationTimeLayout.setError("Invalid input");
                 }
@@ -52,15 +52,15 @@ public class ImportSeedActivity extends VeriActivity {
         });
     }
 
-    public String getSeed(){
+    public String getSeed() {
         return seedLayout.getEditText().getText().toString();
     }
 
-    public long getCreationTime(){
+    public long getCreationTime() {
         String creationString = creationTimeLayout.getEditText().getText().toString();
-        if(creationString.isEmpty()){
+        if (creationString.isEmpty()) {
             return 0;
-        }else {
+        } else {
             return Long.parseLong(creationTimeLayout.getEditText().getText().toString());
         }
     }

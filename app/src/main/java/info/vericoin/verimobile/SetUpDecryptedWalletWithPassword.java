@@ -7,14 +7,14 @@ import android.os.Bundle;
 
 import org.bitcoinj.wallet.Wallet;
 
-public class SetUpDecryptedWallet extends SetUpWallet {
+public class SetUpDecryptedWalletWithPassword extends SetUpWalletWithPassword {
 
     private final static String URI_EXTRA = "uri";
 
     private Uri uri;
 
-    public static Intent createIntent(Context context, Uri uri){
-        return new Intent(context, SetUpDecryptedWallet.class).putExtra(URI_EXTRA, uri);
+    public static Intent createIntent(Context context, Uri uri) {
+        return new Intent(context, SetUpDecryptedWalletWithPassword.class).putExtra(URI_EXTRA, uri);
     }
 
     @Override
@@ -24,7 +24,7 @@ public class SetUpDecryptedWallet extends SetUpWallet {
 
     }
 
-    public void importWallet(final String password){
+    public void importWallet(final String password) {
         importing();
         new Thread(new Runnable() {
             @Override
@@ -32,13 +32,13 @@ public class SetUpDecryptedWallet extends SetUpWallet {
                 try {
                     Wallet importWallet = Wallet.loadFromFileStream(getContentResolver().openInputStream(uri));
 
-                    if(!isNoPassword()) {
+                    if (!isNoPasswordChecked()) {
                         veriMobileApplication.newPassword(password);
-                        if(isEncryptWallet()){
+                        if (isEncryptWallet()) {
                             importWallet.encrypt(password);
                         }
                     }
-                    WalletConnection.importWallet(SetUpDecryptedWallet.this, uri);
+                    WalletSingleton.importWallet(SetUpDecryptedWalletWithPassword.this, uri);
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -47,7 +47,7 @@ public class SetUpDecryptedWallet extends SetUpWallet {
                         }
                     });
 
-                }catch(final Exception e){
+                } catch (final Exception e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {
                         @Override

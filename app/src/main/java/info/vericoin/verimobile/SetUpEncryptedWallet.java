@@ -26,12 +26,12 @@ public class SetUpEncryptedWallet extends VeriActivity {
 
     private VeriMobileApplication veriMobileApplication;
 
-    public static Intent createIntent(Context context, Uri uri){
+    public static Intent createIntent(Context context, Uri uri) {
         return new Intent(context, SetUpEncryptedWallet.class).putExtra(URI_EXTRA, uri);
     }
 
     @Override
-    protected void onCreate(Bundle savedBundleInstance){
+    protected void onCreate(Bundle savedBundleInstance) {
         super.onCreate(savedBundleInstance);
         setContentView(R.layout.activity_set_up_encrypted_wallet);
 
@@ -54,14 +54,14 @@ public class SetUpEncryptedWallet extends VeriActivity {
                     checkPassword(importWallet, getPassword());
                 }
             });
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
             finish();
         }
     }
 
-    public void checkPassword(final Wallet wallet, final String password){
+    public void checkPassword(final Wallet wallet, final String password) {
         importing();
         new Thread(new Runnable() {
             @Override
@@ -69,13 +69,13 @@ public class SetUpEncryptedWallet extends VeriActivity {
                 boolean isPasswordCorrect = wallet.checkPassword(password);
                 try {
                     if (isPasswordCorrect) {
-                        WalletConnection.importWallet(SetUpEncryptedWallet.this, uri);
+                        WalletSingleton.importWallet(SetUpEncryptedWallet.this, uri);
                         veriMobileApplication.newPassword(password);
                         importComplete();
                     } else {
                         setError("Password is incorrect");
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                     setError(e.toString());
                 }
@@ -83,16 +83,16 @@ public class SetUpEncryptedWallet extends VeriActivity {
         }).start();
     }
 
-    public void resetError(){
+    public void resetError() {
         passwordLayout.setErrorEnabled(false);
     }
 
-    public void importing(){
+    public void importing() {
         progressBar.setVisibility(View.VISIBLE);
         importButton.setText("");
     }
 
-    public void importComplete(){
+    public void importComplete() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -102,7 +102,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
         });
     }
 
-    public void setError(final String error){
+    public void setError(final String error) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -113,7 +113,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
         });
     }
 
-    public String getPassword(){
+    public String getPassword() {
         return passwordLayout.getEditText().getText().toString();
     }
 

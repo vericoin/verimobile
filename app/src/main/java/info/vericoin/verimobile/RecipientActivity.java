@@ -28,6 +28,11 @@ public class RecipientActivity extends WalletAppKitActivity {
     }
 
     @Override
+    protected void onWalletKitStop() {
+        nextButton.setOnClickListener(null);
+    }
+
+    @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_recipient);
 

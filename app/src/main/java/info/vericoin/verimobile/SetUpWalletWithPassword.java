@@ -9,12 +9,12 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-public abstract class SetUpWallet extends VeriActivity {
+import info.vericoin.verimobile.ViewModules.NewPasswordValidation;
 
-    private ProgressBar progressBar;
+public abstract class SetUpWalletWithPassword extends VeriActivity {
 
     protected VeriMobileApplication veriMobileApplication;
-
+    private ProgressBar progressBar;
     private TextInputLayout passwordLayout;
 
     private TextInputLayout rePasswordLayout;
@@ -24,6 +24,8 @@ public abstract class SetUpWallet extends VeriActivity {
     private CheckBox encryptWallet;
 
     private CheckBox noPassword;
+
+    private NewPasswordValidation newPasswordValidation;
 
     @Override
     protected void onCreate(Bundle savedBundleInstance) {
@@ -39,20 +41,17 @@ public abstract class SetUpWallet extends VeriActivity {
         encryptWallet = findViewById(R.id.encryptWallet);
         noPassword = findViewById(R.id.noPasswordBox);
 
+        newPasswordValidation = new NewPasswordValidation(passwordLayout, rePasswordLayout);
+
         importWalletButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 resetError();
-                if(isNoPassword()){
+                newPasswordValidation.resetErrors();
+                if (isNoPasswordChecked()) {
                     importWallet("");
-                }else{
-                    if(isPasswordEmpty()){
-                        setPasswordError("Password can not be empty");
-                    }else if(arePaswordsEqual()) {
-                        importWallet(getPassword());
-                    }else{
-                        setRePasswordError("Passwords do not match.");
-                    }
+                } else if (newPasswordValidation.checkValidity()) {
+                    importWallet(newPasswordValidation.getPassword());
                 }
             }
         });
@@ -60,11 +59,11 @@ public abstract class SetUpWallet extends VeriActivity {
         noPassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                if(checked){
+                if (checked) {
                     passwordLayout.setEnabled(false);
                     rePasswordLayout.setEnabled(false);
                     encryptWallet.setEnabled(false);
-                }else{
+                } else {
                     passwordLayout.setEnabled(true);
                     rePasswordLayout.setEnabled(true);
                     encryptWallet.setEnabled(true);
@@ -74,59 +73,38 @@ public abstract class SetUpWallet extends VeriActivity {
 
     }
 
-    public boolean isPasswordEmpty(){
-        return passwordLayout.getEditText().getText().toString().isEmpty();
-    }
-
     abstract void importWallet(String password);
 
-    public void resetError(){
+    public void resetError() {
         passwordLayout.setErrorEnabled(false);
         rePasswordLayout.setErrorEnabled(false);
     }
 
-    public void importing(){
+    public void importing() {
         progressBar.setVisibility(View.VISIBLE);
         importWalletButton.setText("");
         importWalletButton.setEnabled(false);
     }
 
-    public void importFailed(String error){
+    public void importFailed(String error) {
         progressBar.setVisibility(View.GONE);
         importWalletButton.setText("Import");
         importWalletButton.setEnabled(true);
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 
-    public void importComplete(){
+    public void importComplete() {
         Toast.makeText(this, "Wallet has been imported!", Toast.LENGTH_LONG).show();
-        startActivity(SplashActivity.createIntent(SetUpWallet.this));
+        startActivity(SplashActivity.createIntent(SetUpWalletWithPassword.this));
     }
 
-    public boolean isEncryptWallet(){
+    public boolean isEncryptWallet() {
         return encryptWallet.isChecked();
     }
 
-    public boolean isNoPassword(){
+    public boolean isNoPasswordChecked() {
         return noPassword.isChecked();
     }
 
-    public void setPasswordError(String error){ passwordLayout.setError(error);}
-
-    public void setRePasswordError(String error){
-        rePasswordLayout.setError(error);
-    }
-
-    public boolean arePaswordsEqual(){
-        return getPassword().equals(getRePassword());
-    }
-
-    public String getPassword(){
-        return passwordLayout.getEditText().getText().toString();
-    }
-
-    public String getRePassword(){
-        return rePasswordLayout.getEditText().getText().toString();
-    }
 
 }

@@ -5,14 +5,19 @@ import android.content.Intent;
 
 public class DeleteWalletActivity extends WalletAppKitActivity {
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, DeleteWalletActivity.class);
+    }
+
+    @Override
+    protected void onWalletKitStop() {
+
     }
 
     @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_delete_wallet);
-        WalletConnection.deleteWallet(this);
+        WalletSingleton.deleteWallet(this);
     }
 
     @Override
