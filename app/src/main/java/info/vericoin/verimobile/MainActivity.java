@@ -78,6 +78,7 @@ public class MainActivity extends WalletAppKitActivity {
         emptyTextViewTXs = findViewById(R.id.emptyTextViewTXs);
 
         mRecyclerView.setEmptyView(emptyTextViewTXs);
+        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setEmptyViewListener(new RecyclerViewEmptySupport.OnEmptyViewListener() {
             @Override
             public void emptyViewIsOn() {
