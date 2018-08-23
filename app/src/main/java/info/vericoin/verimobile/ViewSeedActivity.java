@@ -17,6 +17,10 @@ public class ViewSeedActivity extends WalletAppKitActivity {
 
     private final static String PASSWORD_EXTRA = "password";
 
+    private final static String TIME_CREATED_LABEL = "timeCreated";
+
+    private final static String SEED_LABEL = "seed";
+
     private String password;
 
     private TextView seedText;
@@ -55,10 +59,10 @@ public class ViewSeedActivity extends WalletAppKitActivity {
             @Override
             public void onClick(View view) {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Seed", getSeedText());
+                ClipData clip = ClipData.newPlainText(SEED_LABEL, getSeedText());
                 clipboard.setPrimaryClip(clip);
 
-                Toast.makeText(ViewSeedActivity.this, "Seed copied to clipboard!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ViewSeedActivity.this, R.string.seed_copied, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -66,10 +70,10 @@ public class ViewSeedActivity extends WalletAppKitActivity {
             @Override
             public void onClick(View view) {
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("Time Created", getCreatedTime());
+                ClipData clip = ClipData.newPlainText(TIME_CREATED_LABEL, getCreatedTime());
                 clipboard.setPrimaryClip(clip);
 
-                Toast.makeText(ViewSeedActivity.this, "Time created copied to clipboard!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ViewSeedActivity.this, R.string.time_created_copied, Toast.LENGTH_LONG).show();
             }
         });
     }

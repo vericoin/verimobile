@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="TextView"
+        android:text="mvYnMtfWV8YsmXP66ajPoQAeXnPgvdALkX"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textIsSelectable="true"
         app:layout_constraintBottom_toBottomOf="parent"

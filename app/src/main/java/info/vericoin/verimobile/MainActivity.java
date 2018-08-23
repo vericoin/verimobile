@@ -6,7 +6,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import info.vericoin.verimobile.Adapters.TransactionListAdapter;
+import info.vericoin.verimobile.Util.RecyclerViewEmptySupport;
 import info.vericoin.verimobile.ViewModules.Updaters.BlockchainUpdater;
 import info.vericoin.verimobile.ViewModules.Updaters.PeerGroupUpdater;
 import info.vericoin.verimobile.ViewModules.Updaters.TransactionListUpdater;
@@ -30,6 +30,7 @@ public class MainActivity extends WalletAppKitActivity {
     private TextView availableBalance;
     private TextView blockHeight;
     private TextView connectedPeers;
+    private TextView emptyTextViewTXs;
     private CardView blockChainView;
     private Button sendButton;
     private Button receiveButton;
@@ -42,7 +43,7 @@ public class MainActivity extends WalletAppKitActivity {
 
     private TextView lastSeenBlockDate;
 
-    private RecyclerView mRecyclerView;
+    private RecyclerViewEmptySupport mRecyclerView;
     private LinearLayoutManager mLayoutManager;
 
     private TransactionListAdapter mAdapter;
@@ -74,6 +75,20 @@ public class MainActivity extends WalletAppKitActivity {
         lastSeenBlockDate = findViewById(R.id.lastSeenBlockDate);
         mRecyclerView = findViewById(R.id.recyclerView);
         blockChainView = findViewById(R.id.blockChainCard);
+        emptyTextViewTXs = findViewById(R.id.emptyTextViewTXs);
+
+        mRecyclerView.setEmptyView(emptyTextViewTXs);
+        mRecyclerView.setEmptyViewListener(new RecyclerViewEmptySupport.OnEmptyViewListener() {
+            @Override
+            public void emptyViewIsOn() {
+                viewTransactionsButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void emptyViewIsOff() {
+                viewTransactionsButton.setVisibility(View.VISIBLE);
+            }
+        });
 
         blockChainView.setOnClickListener(new View.OnClickListener() {
             @Override

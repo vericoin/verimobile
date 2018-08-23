@@ -36,7 +36,7 @@ public class SetUpSeedWalletWithPassword extends SetUpWalletWithPassword {
             veriMobileApplication.removePassword();
         }
         WalletSingleton.importFromSeed(SetUpSeedWalletWithPassword.this, password, mnemonicList, creationTime);
-        Toast.makeText(SetUpSeedWalletWithPassword.this, "Wallet imported!", Toast.LENGTH_LONG).show();
+        Toast.makeText(SetUpSeedWalletWithPassword.this, R.string.wallet_imported, Toast.LENGTH_LONG).show();
         startActivity(SplashActivity.createIntent(SetUpSeedWalletWithPassword.this));
     }
 

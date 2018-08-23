@@ -26,6 +26,8 @@ public class SettingsActivity extends WalletAppKitActivity {
 
     public final static String MIME_TYPE = "application/x-bitcoin";
 
+    private static String PASSWORD_DIALOG_TAG = "passwordDialog";
+
     private MyPreferenceFragment fragment;
 
     public static Intent createIntent(Context context) {
@@ -94,7 +96,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                         }
                     });
                     if (veriMobileApplication.doesPasswordExist()) {
-                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "passwordRequired");
+                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
                     } else {
                         createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
                     }
@@ -114,7 +116,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                         }
                     });
                     if (veriMobileApplication.doesPasswordExist()) {
-                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "passwordRequired");
+                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
                     } else {
                         deleteWallet();
                     }
@@ -122,7 +124,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                 }
             });
 
-            securityCategory = (PreferenceCategory) findPreference("security");
+            securityCategory = (PreferenceCategory) findPreference(getString(R.string.secure_category));
 
             lockTransactions = (CheckBoxPreference) findPreference(getString(R.string.lock_transactions_key));
 
@@ -169,7 +171,7 @@ public class SettingsActivity extends WalletAppKitActivity {
             checkBoxPreference.setChecked(!after); //Prevent any change before password
 
             PasswordDialog passwordDialog = new PasswordDialog();
-            passwordDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "PasswordDialog");
+            passwordDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
 
             passwordDialog.setListener(new PasswordDialog.OnPasswordListener() {
                 @Override
@@ -227,7 +229,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
                         PasswordDialog passwordDialog = new PasswordDialog();
-                        passwordDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "PasswordDialog");
+                        passwordDialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
                         passwordDialog.setListener(new PasswordDialog.OnPasswordListener() {
                             @Override
                             public void onSuccess(String password) {
@@ -287,12 +289,11 @@ public class SettingsActivity extends WalletAppKitActivity {
                 // Instead, a URI to that document will be contained in the return intent
                 // provided to this method as a parameter.
                 // Pull that URI using resultData.getData().
-                Uri uri = null;
                 if (data != null) {
-                    uri = data.getData();
+                    Uri uri = data.getData();
                     try {
                         kit.wallet().saveToFileStream(getActivity().getContentResolver().openOutputStream(uri));
-                        Toast.makeText(getActivity(), "Wallet saved!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), getString(R.string.wallet_saved), Toast.LENGTH_LONG).show();
                     } catch (IOException e) {
                         Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
                         e.printStackTrace();

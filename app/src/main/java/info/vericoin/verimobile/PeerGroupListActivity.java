@@ -27,7 +27,7 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
         setContentView(R.layout.activity_recycler_view);
 
         emptyTextView = findViewById(R.id.emptyTextView);
-        emptyTextView.setText("No peers connected yet.");
+        emptyTextView.setText(getString(R.string.no_peers_connected));
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setEmptyView(emptyTextView);
 

@@ -31,7 +31,7 @@ public class TransactionListActivity extends WalletAppKitActivity {
 
         mRecyclerView = findViewById(R.id.recyclerView);
         emptyTextView = findViewById(R.id.emptyTextView);
-        emptyTextView.setText("No transactions yet.");
+        emptyTextView.setText(R.string.no_transactions);
         mRecyclerView.setEmptyView(emptyTextView);
 
         // use this setting to improve performance if you know that changes

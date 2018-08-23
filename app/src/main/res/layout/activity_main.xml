@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -36,7 +35,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:background="?android:attr/selectableItemBackground"
-                    android:text="Send"
+                    android:text="@string/send_button"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -46,7 +45,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.5"
                     android:background="?android:attr/selectableItemBackground"
-                    android:text="Receive"
+                    android:text="@string/receive_button"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
@@ -58,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:text="Available Balance"
+                android:text="@string/available_balance_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
-                android:text="Unconfirmed Balance"
+                android:text="@string/unconfirmed_balance_text"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -133,6 +132,22 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
+                    <TextView
+                        android:id="@+id/emptyTextViewTXs"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:gravity="center"
+                        android:text="@string/no_transactions"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/recyclerView"
+                        app:layout_constraintTop_toBottomOf="@+id/view4" />
+
                     <View
                         android:id="@+id/view4"
                         android:layout_width="match_parent"
@@ -149,7 +164,7 @@
                         android:layout_width="0dp"
                         android:layout_height="64dp"
                         android:background="?android:attr/selectableItemBackground"
-                        android:text="View More"
+                        android:text="@string/view_more_button"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
@@ -161,13 +176,13 @@
                         android:layout_marginEnd="16dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:text="Recent Transactions"
+                        android:text="@string/recent_transactions_text"
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                    <android.support.v7.widget.RecyclerView
+                    <info.vericoin.verimobile.Util.RecyclerViewEmptySupport
                         android:id="@+id/recyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -215,7 +230,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="Block Height"
+                        android:text="@string/block_height_text"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         card_view:layout_constraintStart_toStartOf="parent"
                         card_view:layout_constraintTop_toBottomOf="@+id/blockHeight" />
@@ -240,7 +255,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:text="Blockchain"
+                        android:text="@string/blockchain_text"
                         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                         card_view:layout_constraintStart_toStartOf="parent"
                         card_view:layout_constraintTop_toTopOf="parent" />
@@ -277,7 +292,7 @@
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
-                            android:text="Syncing..."
+                            android:text="@string/syncing_text"
                             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             card_view:layout_constraintBottom_toBottomOf="parent"
                             card_view:layout_constraintEnd_toStartOf="@+id/percentComplete"

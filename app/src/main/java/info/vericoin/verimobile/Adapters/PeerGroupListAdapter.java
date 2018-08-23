@@ -11,6 +11,7 @@ import org.bitcoinj.core.Peer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import info.vericoin.verimobile.R;
 
@@ -42,9 +43,9 @@ public class PeerGroupListAdapter extends RecyclerView.Adapter<PeerGroupListAdap
         String address = peer.getAddress().getAddr().toString();
         int clientVersion = peer.getPeerVersionMessage().clientVersion;
 
-        holder.pingView.setText(Long.toString(ping) + " ms");
+        holder.pingView.setText(String.format("%tL ms", ping));
         holder.addressView.setText(address);
-        holder.clientVersionView.setText(Integer.toString(clientVersion));
+        holder.clientVersionView.setText(String.format(Locale.getDefault(),"%d", clientVersion));
     }
 
     @Override
@@ -55,13 +56,13 @@ public class PeerGroupListAdapter extends RecyclerView.Adapter<PeerGroupListAdap
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    protected static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView clientVersionView;
-        public TextView addressView;
-        public TextView pingView;
+        private TextView clientVersionView;
+        private TextView addressView;
+        private TextView pingView;
 
-        public ViewHolder(ConstraintLayout v) {
+        private ViewHolder(ConstraintLayout v) {
             super(v);
             clientVersionView = v.findViewById(R.id.clientVersion);
             pingView = v.findViewById(R.id.ping);

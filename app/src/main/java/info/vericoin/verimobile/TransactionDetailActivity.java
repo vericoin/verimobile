@@ -109,7 +109,7 @@ public class TransactionDetailActivity extends WalletAppKitActivity {
 
         Coin fee = tx.getFee();
         if (fee == null) {
-            feeView.setText("N/A"); //If transaction wasn't sent by us we don't know fee.
+            feeView.setText(R.string.N_A); //If transaction wasn't sent by us we don't know fee.
         } else {
             feeView.setText(fee.toFriendlyString());
         }

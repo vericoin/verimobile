@@ -9,15 +9,14 @@ import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import info.vericoin.verimobile.Dialogs.FingerprintDialog;
-import info.vericoin.verimobile.MainActivity;
+import info.vericoin.verimobile.R;
 
 @TargetApi(28)
 public class FingerprintHelper {
 
-    private static final String TAG = MainActivity.class.getName();
+    private static final String FINGERPRINT_DIALOG_TAG = "fingerprintDialog";
 
     private AppCompatActivity context;
     private OnAuthListener listener;
@@ -62,11 +61,10 @@ public class FingerprintHelper {
     private void unLockUsingBiometric() {
         // Create biometricPrompt
         BiometricPrompt mBiometricPrompt = new BiometricPrompt.Builder(context)
-                .setTitle("Unlock Wallet")
-                .setNegativeButton("Cancel", context.getMainExecutor(), new DialogInterface.OnClickListener() {
+                .setTitle(context.getString(R.string.unlock_wallet_text))
+                .setNegativeButton(context.getString(R.string.cancel_button), context.getMainExecutor(), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Log.i(TAG, "Cancel button clicked");
                     }
                 })
                 .build();
@@ -106,7 +104,7 @@ public class FingerprintHelper {
 
     private void unLockUsingFingerprintManager() {
         FingerprintDialog dialog = new FingerprintDialog();
-        dialog.show(context.getSupportFragmentManager(), "Fingerprint Dialog");
+        dialog.show(context.getSupportFragmentManager(), FINGERPRINT_DIALOG_TAG);
         dialog.setListener(new FingerprintDialog.OnAuthListener() {
             @Override
             public void onSuccess() {

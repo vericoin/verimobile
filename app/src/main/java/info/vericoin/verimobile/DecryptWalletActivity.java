@@ -48,7 +48,7 @@ public class DecryptWalletActivity extends VeriActivity {
                     startActivity(ProcessTransactionActivity.createIntent(DecryptWalletActivity.this, address, amount, getPassword()));
                     finish(); //Prevent app from going back to this activity after its finished.
                 } else {
-                    passwordLayout.setError("Password is incorrect");
+                    passwordLayout.setError(getString(R.string.password_is_incorrect));
                 }
             }
         });

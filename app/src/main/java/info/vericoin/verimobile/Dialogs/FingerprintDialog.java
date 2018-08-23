@@ -34,7 +34,7 @@ public class FingerprintDialog extends DialogFragment {
             public void onAuthenticationError(int errorCode, CharSequence errString) {
                 super.onAuthenticationError(errorCode, errString);
                 if (errorCode == FingerprintManager.FINGERPRINT_ERROR_CANCELED) {
-                    message.setText("Touch Sensor");
+                    message.setText(R.string.touch_sensor);
                     imageView.setImageResource(R.drawable.ic_baseline_fingerprint_dark);
                 } else {
                     message.setText(errString);
@@ -52,7 +52,7 @@ public class FingerprintDialog extends DialogFragment {
             @Override
             public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                message.setText("Authentication Success!");
+                message.setText(R.string.authentication_success);
                 imageView.setImageResource(R.drawable.ic_baseline_fingerprint_dark);
 
                 if (listener != null) {
@@ -63,7 +63,7 @@ public class FingerprintDialog extends DialogFragment {
             @Override
             public void onAuthenticationFailed() {
                 super.onAuthenticationFailed();
-                message.setText("Authentication Failed");
+                message.setText(R.string.authentication_failed);
                 imageView.setImageResource(R.drawable.ic_error);
             }
         }, null);
@@ -80,7 +80,7 @@ public class FingerprintDialog extends DialogFragment {
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //Do Nothing
                     }

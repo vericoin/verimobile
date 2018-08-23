@@ -84,7 +84,7 @@ public class UnlockActivity extends VeriActivity {
                 if (isPasswordCorrect()) {
                     unlockWallet();
                 } else {
-                    passwordLayout.setError("Password is incorrect");
+                    passwordLayout.setError(getString(R.string.password_is_incorrect));
                 }
             }
         });

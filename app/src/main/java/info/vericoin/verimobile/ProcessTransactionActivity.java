@@ -79,7 +79,7 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
         completeImage.setVisibility(GONE);
         txHashBox.setVisibility(GONE);
 
-        statusView.setText("Creating Transaction...");
+        statusView.setText(getString(R.string.creating_transaction));
 
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +135,7 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
     }
 
     public void broadcastWaiting() {
-        statusView.setText("Broadcasting Transaction...");
+        statusView.setText(getString(R.string.broadcasting_transaction));
     }
 
     public void broadcastComplete(String txHash) {
@@ -144,14 +144,14 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
         doneButton.setVisibility(View.VISIBLE);
         completeImage.setVisibility(View.VISIBLE);
         txHashBox.setVisibility(View.VISIBLE);
-        statusView.setText("Broadcast Complete!");
+        statusView.setText(getString(R.string.broadcast_complete));
     }
 
     public void broadcastFailed(String message) {
         Toast.makeText(ProcessTransactionActivity.this, message, Toast.LENGTH_LONG).show();
         progressBar.setVisibility(GONE);
         doneButton.setVisibility(View.VISIBLE);
-        statusView.setText("Broadcast Failed");
+        statusView.setText(getString(R.string.broadcast_failed));
     }
 
     @Override

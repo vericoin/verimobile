@@ -1,5 +1,6 @@
 package info.vericoin.verimobile.Util;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
@@ -20,6 +21,12 @@ import info.vericoin.verimobile.R;
 import static android.graphics.Color.BLACK;
 
 public class UtilMethods {
+
+    private static Context context;
+
+    public static void setContext(Context context) {
+        UtilMethods.context = context;
+    }
 
     public static String hashStringSHA256(String toHash) {
         MessageDigest messageDigest = Sha256Hash.newDigest();
@@ -71,22 +78,24 @@ public class UtilMethods {
     }
 
     public static String getConfidenceString(TransactionConfidence.ConfidenceType confidenceType) {
+        int stringId;
         if (confidenceType.equals(TransactionConfidence.ConfidenceType.BUILDING)) {
-            return "Building";
+            stringId = R.string.building_tx;
         } else if (confidenceType.equals(TransactionConfidence.ConfidenceType.PENDING)) {
-            return "Pending";
+            stringId = R.string.pending_tx;
         } else if (confidenceType.equals(TransactionConfidence.ConfidenceType.DEAD)) {
-            return "Dead";
+            stringId = R.string.dead_tx;
         } else if (confidenceType.equals(TransactionConfidence.ConfidenceType.IN_CONFLICT)) {
-            return "In Conflict";
+            stringId = R.string.conflict_tx;
         } else {
-            return "Unknown";
+            stringId = R.string.unknown_tx;
         }
+        return context.getString(stringId);
     }
 
     public static String getDateString(Date date) {
         if (date == null) {
-            return "Unknown";
+            return context.getString(R.string.N_A);
         } else {
             DateFormat format = DateFormat.getDateInstance();
             return format.format(date);
@@ -95,7 +104,7 @@ public class UtilMethods {
 
     public static String getDateTimeString(Date date) {
         if (date == null) {
-            return "Unknown";
+            return context.getString(R.string.N_A);
         } else {
             DateFormat format = DateFormat.getDateTimeInstance();
             return format.format(date);

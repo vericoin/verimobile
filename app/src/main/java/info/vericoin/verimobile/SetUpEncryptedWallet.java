@@ -73,7 +73,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
                         veriMobileApplication.newPassword(password);
                         importComplete();
                     } else {
-                        setError("Password is incorrect");
+                        setError(getString(R.string.password_is_incorrect));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -96,7 +96,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(SetUpEncryptedWallet.this, "Wallet has been imported!", Toast.LENGTH_LONG).show();
+                Toast.makeText(SetUpEncryptedWallet.this, R.string.wallet_imported, Toast.LENGTH_LONG).show();
                 startActivity(SplashActivity.createIntent(SetUpEncryptedWallet.this));
             }
         });
@@ -108,7 +108,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
             public void run() {
                 progressBar.setVisibility(View.GONE);
                 passwordLayout.setError(error);
-                importButton.setText("Import");
+                importButton.setText(getString(R.string.import_button));
             }
         });
     }

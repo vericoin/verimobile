@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:key="preference_screen">
 
-    <PreferenceCategory android:title="Security"
+    <PreferenceCategory android:title="@string/secure_category"
         android:key="security">
 
         <Preference

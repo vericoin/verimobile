@@ -88,13 +88,13 @@ public abstract class SetUpWalletWithPassword extends VeriActivity {
 
     public void importFailed(String error) {
         progressBar.setVisibility(View.GONE);
-        importWalletButton.setText("Import");
+        importWalletButton.setText(R.string.import_button);
         importWalletButton.setEnabled(true);
         Toast.makeText(this, error, Toast.LENGTH_LONG).show();
     }
 
     public void importComplete() {
-        Toast.makeText(this, "Wallet has been imported!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.wallet_imported, Toast.LENGTH_LONG).show();
         startActivity(SplashActivity.createIntent(SetUpWalletWithPassword.this));
     }
 

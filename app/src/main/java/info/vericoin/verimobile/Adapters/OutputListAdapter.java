@@ -53,14 +53,14 @@ public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.Vi
 
         Coin amount = output.getValue();
         if (amount == null) {
-            holder.amount.setText("N/A");
+            holder.amount.setText(R.string.N_A);
         } else {
             holder.amount.setText(amount.toFriendlyString());
         }
         try {
             holder.address.setText(output.getAddressFromP2PKHScript(kit.params()).toBase58());
         } catch (Exception e) {
-            holder.address.setText("N/A");
+            holder.address.setText(R.string.N_A);
         }
     }
 

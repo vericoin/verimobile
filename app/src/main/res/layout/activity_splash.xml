@@ -45,7 +45,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Starting Wallet... \n Please wait."
+        android:text="@string/starting_wallet_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@android:color/white"
         app:layout_constraintEnd_toEndOf="parent"

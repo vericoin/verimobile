@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -23,7 +22,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="The only integrated digital currency + digital reserve ecosystem based on the Binary-Chain protocol."
+        android:text="@string/vericonomy_desc"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +33,7 @@
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginBottom="8dp"
-        android:text="Get Started"
+        android:text="@string/get_started_button"
         app:layout_constraintBottom_toTopOf="@+id/importWalletButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -45,7 +44,7 @@
         android:layout_width="0dp"
         android:layout_height="64dp"
         android:layout_marginBottom="8dp"
-        android:text="Import Wallet"
+        android:text="@string/import_wallet_text"
         app:layout_constraintBottom_toTopOf="@+id/importSeedButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -55,7 +54,7 @@
         android:id="@+id/importSeedButton"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        android:text="Import Seed"
+        android:text="@string/import_seed_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

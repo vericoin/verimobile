@@ -11,9 +11,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 
-import org.bitcoinj.kits.WalletAppKit;
-
-import info.vericoin.verimobile.Listeners.OnConnectListener;
 import info.vericoin.verimobile.ViewModules.NewPasswordValidation;
 
 public class CreateWalletActivity extends VeriActivity {

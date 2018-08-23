@@ -72,7 +72,7 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
                 newPasswordValidation.resetErrors();
                 currentPasswordLayout.setErrorEnabled(false);
                 if (!isCurrentPasswordCorrect(getCurrentPassword())) {
-                    currentPasswordLayout.setError("Current password is not correct");
+                    currentPasswordLayout.setError(getString(R.string.password_is_incorrect));
                 } else if (newPasswordValidation.checkValidity()) {
                     updatePassword(newPasswordValidation.getPassword());
                 }
@@ -110,15 +110,15 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
 
     public void updatePassword(final String password) {
 
+        changePasswordButton.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+        changePasswordButton.setText("");
+
         if (noPasswordBox.isChecked()) {
             veriMobileApplication.removePassword();
         } else {
             veriMobileApplication.newPassword(password);
         }
-
-        changePasswordButton.setEnabled(false);
-        progressBar.setVisibility(View.VISIBLE);
-        changePasswordButton.setText("");
 
         new Thread(new Runnable() {
             @Override
@@ -135,7 +135,7 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(ChangePasswordActivity.this, "Password updated!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(ChangePasswordActivity.this, getString(R.string.password_updated), Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });

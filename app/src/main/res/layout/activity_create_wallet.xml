@@ -11,7 +11,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="No Password"
+        android:text="@string/no_password_checkBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rePasswordInputLayout" />
@@ -20,7 +20,7 @@
         android:id="@+id/createWalletButton"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:text="Create"
+        android:text="@string/create_wallet_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -56,7 +56,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
+            android:hint="@string/password_hint"
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
@@ -70,7 +70,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:gravity="center"
-        android:text="Create New Wallet"
+        android:text="@string/create_new_wallet_text"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,7 +90,7 @@
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Retype Password"
+            android:hint="@string/retype_new_password_hint"
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
@@ -102,7 +102,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:checked="true"
-        android:text="Encrypt Wallet"
+        android:text="@string/encrypt_wallet_checkBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/noPasswordBox" />
@@ -114,7 +114,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="If you encrypt your wallet, you will have to type your password every time you send a transaction."
+        android:text="@string/encrypt_wallet_desc"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

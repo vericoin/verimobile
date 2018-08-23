@@ -39,8 +39,8 @@ public class PasswordDialog extends DialogFragment {
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
         builder.setView(view)
-                .setTitle("Password Required")
-                .setPositiveButton("Enter", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.password_required)
+                .setPositiveButton(R.string.enter_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (isPasswordCorrect(getPasswordFromInput())) {
@@ -49,11 +49,11 @@ public class PasswordDialog extends DialogFragment {
                             }
                             dismiss();
                         } else {
-                            Toast.makeText(getContext(), "Incorrect Password", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), R.string.password_is_incorrect, Toast.LENGTH_LONG).show();
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         //Do Nothing
                     }

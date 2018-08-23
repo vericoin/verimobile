@@ -53,7 +53,7 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
 
         Coin value = input.getValue();
         if (value == null) {
-            holder.amount.setText("N/A");
+            holder.amount.setText(R.string.N_A);
         } else {
             holder.amount.setText(value.toFriendlyString());
         }
@@ -62,7 +62,7 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
         try {
             holder.address.setText(output.getAddressFromP2PKHScript(kit.params()).toBase58());
         } catch (Exception e) {
-            holder.address.setText("N/A");
+            holder.address.setText(R.string.N_A);
         }
 
     }

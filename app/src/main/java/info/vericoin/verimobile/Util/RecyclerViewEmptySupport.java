@@ -6,11 +6,16 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class RecyclerViewEmptySupport extends RecyclerView {
+
     private View emptyView;
 
+    private OnEmptyViewListener emptyViewListener;
+
+    public void setEmptyViewListener(OnEmptyViewListener emptyViewListener) {
+        this.emptyViewListener = emptyViewListener;
+    }
+
     private AdapterDataObserver emptyObserver = new RecyclerView.AdapterDataObserver() {
-
-
         @Override
         public void onChanged() {
             Adapter<?> adapter = getAdapter();
@@ -18,9 +23,15 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                 if (adapter.getItemCount() == 0) {
                     emptyView.setVisibility(View.VISIBLE);
                     RecyclerViewEmptySupport.this.setVisibility(View.GONE);
+                    if(emptyViewListener != null) {
+                        emptyViewListener.emptyViewIsOn();
+                    }
                 } else {
                     emptyView.setVisibility(View.GONE);
                     RecyclerViewEmptySupport.this.setVisibility(View.VISIBLE);
+                    if(emptyViewListener != null) {
+                        emptyViewListener.emptyViewIsOff();
+                    }
                 }
             }
 
@@ -52,5 +63,10 @@ public class RecyclerViewEmptySupport extends RecyclerView {
 
     public void setEmptyView(View emptyView) {
         this.emptyView = emptyView;
+    }
+
+    public interface OnEmptyViewListener{
+        void emptyViewIsOn();
+        void emptyViewIsOff();
     }
 }

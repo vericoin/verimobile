@@ -75,7 +75,7 @@ public class RecipientActivity extends WalletAppKitActivity {
                     startActivity(AmountActivity.createIntent(RecipientActivity.this, address));
                 } catch (AddressFormatException e) {
                     e.printStackTrace();
-                    sendAddr.setError("Invalid address");
+                    sendAddr.setError(getString(R.string.invalid_address));
                 }
             }
         });

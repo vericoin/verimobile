@@ -42,11 +42,11 @@ public class ImportSeedActivity extends VeriActivity {
                         startActivity(SetUpSeedWalletWithPassword.createIntent(ImportSeedActivity.this, mnemonicList, creationTime));
                     } catch (Exception e) {
                         e.printStackTrace();
-                        seedLayout.setError("Invalid input");
+                        seedLayout.setError(getString(R.string.invalid_input));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    creationTimeLayout.setError("Invalid input");
+                    creationTimeLayout.setError(getString(R.string.invalid_input));
                 }
             }
         });
