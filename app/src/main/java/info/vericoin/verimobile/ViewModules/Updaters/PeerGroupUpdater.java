@@ -5,10 +5,11 @@ import android.widget.TextView;
 import org.bitcoinj.core.Peer;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.listeners.PeerConnectedEventListener;
+import org.bitcoinj.core.listeners.PeerDisconnectedEventListener;
 
 import info.vericoin.verimobile.WalletSingleton;
 
-public class PeerGroupUpdater implements PeerConnectedEventListener {
+public class PeerGroupUpdater implements PeerConnectedEventListener, PeerDisconnectedEventListener {
 
     private PeerGroup peerGroup;
 
@@ -21,6 +22,7 @@ public class PeerGroupUpdater implements PeerConnectedEventListener {
 
     public void listenForPeerConnections() {
         peerGroup.addConnectedEventListener(WalletSingleton.getRunInUIThread(), this);
+        peerGroup.addDisconnectedEventListener(WalletSingleton.getRunInUIThread(), this);
     }
 
     @Override
@@ -34,6 +36,11 @@ public class PeerGroupUpdater implements PeerConnectedEventListener {
 
     public void stopListening() {
         peerGroup.removeConnectedEventListener(this);
+        peerGroup.removeDisconnectedEventListener(this);
     }
 
+    @Override
+    public void onPeerDisconnected(Peer peer, int peerCount) {
+        updatePeerView();
+    }
 }
