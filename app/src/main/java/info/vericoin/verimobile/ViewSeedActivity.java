@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,11 @@ public class ViewSeedActivity extends WalletAppKitActivity {
 
     private TextView timeCreated;
 
+    private ConstraintLayout decryptingLayout;
+    private ConstraintLayout seedLayout;
+
+    private DeterministicKeyChain deterministicKeyChain;
+
     public static Intent createIntent(Context context, String password) {
         return new Intent(context, ViewSeedActivity.class).putExtra(PASSWORD_EXTRA, password);
     }
@@ -42,18 +48,35 @@ public class ViewSeedActivity extends WalletAppKitActivity {
 
         seedText = findViewById(R.id.seedTextView);
         timeCreated = findViewById(R.id.timeCreated);
+        decryptingLayout = findViewById(R.id.decryptingLayout);
+        seedLayout = findViewById(R.id.seedViewLayout);
 
         password = getIntent().getStringExtra(PASSWORD_EXTRA);
 
-        Wallet wallet = kit.wallet();
-        DeterministicKeyChain deterministicKeyChain = wallet.getActiveKeyChain();
+        final Wallet wallet = kit.wallet();
 
+        deterministicKeyChain = wallet.getActiveKeyChain();
         if (wallet.isEncrypted()) {
-            deterministicKeyChain = deterministicKeyChain.toDecrypted(password);
+            decryptingLayout.setVisibility(View.VISIBLE);
+            seedLayout.setVisibility(View.GONE);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    deterministicKeyChain = deterministicKeyChain.toDecrypted(password);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            displaySeed();
+                            seedLayout.setVisibility(View.VISIBLE);
+                            decryptingLayout.setVisibility(View.GONE);
+                        }
+                    });
+                }
+            }).start();
+        }else{
+            displaySeed();
+            decryptingLayout.setVisibility(View.GONE);
         }
-
-        setSeedText(UtilMethods.mnemonicToString(deterministicKeyChain.getMnemonicCode()));
-        setTimeCreated(deterministicKeyChain.getEarliestKeyCreationTime());
 
         seedText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,6 +99,11 @@ public class ViewSeedActivity extends WalletAppKitActivity {
                 Toast.makeText(ViewSeedActivity.this, R.string.time_created_copied, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    public void displaySeed(){
+        setSeedText(UtilMethods.mnemonicToString(deterministicKeyChain.getMnemonicCode()));
+        setTimeCreated(deterministicKeyChain.getEarliestKeyCreationTime());
     }
 
     public String getSeedText() {

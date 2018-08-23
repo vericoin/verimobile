@@ -31,23 +31,23 @@
         </activity>
 
         <activity android:name="info.vericoin.verimobile.TransactionListActivity"
-            android:label="Transaction History"
+            android:label="@string/transaction_history_label"
             android:screenOrientation="portrait"/>
 
         <activity android:name="info.vericoin.verimobile.MainActivity"
                   android:screenOrientation="portrait" />
 
         <activity android:name=".RecipientActivity"
-            android:label="Choose recipient"
+            android:label="@string/recipient_label"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"/>
 
         <activity android:name=".AmountActivity"
-            android:label="Send Amount"
+            android:label="@string/send_amount_label"
             android:screenOrientation="portrait"/>
 
         <activity android:name=".ReviewActivity"
-            android:label="Review and Send"
+            android:label="@string/review_label"
             android:screenOrientation="portrait"/>
 
         <activity android:name=".ProcessTransactionActivity"
@@ -55,11 +55,11 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".ReceiveActivity"
-            android:label="Receive Address"
+            android:label="@string/receive_label"
             android:screenOrientation="portrait"/>
 
         <activity android:name=".TransactionDetailActivity"
-            android:label="Transaction Details"
+            android:label="@string/transaction_details_label"
             android:screenOrientation="portrait"/>
 
         <activity android:name=".WelcomeActivity"
@@ -95,7 +95,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".SettingsActivity"
-            android:label="Settings"
+            android:label="@string/settings_label"
             android:screenOrientation="portrait"/>
 
         <activity
@@ -130,7 +130,7 @@
         <activity android:name=".PeerGroupListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Light"
-            android:label="Connected Peers"/>
+            android:label="@string/connected_peers_label"/>
 
         <meta-data
             android:name="preloaded_fonts"

@@ -29,7 +29,7 @@
     <string name="lock_transactions_key">lockTransactions</string>
     <string name="fingerprint_enabled_key">enableFingerprint</string>
     <string name="secure_window_key">secureWindow</string>
-    <string name="secure_category">secureCategory</string>
+    <string name="secure_category">Secure Category</string>
     <string name="password_is_incorrect">Password is incorrect</string>
     <string name="password_updated">Password updated!</string>
     <string name="invalid_input">Invalid input</string>
@@ -110,4 +110,14 @@
     <string name="touch_sensor_text">Touch Sensor</string>
     <string name="protocol_text">Protocol</string>
     <string name="address_text">Address</string>
+    <string name="settings_button">Settings</string>
+    <string name="transaction_history_label">Transaction History</string>
+    <string name="recipient_label">Choose Recipient</string>
+    <string name="send_amount_label">Send Amount</string>
+    <string name="review_label">Review and Send</string>
+    <string name="receive_label">Receive Address</string>
+    <string name="transaction_details_label">Transaction Details</string>
+    <string name="settings_label">Settings</string>
+    <string name="connected_peers_label">Connected Peers</string>
+    <string name="decrypting_seed_text">Decrypting Seed&#8230;</string>
 </resources>

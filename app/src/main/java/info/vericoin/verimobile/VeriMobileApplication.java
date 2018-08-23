@@ -23,6 +23,7 @@ public class VeriMobileApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         WalletSingleton.setVeriMobileApplication(this);
+        UtilMethods.setContext(this);
 
         if (WalletSingleton.doesWalletExist(this)) {
             WalletSingleton.startWallet(this);
