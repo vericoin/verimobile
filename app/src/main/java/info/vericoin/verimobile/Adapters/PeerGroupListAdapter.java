@@ -40,7 +40,7 @@ public class PeerGroupListAdapter extends RecyclerView.Adapter<PeerGroupListAdap
         Peer peer = peerList.get(position);
 
         long ping = peer.getPingTime();
-        String address = peer.getAddress().getAddr().toString();
+        String address = peer.getAddress().toString();
         int clientVersion = peer.getPeerVersionMessage().clientVersion;
 
         holder.pingView.setText(String.format("%tL ms", ping));

@@ -7,6 +7,7 @@ import android.os.Looper;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.params.RegTestParams;
@@ -48,6 +49,10 @@ public class WalletSingleton {
     };
     private static ArrayList<BlockDownloadListener> blockDownloadListeners = new ArrayList<>();
     private WalletSingleton() { //Prevent singleton from being constructed.
+    }
+
+    public static NetworkParameters getParams() {
+        return params;
     }
 
     public static void setVeriMobileApplication(VeriMobileApplication veriMobileApplication) {
@@ -181,6 +186,15 @@ public class WalletSingleton {
 
             }
         };
+
+        try {
+            ArrayList<PeerAddress> peerAddresses = veriMobileApplication.getCustomPeerAddressList();
+            if (peerAddresses != null && !peerAddresses.isEmpty()) {
+                kit.setPeerNodes(peerAddresses.toArray(new PeerAddress[peerAddresses.size()]));
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         kit.setBlockingStartup(false);
         kit.setDownloadListener(new DownloadProgressTracker() {
             @Override

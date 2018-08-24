@@ -132,6 +132,16 @@
             android:theme="@style/AppTheme.Light"
             android:label="@string/connected_peers_label"/>
 
+        <activity android:name=".CustomPeerListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Light"
+            android:label="@string/custom_peers_title"/>
+
+        <activity android:name=".ActivityAddPeer"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"
+            android:label="@string/add_peer_label"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

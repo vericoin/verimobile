@@ -14,4 +14,5 @@
     <color name="blueButton">#0f2f57</color>
     <color name="splashScreenBackground">#2c2c2d</color>
     <color name="errorColor">#FFA0A0</color>
+    <color name="menuIconLight">#F0F0F0</color>
 </resources>

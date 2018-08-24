@@ -81,7 +81,7 @@ public class CreateWalletActivity extends VeriActivity {
             public void onClick(View v) {
                 newPasswordValidation.resetErrors();
                 if (noPasswordBox.isChecked()) {
-                    WalletSingleton.startWallet(CreateWalletActivity.this);
+                    WalletSingleton.startWallet(CreateWalletActivity.this, null);
                     startApp();
                 } else if (newPasswordValidation.checkValidity()) {
                     String password = newPasswordValidation.getPassword();
@@ -92,7 +92,7 @@ public class CreateWalletActivity extends VeriActivity {
                     if (shouldEncryptWallet()) {
                         WalletSingleton.startWallet(CreateWalletActivity.this, password);
                     } else {
-                        WalletSingleton.startWallet(CreateWalletActivity.this);
+                        WalletSingleton.startWallet(CreateWalletActivity.this, null);
                     }
                     startApp();
                 }

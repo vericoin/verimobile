@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import info.vericoin.verimobile.Adapters.PeerGroupListAdapter;
@@ -27,7 +30,7 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
         setContentView(R.layout.activity_recycler_view);
 
         emptyTextView = findViewById(R.id.emptyTextView);
-        emptyTextView.setText(getString(R.string.no_peers_connected));
+        emptyTextView.setText(R.string.no_peers_connected);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setEmptyView(emptyTextView);
 
@@ -60,6 +63,26 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
     @Override
     protected void onWalletKitStop() {
         peerGroupListUpdater.stopPeriodicUpdate();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.connected_peer_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.modifyPeers:
+                //Write your code
+                startActivity(CustomPeerListActivity.createIntent(this));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

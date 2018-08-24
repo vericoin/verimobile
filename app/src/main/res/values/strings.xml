@@ -120,4 +120,12 @@
     <string name="settings_label">Settings</string>
     <string name="connected_peers_label">Connected Peers</string>
     <string name="decrypting_seed_text">Decrypting Seed&#8230;</string>
+    <string name="edit_peers_button">Modify Peers</string>
+    <string name="host_name_text">Host\'s Name</string>
+    <string name="add_peer_button">Add Peer</string>
+    <string name="edit_peers_desc">You can add custom peers to connect to exclusively. Restart app for changes to take place.</string>
+    <string name="custom_peers_title">Custom Peers</string>
+    <string name="add_peer_label">Add Peer</string>
+    <string name="remove_button">Remove</string>
+    <string name="remove_peer_title">Remove Peer</string>
 </resources>
