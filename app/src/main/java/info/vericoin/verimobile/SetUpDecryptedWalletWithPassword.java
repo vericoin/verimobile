@@ -38,7 +38,8 @@ public class SetUpDecryptedWalletWithPassword extends SetUpWalletWithPassword {
                             importWallet.encrypt(password);
                         }
                     }
-                    WalletSingleton.importWallet(SetUpDecryptedWalletWithPassword.this, uri);
+
+                    WalletSingleton.importWallet(SetUpDecryptedWalletWithPassword.this, importWallet);
 
                     runOnUiThread(new Runnable() {
                         @Override

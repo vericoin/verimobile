@@ -14,6 +14,7 @@ import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
 import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.Wallet;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -65,6 +66,11 @@ public class WalletSingleton {
 
     public static boolean doesWalletExist(Context context) {
         return (new File(context.getFilesDir(), WALLET_FILE_NAME).exists() || kit != null);
+    }
+
+    public static void importWallet(Context context, Wallet walllet) throws IOException{
+        File file = new File(context.getFilesDir(), WALLET_FILE_NAME);
+        walllet.saveToFile(file);
     }
 
     public static void importWallet(Context context, Uri uri) throws IOException, NullPointerException {
