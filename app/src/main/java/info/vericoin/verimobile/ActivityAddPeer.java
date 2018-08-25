@@ -42,7 +42,7 @@ public class ActivityAddPeer extends WalletAppKitActivity {
                         veriMobileApplication.addPeerAddress(hostName);
                         setResult(RESULT_OK);
                         finish();
-                    }catch (UnknownHostException e){
+                    }catch (Exception e){
                         hostNameLayout.setError(getString(R.string.invalid_input));
                     }
                 }

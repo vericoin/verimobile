@@ -20,6 +20,7 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
     private LinearLayoutManager layoutManager;
     private PeerGroupListUpdater peerGroupListUpdater;
     private TextView emptyTextView;
+    private VeriMobileApplication veriMobileApplication;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, PeerGroupListActivity.class);
@@ -28,9 +29,9 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
     @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_recycler_view);
+        veriMobileApplication = (VeriMobileApplication) getApplication();
 
         emptyTextView = findViewById(R.id.emptyTextView);
-        emptyTextView.setText(R.string.no_peers_connected);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setEmptyView(emptyTextView);
 
@@ -52,6 +53,15 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
         }
         peerGroupListUpdater.updateListView();
         peerGroupListUpdater.startPeriodicUpdate();
+    }
+
+    @Override
+    protected void onWalletKitResume(){
+        if(!veriMobileApplication.getCustomPeerAddressList().isEmpty()){
+            emptyTextView.setText(R.string.connected_peers_tip); //If list is empty and there's custom peers, then show this tip for user.
+        }else{
+            emptyTextView.setText(R.string.no_peers_connected);
+        }
     }
 
     @Override

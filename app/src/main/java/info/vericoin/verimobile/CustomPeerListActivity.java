@@ -2,6 +2,7 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,8 +36,8 @@ public class CustomPeerListActivity extends WalletAppKitActivity {
     @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_edit_peers);
-
         veriMobileApplication = (VeriMobileApplication) getApplication();
+
         emptyTextView = findViewById(R.id.emptyTextView);
         emptyTextView.setText(R.string.edit_peers_desc);
         recyclerView = findViewById(R.id.recyclerView);

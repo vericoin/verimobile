@@ -124,6 +124,7 @@
     <string name="host_name_text">Host\'s Name</string>
     <string name="add_peer_button">Add Peer</string>
     <string name="edit_peers_desc">You can add custom peers to connect to exclusively. Restart app for changes to take place.</string>
+    <string name="connected_peers_tip">You are not connected to your custom peers. You may want to check your connection or remove your custom peers to allow connections to all peers.</string>
     <string name="custom_peers_title">Custom Peers</string>
     <string name="add_peer_label">Add Peer</string>
     <string name="remove_button">Remove</string>
