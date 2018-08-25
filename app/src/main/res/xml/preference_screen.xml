@@ -3,7 +3,7 @@
     android:key="preference_screen">
 
     <PreferenceCategory android:title="@string/secure_category"
-        android:key="security">
+        android:key="@string/security_key">
 
         <Preference
             android:key="@string/change_password_button"

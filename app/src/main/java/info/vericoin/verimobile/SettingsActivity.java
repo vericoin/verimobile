@@ -124,7 +124,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                 }
             });
 
-            securityCategory = (PreferenceCategory) findPreference(getString(R.string.secure_category));
+            securityCategory = (PreferenceCategory) findPreference(getString(R.string.security_key));
 
             lockTransactions = (CheckBoxPreference) findPreference(getString(R.string.lock_transactions_key));
 

@@ -128,4 +128,5 @@
     <string name="add_peer_label">Add Peer</string>
     <string name="remove_button">Remove</string>
     <string name="remove_peer_title">Remove Peer</string>
+    <string name="security_key">securityKey</string>
 </resources>
