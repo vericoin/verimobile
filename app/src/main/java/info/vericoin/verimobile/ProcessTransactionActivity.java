@@ -120,7 +120,7 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
                         public void run() {
                             broadcastComplete(sendResult.tx.getHashAsString()); //Broadcast complete show user TX hash.
                         }
-                    }, WalletSingleton.getRunInUIThread());
+                    }, WalletManager.runInUIThread);
                 } catch (final Exception e) {
                     e.printStackTrace();
                     runOnUiThread(new Runnable() {

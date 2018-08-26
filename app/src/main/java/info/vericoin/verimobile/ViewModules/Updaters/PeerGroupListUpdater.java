@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import info.vericoin.verimobile.Adapters.PeerGroupListAdapter;
-import info.vericoin.verimobile.WalletSingleton;
+import info.vericoin.verimobile.WalletManager;
 
 public class PeerGroupListUpdater {
 
@@ -29,7 +29,7 @@ public class PeerGroupListUpdater {
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                WalletSingleton.getRunInUIThread().execute(new Runnable() {
+                WalletManager.runInUIThread.execute(new Runnable() {
                     @Override
                     public void run() {
                         updateListView();

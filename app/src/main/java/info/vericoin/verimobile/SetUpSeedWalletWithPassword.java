@@ -3,7 +3,6 @@ package info.vericoin.verimobile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,15 +28,33 @@ public class SetUpSeedWalletWithPassword extends SetUpWalletWithPassword {
     }
 
     @Override
-    void importWallet(String password) {
-        if (!isNoPasswordChecked()) {
-            veriMobileApplication.newPassword(password);
-        } else {
-            veriMobileApplication.removePassword();
-        }
-        WalletSingleton.importFromSeed(SetUpSeedWalletWithPassword.this, password, mnemonicList, creationTime);
-        Toast.makeText(SetUpSeedWalletWithPassword.this, R.string.wallet_imported, Toast.LENGTH_LONG).show();
-        startActivity(SplashActivity.createIntent(SetUpSeedWalletWithPassword.this));
+    void importWallet(final String password) {
+        importing();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (password == null) {
+                        walletManager.createWalletFromSeed(SetUpSeedWalletWithPassword.this, mnemonicList, creationTime);
+                    } else {
+                        walletManager.createWalletFromSeed(SetUpSeedWalletWithPassword.this, mnemonicList, creationTime, isEncryptWallet(), password);
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            importComplete();
+                        }
+                    });
+                } catch (final Exception e) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            importFailed(e.toString());
+                        }
+                    });
+                }
+            }
+        }).start();
     }
 
 }

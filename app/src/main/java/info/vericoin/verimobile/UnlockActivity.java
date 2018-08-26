@@ -31,6 +31,8 @@ public class UnlockActivity extends VeriActivity {
 
     private VeriMobileApplication veriMobileApplication;
 
+    private PasswordManager passwordManager;
+
     private Coin coin;
     private Address address;
 
@@ -51,6 +53,7 @@ public class UnlockActivity extends VeriActivity {
         setContentView(R.layout.activity_unlock_wallet);
 
         veriMobileApplication = (VeriMobileApplication) getApplication();
+        passwordManager = veriMobileApplication.getPasswordManager();
 
         coin = (Coin) getIntent().getSerializableExtra(COIN_EXTRA);
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
@@ -126,7 +129,7 @@ public class UnlockActivity extends VeriActivity {
     }
 
     public boolean isPasswordCorrect() {
-        return veriMobileApplication.checkPassword(getPassword());
+        return passwordManager.checkPassword(getPassword());
     }
 
 }

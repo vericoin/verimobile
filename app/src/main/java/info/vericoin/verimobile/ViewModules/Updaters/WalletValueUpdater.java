@@ -6,7 +6,7 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
-import info.vericoin.verimobile.WalletSingleton;
+import info.vericoin.verimobile.WalletManager;
 
 public class WalletValueUpdater implements WalletChangeEventListener {
 
@@ -23,7 +23,7 @@ public class WalletValueUpdater implements WalletChangeEventListener {
     }
 
     public void listenForBalanceChanges() {
-        wallet.addChangeEventListener(WalletSingleton.getRunInUIThread(), this);
+        wallet.addChangeEventListener(WalletManager.runInUIThread, this);
     }
 
     public void updateWalletView() {

@@ -2,7 +2,6 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,7 +24,7 @@ public class CustomPeerListActivity extends WalletAppKitActivity {
 
     private VeriMobileApplication veriMobileApplication;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, CustomPeerListActivity.class);
     }
 
@@ -45,7 +44,7 @@ public class CustomPeerListActivity extends WalletAppKitActivity {
         );
         addPeerfab = findViewById(R.id.addPeerfab);
 
-        if(adapter == null){
+        if (adapter == null) {
             adapter = new CustomPeerListAdapter(this);
         }
 
@@ -78,7 +77,7 @@ public class CustomPeerListActivity extends WalletAppKitActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_CODE  && resultCode  == RESULT_OK) {
+        if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             adapter.setPeerList(veriMobileApplication.getPeerManager().getCustomPeerAddressList()); //Update list if new peer was added.
         }
     }

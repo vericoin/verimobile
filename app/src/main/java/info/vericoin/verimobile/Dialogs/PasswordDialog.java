@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import info.vericoin.verimobile.PasswordManager;
 import info.vericoin.verimobile.R;
 import info.vericoin.verimobile.VeriMobileApplication;
 
@@ -17,7 +18,7 @@ public class PasswordDialog extends DialogFragment {
 
     private TextInputLayout passwordLayout;
     private OnPasswordListener listener;
-    private VeriMobileApplication veriMobileApplication;
+    private PasswordManager passwordManager;
 
     public void setListener(OnPasswordListener listener) {
         this.listener = listener;
@@ -26,7 +27,7 @@ public class PasswordDialog extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-        veriMobileApplication = (VeriMobileApplication) getActivity().getApplication();
+        passwordManager = ((VeriMobileApplication) getActivity().getApplication()).getPasswordManager();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         // Get the layout inflater
@@ -74,7 +75,7 @@ public class PasswordDialog extends DialogFragment {
     }
 
     public boolean isPasswordCorrect(String password) {
-        return veriMobileApplication.checkPassword(password);
+        return passwordManager.checkPassword(password);
     }
 
     public interface OnPasswordListener {

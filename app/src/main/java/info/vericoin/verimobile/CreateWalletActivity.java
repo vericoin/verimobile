@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import info.vericoin.verimobile.ViewModules.NewPasswordValidation;
 
@@ -27,7 +28,7 @@ public class CreateWalletActivity extends VeriActivity {
 
     private CheckBox noPasswordBox;
 
-    private VeriMobileApplication veriMobileApplication;
+    private WalletManager walletManager;
 
     private NewPasswordValidation newPasswordValidation;
 
@@ -51,7 +52,7 @@ public class CreateWalletActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_wallet);
-        veriMobileApplication = (VeriMobileApplication) getApplication();
+        walletManager = ((VeriMobileApplication) getApplication()).getWalletManager();
 
         createWalletButton = findViewById(R.id.createWalletButton);
         progressBar = findViewById(R.id.progressBar);
@@ -80,33 +81,53 @@ public class CreateWalletActivity extends VeriActivity {
             @Override
             public void onClick(View v) {
                 newPasswordValidation.resetErrors();
-                if (noPasswordBox.isChecked()) {
-                    WalletSingleton.startWallet(CreateWalletActivity.this, null);
-                    startApp();
-                } else if (newPasswordValidation.checkValidity()) {
-                    String password = newPasswordValidation.getPassword();
-                    createWalletButton.setEnabled(false);
-                    createWalletButton.setText("");
-                    progressBar.setVisibility(View.VISIBLE);
-                    savePassword(password);
-                    if (shouldEncryptWallet()) {
-                        WalletSingleton.startWallet(CreateWalletActivity.this, password);
-                    } else {
-                        WalletSingleton.startWallet(CreateWalletActivity.this, null);
+                loading();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (noPasswordBox.isChecked()) {
+                                walletManager.createNewWallet(CreateWalletActivity.this);
+                            } else if (newPasswordValidation.checkValidity()) {
+                                String password = newPasswordValidation.getPassword();
+                                walletManager.createNewWallet(CreateWalletActivity.this, password, shouldEncryptWallet());
+                            }
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    startApp();
+                                }
+                            });
+                        } catch (final Exception e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    failed(e.toString());
+                                }
+                            });
+                        }
                     }
-                    startApp();
-                }
+                }).start();
             }
         });
     }
 
-    public void startApp(){
-        startActivity(SplashActivity.createIntent(CreateWalletActivity.this));
-        ActivityCompat.finishAffinity(CreateWalletActivity.this); //Prevent app from going back to previous activities.
+    public void loading() {
+        createWalletButton.setEnabled(false);
+        createWalletButton.setText("");
+        progressBar.setVisibility(View.VISIBLE);
     }
 
-    public void savePassword(String password) {
-        veriMobileApplication.newPassword(password);
+    public void failed(String error) {
+        createWalletButton.setEnabled(false);
+        createWalletButton.setText("");
+        progressBar.setVisibility(View.VISIBLE);
+        Toast.makeText(CreateWalletActivity.this, error, Toast.LENGTH_LONG).show();
+    }
+
+    public void startApp() {
+        startActivity(SplashActivity.createIntent(CreateWalletActivity.this));
+        ActivityCompat.finishAffinity(CreateWalletActivity.this); //Prevent app from going back to previous activities.
     }
 
     public boolean shouldEncryptWallet() {

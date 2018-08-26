@@ -5,20 +5,11 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.multidex.MultiDexApplication;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.bitcoinj.core.PeerAddress;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
+import org.bitcoinj.utils.BriefLogFormatter;
 
 import info.vericoin.verimobile.Util.UtilMethods;
 
 public class VeriMobileApplication extends MultiDexApplication {
-
-    private final static String PASSWORD_HASH_PREF = "passwordHash";
 
     private final static String PREFERENCE_FILE_KEY = "info.vericoin.verimobile.PREFERENCE_FILE_KEY";
 
@@ -28,8 +19,20 @@ public class VeriMobileApplication extends MultiDexApplication {
 
     private CustomPeerManager peerManager;
 
+    private WalletManager walletManager;
+
+    private PasswordManager passwordManager;
+
     public CustomPeerManager getPeerManager() {
         return peerManager;
+    }
+
+    public WalletManager getWalletManager() {
+        return walletManager;
+    }
+
+    public PasswordManager getPasswordManager() {
+        return passwordManager;
     }
 
     // Called when the application is starting, before any other application objects have been created.
@@ -37,51 +40,25 @@ public class VeriMobileApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        BriefLogFormatter.init();
+
         sharedPref = getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
         defaultPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        peerManager = new CustomPeerManager(sharedPref);
+        passwordManager = new PasswordManager(sharedPref);
+        walletManager = new WalletManager(this);
+        peerManager = new CustomPeerManager(sharedPref, walletManager);
 
-        WalletSingleton.setVeriMobileApplication(this);
         UtilMethods.setContext(this);
 
-        if (WalletSingleton.doesWalletExist(this)) {
-            WalletSingleton.startWallet(this);
-        }
-    }
-
-    public boolean checkPassword(String password) {
-        String passwordHash = sharedPref.getString(PASSWORD_HASH_PREF, "");
-        if (passwordHash.isEmpty()) {
-            return true; //There is no password
-        } else {
-            return passwordHash.equals(UtilMethods.hashStringSHA256(password));
+        if (walletManager.doesWalletExist(this)) {
+            walletManager.startWallet(this);
         }
     }
 
     public boolean isLockTransactions() {
         return defaultPref.getBoolean(getString(R.string.lock_transactions_key), false);
-    }
-
-    public boolean doesPasswordExist() {
-        String password = sharedPref.getString(VeriMobileApplication.PASSWORD_HASH_PREF, "");
-        if (password.isEmpty()) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public void removePassword() {
-        sharedPref.edit().remove(VeriMobileApplication.PASSWORD_HASH_PREF).apply();
-    }
-
-    public void newPassword(String newPassword) {
-        sharedPref.edit().putString(VeriMobileApplication.PASSWORD_HASH_PREF, UtilMethods.hashStringSHA256(newPassword)).apply();
-    }
-
-    public String getPasswordHash() {
-        return sharedPref.getString(VeriMobileApplication.PASSWORD_HASH_PREF, "");
     }
 
     public boolean isFingerPrintEnabled() {

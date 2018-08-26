@@ -24,7 +24,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
 
     private Uri uri;
 
-    private VeriMobileApplication veriMobileApplication;
+    private WalletManager walletManager;
 
     public static Intent createIntent(Context context, Uri uri) {
         return new Intent(context, SetUpEncryptedWallet.class).putExtra(URI_EXTRA, uri);
@@ -35,7 +35,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
         super.onCreate(savedBundleInstance);
         setContentView(R.layout.activity_set_up_encrypted_wallet);
 
-        veriMobileApplication = (VeriMobileApplication) getApplication();
+        walletManager = ((VeriMobileApplication) getApplication()).getWalletManager();
 
         uri = getIntent().getParcelableExtra(URI_EXTRA);
 
@@ -69,8 +69,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
                 boolean isPasswordCorrect = wallet.checkPassword(password);
                 try {
                     if (isPasswordCorrect) {
-                        WalletSingleton.importWallet(SetUpEncryptedWallet.this, uri);
-                        veriMobileApplication.newPassword(password);
+                        walletManager.createWalletFromFile(SetUpEncryptedWallet.this, uri, password, false); //We don't encrypt a wallet that is already encrypted.
                         importComplete();
                     } else {
                         setError(getString(R.string.password_is_incorrect));

@@ -73,7 +73,7 @@ public class ViewSeedActivity extends WalletAppKitActivity {
                     });
                 }
             }).start();
-        }else{
+        } else {
             displaySeed();
             decryptingLayout.setVisibility(View.GONE);
         }
@@ -101,7 +101,7 @@ public class ViewSeedActivity extends WalletAppKitActivity {
         });
     }
 
-    public void displaySeed(){
+    public void displaySeed() {
         setSeedText(UtilMethods.mnemonicToString(deterministicKeyChain.getMnemonicCode()));
         setTimeCreated(deterministicKeyChain.getEarliestKeyCreationTime());
     }

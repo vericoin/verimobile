@@ -5,6 +5,8 @@ import android.content.Intent;
 
 public class DeleteWalletActivity extends WalletAppKitActivity {
 
+    private WalletManager walletManager;
+
     public static Intent createIntent(Context context) {
         return new Intent(context, DeleteWalletActivity.class);
     }
@@ -17,7 +19,8 @@ public class DeleteWalletActivity extends WalletAppKitActivity {
     @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_delete_wallet);
-        WalletSingleton.deleteWallet(this);
+        walletManager = ((VeriMobileApplication) getApplication()).getWalletManager();
+        walletManager.deleteWallet(this);
     }
 
     @Override

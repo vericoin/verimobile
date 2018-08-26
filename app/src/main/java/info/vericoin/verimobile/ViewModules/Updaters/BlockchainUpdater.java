@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import info.vericoin.verimobile.Listeners.BlockDownloadListener;
 import info.vericoin.verimobile.Util.UtilMethods;
-import info.vericoin.verimobile.WalletSingleton;
+import info.vericoin.verimobile.WalletManager;
 
 public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadListener {
 
@@ -28,7 +28,10 @@ public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadLis
 
     private BlockChain blockChain;
 
-    public BlockchainUpdater(BlockChain blockChain, ConstraintLayout syncingBlock, TextView percentComplete, TextView blockHeight, TextView lastSeenBlockDate) {
+    private WalletManager walletManager;
+
+    public BlockchainUpdater(WalletManager walletManager, BlockChain blockChain, ConstraintLayout syncingBlock, TextView percentComplete, TextView blockHeight, TextView lastSeenBlockDate) {
+        this.walletManager = walletManager;
         this.syncingBlock = syncingBlock;
         this.percentComplete = percentComplete;
         this.blockHeight = blockHeight;
@@ -43,7 +46,7 @@ public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadLis
     }
 
     public void listenForBlocks() {
-        WalletSingleton.addBlockDownloadListener(this);
+        walletManager.addBlockDownloadListener(this);
     }
 
     public void setBlockHeight(int height) {
@@ -67,7 +70,7 @@ public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadLis
     public void finishedDownload() {
         updateBlockChainView();
         syncingBlock.setVisibility(View.INVISIBLE);
-        blockChain.addNewBestBlockListener(WalletSingleton.getRunInUIThread(), this);
+        blockChain.addNewBestBlockListener(WalletManager.runInUIThread, this);
     }
 
     @Override
@@ -77,7 +80,7 @@ public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadLis
 
     public void stopListening() {
         blockChain.removeNewBestBlockListener(this);
-        WalletSingleton.removeBlockDownloadListener(this);
+        walletManager.removeBlockDownloadListener(this);
     }
 
 }

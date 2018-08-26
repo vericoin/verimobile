@@ -6,10 +6,7 @@ import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
 
-import org.bitcoinj.core.PeerAddress;
-
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class ActivityAddPeer extends WalletAppKitActivity {
 
@@ -17,7 +14,7 @@ public class ActivityAddPeer extends WalletAppKitActivity {
     private Button addPeerButton;
     private VeriMobileApplication veriMobileApplication;
 
-    public static Intent createIntent(Context context){
+    public static Intent createIntent(Context context) {
         return new Intent(context, ActivityAddPeer.class);
     }
 
@@ -34,15 +31,15 @@ public class ActivityAddPeer extends WalletAppKitActivity {
             public void onClick(View view) {
                 hostNameLayout.setErrorEnabled(false);
                 String hostName = hostNameLayout.getEditText().getText().toString();
-                if(hostName.isEmpty()){
+                if (hostName.isEmpty()) {
                     hostNameLayout.setError(getString(R.string.invalid_input));
-                }else{
+                } else {
                     try {
                         InetAddress.getByName(hostName); //Check to see if hostName is valid
                         veriMobileApplication.getPeerManager().addPeerAddress(hostName);
                         setResult(RESULT_OK);
                         finish();
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         hostNameLayout.setError(getString(R.string.invalid_input));
                     }
                 }

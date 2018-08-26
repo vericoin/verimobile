@@ -19,7 +19,7 @@ public class DecryptWalletActivity extends VeriActivity {
     private Button unlockButton;
     private Address address;
     private Coin amount;
-    private VeriMobileApplication veriMobileApplication;
+    private PasswordManager passwordManager;
 
     public static Intent createIntent(Context context, Address toAddr, Coin amount) {
         Intent intent = new Intent(context, DecryptWalletActivity.class);
@@ -32,7 +32,7 @@ public class DecryptWalletActivity extends VeriActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_decrypt_wallet);
-        veriMobileApplication = (VeriMobileApplication) getApplication();
+        passwordManager = ((VeriMobileApplication) getApplication()).getPasswordManager();
 
         address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
         amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
@@ -60,7 +60,7 @@ public class DecryptWalletActivity extends VeriActivity {
     }
 
     public boolean isPasswordCorrect() {
-        return veriMobileApplication.checkPassword(getPassword());
+        return passwordManager.checkPassword(getPassword());
     }
 
 }

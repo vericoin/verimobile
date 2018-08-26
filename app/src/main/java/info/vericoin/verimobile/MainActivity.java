@@ -53,6 +53,8 @@ public class MainActivity extends WalletAppKitActivity {
     private BlockchainUpdater blockchainUpdater;
     private PeerGroupUpdater peerGroupUpdater;
 
+    private WalletManager walletManager;
+
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
@@ -62,6 +64,7 @@ public class MainActivity extends WalletAppKitActivity {
     @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_main);
+        walletManager = ((VeriMobileApplication) getApplication()).getWalletManager();
 
         unconfirmedBalance = findViewById(R.id.unconfirmedBalance);
         availableBalance = findViewById(R.id.availableBalance);
@@ -152,7 +155,7 @@ public class MainActivity extends WalletAppKitActivity {
         walletValueUpdater.listenForBalanceChanges();
 
         if (blockchainUpdater == null) {
-            blockchainUpdater = new BlockchainUpdater(kit.chain(), syncingBlock, percentComplete, blockHeight, lastSeenBlockDate);
+            blockchainUpdater = new BlockchainUpdater(walletManager, kit.chain(), syncingBlock, percentComplete, blockHeight, lastSeenBlockDate);
         }
 
         blockchainUpdater.updateBlockChainView();

@@ -56,10 +56,10 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
     }
 
     @Override
-    protected void onWalletKitResume(){
-        if(!veriMobileApplication.getPeerManager().getCustomPeerAddressList().isEmpty()){
+    protected void onWalletKitResume() {
+        if (!veriMobileApplication.getPeerManager().getCustomPeerAddressList().isEmpty()) {
             emptyTextView.setText(R.string.connected_peers_tip); //If list is empty and there's custom peers, then show this tip for user.
-        }else{
+        } else {
             emptyTextView.setText(R.string.no_peers_connected);
         }
     }

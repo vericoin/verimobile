@@ -7,7 +7,7 @@ import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 import java.util.List;
 
 import info.vericoin.verimobile.Adapters.TransactionListAdapter;
-import info.vericoin.verimobile.WalletSingleton;
+import info.vericoin.verimobile.WalletManager;
 
 public class TransactionListUpdater implements WalletChangeEventListener {
 
@@ -28,7 +28,7 @@ public class TransactionListUpdater implements WalletChangeEventListener {
     }
 
     public void listenForTransactions() {
-        wallet.addChangeEventListener(WalletSingleton.getRunInUIThread(), this);
+        wallet.addChangeEventListener(WalletManager.runInUIThread, this);
     }
 
     public void updateTransactionList() {

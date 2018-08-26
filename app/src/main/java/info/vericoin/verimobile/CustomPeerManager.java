@@ -17,47 +17,51 @@ public class CustomPeerManager {
 
     private SharedPreferences sharedPref;
 
-    public CustomPeerManager(SharedPreferences sharedPref) {
+    private WalletManager walletManager;
+
+    public CustomPeerManager(SharedPreferences sharedPref, WalletManager walletManager) {
         this.sharedPref = sharedPref;
+        this.walletManager = walletManager;
     }
 
-    public ArrayList<PeerAddress> getCustomPeerAddressList(){
+    public ArrayList<PeerAddress> getCustomPeerAddressList() {
         ArrayList<PeerAddress> peerAddressList = new ArrayList<>();
         ArrayList<String> peerList = getCustomPeerStringList();
-        for(int i = 0; i < peerList.size(); i++){
+        for (int i = 0; i < peerList.size(); i++) {
             try {
-                PeerAddress peerAddress = new PeerAddress(WalletSingleton.getParams(), InetAddress.getByName(peerList.get(i)));
+                PeerAddress peerAddress = new PeerAddress(walletManager.getParams(), InetAddress.getByName(peerList.get(i)));
                 peerAddressList.add(peerAddress);
-            }catch(UnknownHostException e){
+            } catch (UnknownHostException e) {
                 e.printStackTrace();
             }
         }
         return peerAddressList;
     }
 
-    private ArrayList<String> getCustomPeerStringList(){
+    private ArrayList<String> getCustomPeerStringList() {
         String peerListJson = sharedPref.getString(CUSTOM_PEER_LIST, "");
-        if(peerListJson.isEmpty()){
+        if (peerListJson.isEmpty()) {
             return new ArrayList<>(); //Return empty list
-        }else {
+        } else {
             Gson gson = new Gson();
-            return gson.fromJson(peerListJson, new TypeToken<ArrayList<String>>() {}.getType());
+            return gson.fromJson(peerListJson, new TypeToken<ArrayList<String>>() {
+            }.getType());
         }
     }
 
-    public void addPeerAddress(String hostName){
+    public void addPeerAddress(String hostName) {
         ArrayList<String> peerStringList = getCustomPeerStringList();
         peerStringList.add(hostName);
         saveCustomPeerList(peerStringList);
     }
 
-    public void removePeerAddress(String hostName){
+    public void removePeerAddress(String hostName) {
         ArrayList<String> peerStringList = getCustomPeerStringList();
         peerStringList.remove(hostName);
         saveCustomPeerList(peerStringList);
     }
 
-    private void saveCustomPeerList(ArrayList<String> peerStringList){
+    private void saveCustomPeerList(ArrayList<String> peerStringList) {
         Gson gson = new Gson();
         String peerListJson = gson.toJson(peerStringList);
         sharedPref.edit().putString(CUSTOM_PEER_LIST, peerListJson).apply();

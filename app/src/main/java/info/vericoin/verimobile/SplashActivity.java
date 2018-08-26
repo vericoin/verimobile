@@ -4,18 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import org.bitcoinj.core.PeerAddress;
-import org.bitcoinj.kits.WalletAppKit;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-
-import info.vericoin.verimobile.Listeners.OnConnectListener;
-
-public class SplashActivity extends VeriActivity implements OnConnectListener {
+public class SplashActivity extends WalletAppKitActivity {
 
     private VeriMobileApplication veriMobileApplication;
+
+    private WalletManager walletManager;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, SplashActivity.class);
@@ -26,15 +19,15 @@ public class SplashActivity extends VeriActivity implements OnConnectListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         veriMobileApplication = (VeriMobileApplication) getApplication();
+        walletManager = veriMobileApplication.getWalletManager();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (WalletSingleton.doesWalletExist(SplashActivity.this)) {
-            WalletSingleton.startWallet(SplashActivity.this);
-            WalletSingleton.addConnectListener(this);
+        if (walletManager.doesWalletExist(SplashActivity.this)) {
+            walletManager.startWallet(SplashActivity.this);
         } else {
             startActivity(WelcomeActivity.createIntent(SplashActivity.this));
             finish();
@@ -42,13 +35,7 @@ public class SplashActivity extends VeriActivity implements OnConnectListener {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        WalletSingleton.removeConnectListener(this);
-    }
-
-    @Override
-    public void onSetUpComplete(WalletAppKit kit) {
+    protected void onWalletKitReady() {
         if (doesPasswordExist()) {
             startActivity(UnlockActivity.createIntent(SplashActivity.this)); //Ask for password;
         } else {
@@ -57,13 +44,8 @@ public class SplashActivity extends VeriActivity implements OnConnectListener {
         finish(); //Prevent app from going back to this activity after its finished.
     }
 
-    @Override
-    public void onStopAsync() {
-
-    }
-
     public boolean doesPasswordExist() {
-        return veriMobileApplication.doesPasswordExist();
+        return veriMobileApplication.getPasswordManager().doesPasswordExist();
     }
 
 }

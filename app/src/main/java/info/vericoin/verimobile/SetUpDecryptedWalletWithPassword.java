@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
-import org.bitcoinj.wallet.Wallet;
+import javax.annotation.Nullable;
 
 public class SetUpDecryptedWalletWithPassword extends SetUpWalletWithPassword {
 
@@ -24,32 +24,24 @@ public class SetUpDecryptedWalletWithPassword extends SetUpWalletWithPassword {
 
     }
 
-    public void importWallet(final String password) {
+    public void importWallet(@Nullable final String password) {
         importing();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Wallet importWallet = Wallet.loadFromFileStream(getContentResolver().openInputStream(uri));
-
-                    if (!isNoPasswordChecked()) {
-                        veriMobileApplication.newPassword(password);
-                        if (isEncryptWallet()) {
-                            importWallet.encrypt(password);
-                        }
+                    if (password == null) {
+                        walletManager.createWalletFromFile(SetUpDecryptedWalletWithPassword.this, uri);
+                    } else {
+                        walletManager.createWalletFromFile(SetUpDecryptedWalletWithPassword.this, uri, password, isEncryptWallet());
                     }
-
-                    WalletSingleton.importWallet(SetUpDecryptedWalletWithPassword.this, importWallet);
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             importComplete();
                         }
                     });
-
                 } catch (final Exception e) {
-                    e.printStackTrace();
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

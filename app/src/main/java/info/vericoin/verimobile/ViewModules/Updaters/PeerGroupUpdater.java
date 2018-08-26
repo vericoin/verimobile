@@ -7,7 +7,7 @@ import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.listeners.PeerConnectedEventListener;
 import org.bitcoinj.core.listeners.PeerDisconnectedEventListener;
 
-import info.vericoin.verimobile.WalletSingleton;
+import info.vericoin.verimobile.WalletManager;
 
 public class PeerGroupUpdater implements PeerConnectedEventListener, PeerDisconnectedEventListener {
 
@@ -21,8 +21,8 @@ public class PeerGroupUpdater implements PeerConnectedEventListener, PeerDisconn
     }
 
     public void listenForPeerConnections() {
-        peerGroup.addConnectedEventListener(WalletSingleton.getRunInUIThread(), this);
-        peerGroup.addDisconnectedEventListener(WalletSingleton.getRunInUIThread(), this);
+        peerGroup.addConnectedEventListener(WalletManager.runInUIThread, this);
+        peerGroup.addDisconnectedEventListener(WalletManager.runInUIThread, this);
     }
 
     @Override

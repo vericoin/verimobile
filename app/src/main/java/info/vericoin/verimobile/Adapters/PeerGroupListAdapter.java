@@ -45,7 +45,7 @@ public class PeerGroupListAdapter extends RecyclerView.Adapter<PeerGroupListAdap
 
         holder.pingView.setText(String.format("%tL ms", ping));
         holder.addressView.setText(address);
-        holder.clientVersionView.setText(String.format(Locale.getDefault(),"%d", clientVersion));
+        holder.clientVersionView.setText(String.format(Locale.getDefault(), "%d", clientVersion));
     }
 
     @Override

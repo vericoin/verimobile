@@ -46,7 +46,7 @@ public class SettingsActivity extends WalletAppKitActivity {
 
     @Override
     protected void onWalletKitStop() {
-        getFragmentManager().beginTransaction().remove(fragment);
+        getFragmentManager().beginTransaction().remove(fragment).commit();
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment {
@@ -59,7 +59,7 @@ public class SettingsActivity extends WalletAppKitActivity {
         private Preference deleteWallet;
         private CheckBoxPreference lockTransactions;
         private CheckBoxPreference fingerPrint;
-        private VeriMobileApplication veriMobileApplication;
+        private PasswordManager passwordManager;
         private FingerprintHelper fingerprintHelper;
         private PreferenceCategory securityCategory;
         private CheckBoxPreference secureWindow;
@@ -70,7 +70,7 @@ public class SettingsActivity extends WalletAppKitActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_screen);
-            veriMobileApplication = (VeriMobileApplication) getActivity().getApplication();
+            passwordManager = ((VeriMobileApplication) getActivity().getApplication()).getPasswordManager();
             settingsActivity = (SettingsActivity) getActivity();
             kit = settingsActivity.kit;
 
@@ -95,7 +95,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                             ;
                         }
                     });
-                    if (veriMobileApplication.doesPasswordExist()) {
+                    if (doesPasswordExist()) {
                         dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
                     } else {
                         createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
@@ -115,7 +115,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                             deleteWallet();
                         }
                     });
-                    if (veriMobileApplication.doesPasswordExist()) {
+                    if (doesPasswordExist()) {
                         dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
                     } else {
                         deleteWallet();
@@ -182,7 +182,7 @@ public class SettingsActivity extends WalletAppKitActivity {
         }
 
         public boolean doesPasswordExist() {
-            return veriMobileApplication.doesPasswordExist();
+            return passwordManager.doesPasswordExist();
         }
 
         public void openViewSeedActivity(String password) {
@@ -200,7 +200,7 @@ public class SettingsActivity extends WalletAppKitActivity {
         public void onResume() {
             super.onResume();
 
-            if (veriMobileApplication.doesPasswordExist()) { //Require password before changing these settings.
+            if (doesPasswordExist()) { //Require password before changing these settings.
                 lockTransactions.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {

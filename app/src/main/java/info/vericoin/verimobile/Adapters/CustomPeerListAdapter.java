@@ -16,21 +16,19 @@ import java.util.ArrayList;
 
 import info.vericoin.verimobile.CustomPeerListActivity;
 import info.vericoin.verimobile.R;
-import info.vericoin.verimobile.VeriMobileApplication;
 
 public class CustomPeerListAdapter extends RecyclerView.Adapter<CustomPeerListAdapter.ViewHolder> {
 
     private ArrayList<PeerAddress> peerList = new ArrayList<>();
-
-    public void setPeerList(ArrayList<PeerAddress> peerList) {
-        this.peerList = peerList;
-        notifyDataSetChanged();
-    }
-
     private CustomPeerListActivity activity;
 
     public CustomPeerListAdapter(CustomPeerListActivity activity) {
         this.activity = activity;
+    }
+
+    public void setPeerList(ArrayList<PeerAddress> peerList) {
+        this.peerList = peerList;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -59,13 +57,13 @@ public class CustomPeerListAdapter extends RecyclerView.Adapter<CustomPeerListAd
 
                 // 2. Chain together various setter methods to set the dialog characteristics
                 builder.setPositiveButton(R.string.remove_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                activity.getVeriMobileApplication().getPeerManager().removePeerAddress(peerAddress.getAddr().getHostAddress());
-                                peerList.remove(position);
-                                notifyDataSetChanged();
-                            }
-                        })
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        activity.getVeriMobileApplication().getPeerManager().removePeerAddress(peerAddress.getAddr().getHostAddress());
+                        peerList.remove(position);
+                        notifyDataSetChanged();
+                    }
+                })
                         .setTitle(R.string.remove_peer_title);
 
                 // 3. Get the AlertDialog from create()

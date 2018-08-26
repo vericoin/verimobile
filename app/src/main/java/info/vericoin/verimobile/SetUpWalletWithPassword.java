@@ -9,11 +9,13 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import javax.annotation.Nullable;
+
 import info.vericoin.verimobile.ViewModules.NewPasswordValidation;
 
 public abstract class SetUpWalletWithPassword extends VeriActivity {
 
-    protected VeriMobileApplication veriMobileApplication;
+    protected WalletManager walletManager;
     private ProgressBar progressBar;
     private TextInputLayout passwordLayout;
 
@@ -30,8 +32,8 @@ public abstract class SetUpWalletWithPassword extends VeriActivity {
     @Override
     protected void onCreate(Bundle savedBundleInstance) {
         super.onCreate(savedBundleInstance);
-        setContentView(R.layout.activity_set_up_decrypted_wallet);
-        veriMobileApplication = (VeriMobileApplication) getApplication();
+        setContentView(R.layout.activity_set_up_wallet);
+        walletManager = ((VeriMobileApplication) getApplication()).getWalletManager();
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
@@ -49,7 +51,7 @@ public abstract class SetUpWalletWithPassword extends VeriActivity {
                 resetError();
                 newPasswordValidation.resetErrors();
                 if (isNoPasswordChecked()) {
-                    importWallet("");
+                    importWallet(null);
                 } else if (newPasswordValidation.checkValidity()) {
                     importWallet(newPasswordValidation.getPassword());
                 }
@@ -73,7 +75,7 @@ public abstract class SetUpWalletWithPassword extends VeriActivity {
 
     }
 
-    abstract void importWallet(String password);
+    abstract void importWallet(@Nullable String password);
 
     public void resetError() {
         passwordLayout.setErrorEnabled(false);

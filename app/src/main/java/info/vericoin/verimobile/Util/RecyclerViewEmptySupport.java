@@ -10,11 +10,6 @@ public class RecyclerViewEmptySupport extends RecyclerView {
     private View emptyView;
 
     private OnEmptyViewListener emptyViewListener;
-
-    public void setEmptyViewListener(OnEmptyViewListener emptyViewListener) {
-        this.emptyViewListener = emptyViewListener;
-    }
-
     private AdapterDataObserver emptyObserver = new RecyclerView.AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -23,13 +18,13 @@ public class RecyclerViewEmptySupport extends RecyclerView {
                 if (adapter.getItemCount() == 0) {
                     emptyView.setVisibility(View.VISIBLE);
                     RecyclerViewEmptySupport.this.setVisibility(View.GONE);
-                    if(emptyViewListener != null) {
+                    if (emptyViewListener != null) {
                         emptyViewListener.emptyViewIsOn();
                     }
                 } else {
                     emptyView.setVisibility(View.GONE);
                     RecyclerViewEmptySupport.this.setVisibility(View.VISIBLE);
-                    if(emptyViewListener != null) {
+                    if (emptyViewListener != null) {
                         emptyViewListener.emptyViewIsOff();
                     }
                 }
@@ -50,6 +45,10 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         super(context, attrs, defStyle);
     }
 
+    public void setEmptyViewListener(OnEmptyViewListener emptyViewListener) {
+        this.emptyViewListener = emptyViewListener;
+    }
+
     @Override
     public void setAdapter(Adapter adapter) {
         super.setAdapter(adapter);
@@ -65,8 +64,9 @@ public class RecyclerViewEmptySupport extends RecyclerView {
         this.emptyView = emptyView;
     }
 
-    public interface OnEmptyViewListener{
+    public interface OnEmptyViewListener {
         void emptyViewIsOn();
+
         void emptyViewIsOff();
     }
 }

@@ -25,7 +25,7 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
 
     private CheckBox noPasswordBox;
 
-    private VeriMobileApplication veriMobileApplication;
+    private PasswordManager passwordManager;
 
     private NewPasswordValidation newPasswordValidation;
 
@@ -41,7 +41,7 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
     @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_change_password);
-        veriMobileApplication = (VeriMobileApplication) getApplication();
+        passwordManager = ((VeriMobileApplication) getApplication()).getPasswordManager();
 
         currentPasswordLayout = findViewById(R.id.currentPasswordInputLayout);
         newPasswordLayout = findViewById(R.id.newPasswordLayout);
@@ -105,7 +105,7 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
     }
 
     public boolean doesPasswordExist() {
-        return veriMobileApplication.doesPasswordExist();
+        return passwordManager.doesPasswordExist();
     }
 
     public void updatePassword(final String password) {
@@ -115,9 +115,9 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
         changePasswordButton.setText("");
 
         if (noPasswordBox.isChecked()) {
-            veriMobileApplication.removePassword();
+            passwordManager.removePassword();
         } else {
-            veriMobileApplication.newPassword(password);
+            passwordManager.newPassword(password);
         }
 
         new Thread(new Runnable() {
@@ -144,7 +144,7 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
     }
 
     public String getCurrentPasswordHash() {
-        return veriMobileApplication.getPasswordHash();
+        return passwordManager.getPasswordHash();
     }
 
     public void decryptWallet(String password) {

@@ -14,26 +14,32 @@ public abstract class WalletAppKitActivity extends VeriActivity implements OnCon
 
     private boolean resumeStateActive = false;
 
+    private VeriMobileApplication veriMobileApplication;
+
+    private WalletManager walletManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        veriMobileApplication = (VeriMobileApplication) getApplication();
+        walletManager = veriMobileApplication.getWalletManager();
 
-        WalletSingleton.addConnectListener(this);
+        walletManager.addConnectListener(this);
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
 
         resumeStateActive = true;
 
-        if(walletKitReady){
+        if (walletKitReady) {
             onWalletKitResume();
         }
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         resumeStateActive = false;
     }
@@ -44,7 +50,7 @@ public abstract class WalletAppKitActivity extends VeriActivity implements OnCon
         onWalletKitReady();
         walletKitReady = true;
 
-        if(resumeStateActive){
+        if (resumeStateActive) {
             onWalletKitResume();
         }
     }
@@ -58,13 +64,16 @@ public abstract class WalletAppKitActivity extends VeriActivity implements OnCon
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        WalletSingleton.removeConnectListener(this);
+        walletManager.removeConnectListener(this);
     }
 
-    protected void onWalletKitResume(){}
+    protected void onWalletKitResume() {
+    }
 
-    protected void onWalletKitStop(){}
+    protected void onWalletKitStop() {
+    }
 
-    protected void onWalletKitReady(){}
+    protected void onWalletKitReady() {
+    }
 
 }

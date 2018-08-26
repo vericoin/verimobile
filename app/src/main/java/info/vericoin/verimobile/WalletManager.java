@@ -5,15 +5,15 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 
-import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.listeners.DownloadProgressTracker;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
-import org.bitcoinj.utils.BriefLogFormatter;
 import org.bitcoinj.wallet.DeterministicSeed;
+import org.bitcoinj.wallet.KeyChainGroup;
+import org.bitcoinj.wallet.UnreadableWalletException;
 import org.bitcoinj.wallet.Wallet;
 
 import java.io.File;
@@ -25,22 +25,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
 
+import javax.annotation.Nullable;
+
 import info.vericoin.verimobile.Listeners.BlockDownloadListener;
 import info.vericoin.verimobile.Listeners.OnConnectListener;
 
-public class WalletSingleton {
+public class WalletManager {
 
     private static final String FILE_PREFIX = "forwarding-service-testnet";
     private static final String WALLET_FILE_NAME = FILE_PREFIX + ".wallet";
     private static final String CHAIN_FILE_NAME = FILE_PREFIX + ".spvchain";
-    private static VeriMobileApplication veriMobileApplication;
-    private static boolean startUpComplete = false;
-    private static boolean starting = false;
-    private static boolean finishedDownloadingBlockchain = false;
-    private static List<OnConnectListener> connectListeners = new ArrayList<>();
-    private static NetworkParameters params = TestNet3Params.get();
-    private static WalletAppKit kit;
-    private static Executor runInUIThread = new Executor() {
+    public static Executor runInUIThread = new Executor() {
         @Override
         public void execute(Runnable runnable) {
             Handler handler = new Handler(Looper.getMainLooper());
@@ -48,32 +43,37 @@ public class WalletSingleton {
             handler.post(runnable);
         }
     };
-    private static ArrayList<BlockDownloadListener> blockDownloadListeners = new ArrayList<>();
-    private WalletSingleton() { //Prevent singleton from being constructed.
+    private boolean startUpComplete = false;
+    private boolean finishedDownloadingBlockchain = false;
+    private List<OnConnectListener> connectListeners = new ArrayList<>();
+    private NetworkParameters params = TestNet3Params.get();
+    private WalletAppKit kit;
+    private VeriMobileApplication application;
+    private ArrayList<BlockDownloadListener> blockDownloadListeners = new ArrayList<>();
+
+    public WalletManager(VeriMobileApplication application) {
+        this.application = application;
     }
 
-    public static NetworkParameters getParams() {
+    private static void deleteChainFile(Context context) {
+        File chainFile = new File(context.getFilesDir(), CHAIN_FILE_NAME);
+        chainFile.delete();
+    }
+
+    public NetworkParameters getParams() {
         return params;
     }
 
-    public static void setVeriMobileApplication(VeriMobileApplication veriMobileApplication) {
-        WalletSingleton.veriMobileApplication = veriMobileApplication;
-    }
-
-    public static Executor getRunInUIThread() {
-        return runInUIThread;
-    }
-
-    public static boolean doesWalletExist(Context context) {
+    public boolean doesWalletExist(Context context) {
         return (new File(context.getFilesDir(), WALLET_FILE_NAME).exists() || kit != null);
     }
 
-    public static void importWallet(Context context, Wallet walllet) throws IOException{
+    private void saveWallet(Context context, Wallet wallet) throws IOException {
         File file = new File(context.getFilesDir(), WALLET_FILE_NAME);
-        walllet.saveToFile(file);
+        wallet.saveToFile(file);
     }
 
-    public static void importWallet(Context context, Uri uri) throws IOException, NullPointerException {
+    private void importWalletFile(Context context, Uri uri) throws IOException, NullPointerException {
         File file = new File(context.getFilesDir(), WALLET_FILE_NAME);
 
         if (file.exists()) {
@@ -94,14 +94,14 @@ public class WalletSingleton {
         fop.close();
     }
 
-    public static void deleteWallet(final Context context) {
+    public void deleteWallet(final Context context) {
         new Thread(new Runnable() {
             @Override
             public void run() {
 
                 stopWalletAsync();
 
-                veriMobileApplication.removePassword();
+                application.getPasswordManager().removePassword();
 
                 deleteWalletFile(context);
                 deleteChainFile(context);
@@ -111,7 +111,7 @@ public class WalletSingleton {
         }).start();
     }
 
-    public static void stopWalletAsync() {
+    private void stopWalletAsync() {
 
         for (final OnConnectListener listener : connectListeners) {
             runInUIThread.execute(new Runnable() {
@@ -129,56 +129,38 @@ public class WalletSingleton {
         resetVariables();
     }
 
-    private static void clearListeners() {
+    private void clearListeners() {
         connectListeners.clear();
         blockDownloadListeners.clear();
     }
 
-    private static void resetVariables() {
+    private void resetVariables() {
         kit = null;
-        starting = false;
         startUpComplete = false;
         finishedDownloadingBlockchain = false;
     }
 
-    private static void deleteWalletFile(Context context) {
+    private void deleteWalletFile(Context context) {
         File walletFile = new File(context.getFilesDir(), WALLET_FILE_NAME);
         walletFile.delete();
     }
 
-    private static void deleteChainFile(Context context) {
-        File chainFile = new File(context.getFilesDir(), CHAIN_FILE_NAME);
-        chainFile.delete();
-    }
-
-    public static void addBlockDownloadListener(BlockDownloadListener listener) {
+    public void addBlockDownloadListener(BlockDownloadListener listener) {
         if (finishedDownloadingBlockchain) {
             listener.finishedDownload();
         }
         blockDownloadListeners.add(listener);
     }
 
-    public static void removeBlockDownloadListener(BlockDownloadListener listener) {
+    public void removeBlockDownloadListener(BlockDownloadListener listener) {
         blockDownloadListeners.remove(listener);
     }
 
-    private static void initWalletAppKit(Context context, final String password) {
-        BriefLogFormatter.init();
-        // Start up a basic app using a class that automates some boilerplate. Ensure we always have at least one key.
+    private void initWalletAppKit(Context context) {
+        // Start up a basic app using a class that automates some boilerplate.
         kit = new WalletAppKit(params, context.getFilesDir(), FILE_PREFIX) {
             @Override
             protected void onSetupCompleted() {
-                // This is called in a background thread after startAndWait is called, as setting up various objects
-                // can do disk and network IO that may cause UI jank/stuttering in wallet apps if it were to be done
-                // on the main thread.
-                if (wallet().getKeyChainGroupSize() < 1) {
-                    wallet().importKey(new ECKey());
-                }
-
-                if (!password.isEmpty()) {
-                    wallet().encrypt(password);
-                }
-
                 //WalletAppKit is now ready to be used.
                 runInUIThread.execute(new Runnable() {
                     @Override
@@ -189,16 +171,15 @@ public class WalletSingleton {
                     }
                 });
                 startUpComplete = true;
-
             }
         };
 
         try {
-            ArrayList<PeerAddress> peerAddresses = veriMobileApplication.getPeerManager().getCustomPeerAddressList();
+            ArrayList<PeerAddress> peerAddresses = application.getPeerManager().getCustomPeerAddressList();
             if (peerAddresses != null && !peerAddresses.isEmpty()) {
                 kit.setPeerNodes(peerAddresses.toArray(new PeerAddress[peerAddresses.size()]));
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         kit.setBlockingStartup(false);
@@ -230,8 +211,7 @@ public class WalletSingleton {
         });
     }
 
-    private static void startWalletAsync() {
-
+    private void startWalletAsync() {
         if (params == RegTestParams.get()) {
             // Regression test mode is designed for testing and development only, so there's no public network for it.
             // If you pick this mode, you're expected to be running a local "bitcoind -regtest" instance.
@@ -244,47 +224,82 @@ public class WalletSingleton {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    public static void startWallet(Context context) {
-        startWallet(context, "");
-    }
-
-    public static void startWallet(Context context, final String password) {
-
-        if (kit == null) { //Only init kit if it does not exist yet.
-            initWalletAppKit(context, password);
-        }
-
-        if (!starting) {
-            startWalletAsync();
-            starting = true;
-        }
-    }
-
-    public static void importFromSeed(final Context context, final String password, final List<String> mnemonicList, final long creationTime) {
-
+    public void startWallet(Context context) { //Start wallet
         if (kit == null) {
-            initWalletAppKit(context, password);
-        }
-
-        kit.restoreWalletFromSeed(new DeterministicSeed(mnemonicList, null, "", creationTime));
-
-        if (!starting) {
+            initWalletAppKit(context);
             startWalletAsync();
-            starting = true;
         }
     }
 
-    public static void addConnectListener(OnConnectListener listener) {
+    public void createNewWallet(Context context) throws IOException {
+        createNewWallet(context, null, false);
+    }
+
+    public void createNewWallet(Context context, @Nullable final String password, final boolean encryptWallet) throws IOException {
+        if (kit == null) {
+            KeyChainGroup kcg = new KeyChainGroup(params);
+            Wallet wallet = new Wallet(params, kcg);
+            if (password != null) {
+                application.getPasswordManager().newPassword(password);
+                if (encryptWallet) {
+                    wallet.encrypt(password);
+                }
+            }
+            saveWallet(context, wallet);
+            startWalletAsync();
+        }
+    }
+
+    public void createWalletFromSeed(Context context, final List<String> mnemonicList, final long creationTime) throws IOException {
+        createWalletFromSeed(context, mnemonicList, creationTime, false, null);
+    }
+
+    public void createWalletFromSeed(Context context, final List<String> mnemonicList, final long creationTime, final boolean encryptWallet, @Nullable final String password) throws IOException {
+        if (kit == null) {
+            Wallet wallet = Wallet.fromSeed(params, new DeterministicSeed(mnemonicList, null, "", creationTime));
+            if (password != null) {
+                application.getPasswordManager().newPassword(password);
+                if (encryptWallet) {
+                    wallet.encrypt(password);
+                }
+            }
+            saveWallet(context, wallet);
+            startWalletAsync();
+        }
+    }
+
+    public void createWalletFromFile(Context context, Uri uri) throws IOException, UnreadableWalletException {
+        createWalletFromFile(context, uri, null, false);
+    }
+
+    public void createWalletFromFile(Context context, Uri uri, @Nullable String password, boolean encryptWallet) throws IOException, UnreadableWalletException {
+        if (kit == null) {
+            if (password == null) {
+                importWalletFile(context, uri);
+            } else {
+                application.getPasswordManager().newPassword(password);
+                if (encryptWallet) {
+                    Wallet encryptedWallet = Wallet.loadFromFileStream(context.getContentResolver().openInputStream(uri));
+                    encryptedWallet.encrypt(password);
+                    saveWallet(context, encryptedWallet);
+                } else {
+                    importWalletFile(context, uri);
+                }
+            }
+            startWalletAsync();
+        }
+    }
+
+    public void addConnectListener(OnConnectListener listener) {
         if (kit != null && startUpComplete) { //Check to see if Wallet is already running.
             listener.onSetUpComplete(kit);
         }
         connectListeners.add(listener);
     }
 
-    public static void removeConnectListener(OnConnectListener listener) {
+    public void removeConnectListener(OnConnectListener listener) {
         connectListeners.remove(listener);
     }
 
