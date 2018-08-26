@@ -66,7 +66,7 @@ public class CustomPeerListActivity extends WalletAppKitActivity {
             }
         });
 
-        adapter.setPeerList(veriMobileApplication.getCustomPeerAddressList());
+        adapter.setPeerList(veriMobileApplication.getPeerManager().getCustomPeerAddressList());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class CustomPeerListActivity extends WalletAppKitActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_CODE  && resultCode  == RESULT_OK) {
-            adapter.setPeerList(veriMobileApplication.getCustomPeerAddressList()); //Update list if new peer was added.
+            adapter.setPeerList(veriMobileApplication.getPeerManager().getCustomPeerAddressList()); //Update list if new peer was added.
         }
     }
 }

@@ -39,7 +39,7 @@ public class ActivityAddPeer extends WalletAppKitActivity {
                 }else{
                     try {
                         InetAddress.getByName(hostName); //Check to see if hostName is valid
-                        veriMobileApplication.addPeerAddress(hostName);
+                        veriMobileApplication.getPeerManager().addPeerAddress(hostName);
                         setResult(RESULT_OK);
                         finish();
                     }catch (Exception e){

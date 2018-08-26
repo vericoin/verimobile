@@ -194,7 +194,7 @@ public class WalletSingleton {
         };
 
         try {
-            ArrayList<PeerAddress> peerAddresses = veriMobileApplication.getCustomPeerAddressList();
+            ArrayList<PeerAddress> peerAddresses = veriMobileApplication.getPeerManager().getCustomPeerAddressList();
             if (peerAddresses != null && !peerAddresses.isEmpty()) {
                 kit.setPeerNodes(peerAddresses.toArray(new PeerAddress[peerAddresses.size()]));
             }

@@ -61,7 +61,7 @@ public class CustomPeerListAdapter extends RecyclerView.Adapter<CustomPeerListAd
                 builder.setPositiveButton(R.string.remove_button, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                activity.getVeriMobileApplication().removePeerAddress(peerAddress.getAddr().getHostAddress());
+                                activity.getVeriMobileApplication().getPeerManager().removePeerAddress(peerAddress.getAddr().getHostAddress());
                                 peerList.remove(position);
                                 notifyDataSetChanged();
                             }
