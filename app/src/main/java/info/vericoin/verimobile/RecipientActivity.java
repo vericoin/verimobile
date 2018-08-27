@@ -23,6 +23,8 @@ public class RecipientActivity extends WalletAppKitActivity {
 
     private ConstraintLayout scanButton;
 
+    private VeriMobileApplication veriMobileApplication;
+
     public static Intent createIntent(Context context) {
         return new Intent(context, RecipientActivity.class);
     }
@@ -35,6 +37,8 @@ public class RecipientActivity extends WalletAppKitActivity {
     @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_recipient);
+
+        veriMobileApplication = (VeriMobileApplication) getApplication();
 
         sendAddr = findViewById(R.id.sendAddr);
 
@@ -72,13 +76,26 @@ public class RecipientActivity extends WalletAppKitActivity {
                 String addressString = sendAddr.getEditText().getText().toString();
                 try {
                     Address address = Address.fromString(kit.params(), addressString);
-                    startActivity(AmountActivity.createIntent(RecipientActivity.this, address));
+                    verifyUser(address);
                 } catch (AddressFormatException e) {
                     e.printStackTrace();
                     sendAddr.setError(getString(R.string.invalid_address));
                 }
             }
         });
+    }
+
+    public void verifyUser(Address address){
+        VeriTransaction veriTransaction = new VeriTransaction();
+        veriTransaction.setAddress(address);
+
+        if(isWalletEncrypted()){
+            startActivity(DecryptWalletActivity.createIntent(RecipientActivity.this, veriTransaction));
+        }else if(isLockTransactions() && passwordExist()){
+            startActivity(UnlockActivity.createIntent(RecipientActivity.this, veriTransaction));
+        }else {
+            startActivity(AmountActivity.createIntent(RecipientActivity.this, veriTransaction));
+        }
     }
 
     @Override
@@ -92,5 +109,15 @@ public class RecipientActivity extends WalletAppKitActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    public boolean isWalletEncrypted() {
+        return kit.wallet().isEncrypted();
+    }
+
+    public boolean isLockTransactions() {
+        return veriMobileApplication.isLockTransactions();
+    }
+
+    public boolean passwordExist(){ return veriMobileApplication.getPasswordManager().doesPasswordExist(); }
 
 }

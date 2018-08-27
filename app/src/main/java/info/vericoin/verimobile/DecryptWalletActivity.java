@@ -13,18 +13,15 @@ import org.bitcoinj.core.Coin;
 
 public class DecryptWalletActivity extends VeriActivity {
 
-    private final static String ADDRESS_EXTRA = "address";
-    private final static String AMOUNT_EXTRA = "amount";
+    private final static String VERI_TRANSACTION = "veriTransaction";
     private TextInputLayout passwordLayout;
     private Button unlockButton;
-    private Address address;
-    private Coin amount;
+    private VeriTransaction veriTransaction;
     private PasswordManager passwordManager;
 
-    public static Intent createIntent(Context context, Address toAddr, Coin amount) {
+    public static Intent createIntent(Context context, VeriTransaction veriTransaction) {
         Intent intent = new Intent(context, DecryptWalletActivity.class);
-        intent.putExtra(ADDRESS_EXTRA, toAddr);
-        intent.putExtra(AMOUNT_EXTRA, amount);
+        intent.putExtra(VERI_TRANSACTION, veriTransaction);
         return intent;
     }
 
@@ -34,8 +31,7 @@ public class DecryptWalletActivity extends VeriActivity {
         setContentView(R.layout.activity_decrypt_wallet);
         passwordManager = ((VeriMobileApplication) getApplication()).getPasswordManager();
 
-        address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
-        amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
+        veriTransaction = (VeriTransaction) getIntent().getSerializableExtra(VERI_TRANSACTION);
 
         unlockButton = findViewById(R.id.unlockButton);
 
@@ -45,7 +41,8 @@ public class DecryptWalletActivity extends VeriActivity {
             @Override
             public void onClick(View v) {
                 if (isPasswordCorrect()) {
-                    startActivity(ProcessTransactionActivity.createIntent(DecryptWalletActivity.this, address, amount, getPassword()));
+                    veriTransaction.setPassword(getPassword());
+                    startActivity(AmountActivity.createIntent(DecryptWalletActivity.this, veriTransaction));
                     finish(); //Prevent app from going back to this activity after its finished.
                 } else {
                     passwordLayout.setError(getString(R.string.password_is_incorrect));

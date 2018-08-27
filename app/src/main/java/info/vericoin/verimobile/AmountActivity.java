@@ -5,25 +5,31 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.InsufficientMoneyException;
+import org.bitcoinj.wallet.SendRequest;
+import org.spongycastle.crypto.params.KeyParameter;
 
-import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
+import static android.view.View.GONE;
 
 public class AmountActivity extends WalletAppKitActivity implements View.OnClickListener {
 
-    private final static String ADDRESS_EXTRA = "address";
+    private final static String VERI_TRANSACTION = "veriTransaction";
 
-    private Address address;
+    private VeriTransaction veriTransaction;
 
     private TextView amount;
 
     private AmountParser amountParser;
 
     private Coin AMOUNT_DEFAULT = Coin.ZERO;
+
+    private VeriMobileApplication veriMobileApplication;
 
     private TextView button1;
     private TextView button2;
@@ -38,11 +44,13 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
     private TextView dotButton;
     private ImageView backSpace;
 
+    private ProgressBar progressBar;
+
     private Button nextButton;
 
-    public static Intent createIntent(Context context, Address address) {
+    public static Intent createIntent(Context context, VeriTransaction veriTransaction) {
         Intent intent = new Intent(context, AmountActivity.class);
-        intent.putExtra(ADDRESS_EXTRA, address);
+        intent.putExtra(VERI_TRANSACTION, veriTransaction);
         return intent;
     }
 
@@ -54,8 +62,9 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
     @Override
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_amount);
+        veriMobileApplication = (VeriMobileApplication) getApplication();
 
-        address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
+        veriTransaction = (VeriTransaction) getIntent().getSerializableExtra(VERI_TRANSACTION);
 
         amountParser = new AmountParser(AMOUNT_DEFAULT.toPlainString());
 
@@ -63,6 +72,8 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
         amount.setText(amountParser.getAmount() + " BTC");
 
         nextButton = findViewById(R.id.nextButton);
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(GONE);
 
         button0 = findViewById(R.id.button0);
         button1 = findViewById(R.id.button1);
@@ -93,15 +104,56 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Coin amount = Coin.parseCoin(amountParser.getAmount());
-
-                if (amount.isGreaterThan(kit.wallet().getBalance().add(BTC_TRANSACTION_FEE))) {
-                    Toast.makeText(AmountActivity.this, "Wallet does not have enough funds", Toast.LENGTH_LONG).show();
-                } else {
-                    startActivity(ReviewActivity.createIntent(AmountActivity.this, address, amount));
-                }
+                waiting();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            final Coin amount = Coin.parseCoin(amountParser.getAmount());
+                            SendRequest request = SendRequest.to(veriTransaction.getAddress(), amount);
+                            if(kit.wallet().isEncrypted()){
+                                request.aesKey = kit.wallet().getKeyCrypter().deriveKey(veriTransaction.getPassword());
+                            }
+                            kit.wallet().completeTx(request); //Complete TX to see if we have enough funds to cover the fee.
+                            final Coin fee = request.tx.getFee();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    reviewTransaction(amount, fee);
+                                }
+                            });
+                        } catch (InsufficientMoneyException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    failed(getString(R.string.insufficient_funds));
+                                }
+                            });
+                        } catch (final Exception e){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    failed(e.toString());
+                                }
+                            });
+                        }
+                    }
+                }).start();
             }
         });
+    }
+
+    public void waiting(){
+        progressBar.setVisibility(View.VISIBLE);
+        nextButton.setText("");
+        nextButton.setEnabled(false);
+    }
+
+    public void failed(String error){
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+        progressBar.setVisibility(GONE);
+        nextButton.setEnabled(true);
+        nextButton.setText(R.string.next_button);
     }
 
     @Override
@@ -145,5 +197,15 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
                 break;
         }
         amount.setText(amountParser.getAmount() + " BTC");
+    }
+
+    public void reviewTransaction(Coin amount, Coin fee) {
+        veriTransaction.setAmount(amount);
+        veriTransaction.setFee(fee);
+
+        progressBar.setVisibility(GONE);
+        nextButton.setEnabled(true);
+        nextButton.setText(R.string.next_button);
+        startActivity(ReviewActivity.createIntent(this, veriTransaction));
     }
 }

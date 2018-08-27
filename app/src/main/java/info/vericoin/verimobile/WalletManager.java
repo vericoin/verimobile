@@ -73,7 +73,7 @@ public class WalletManager {
         wallet.saveToFile(file);
     }
 
-    private void importWalletFile(Context context, Uri uri) throws IOException, NullPointerException {
+    private void saveWalletFile(Context context, Uri uri) throws IOException, NullPointerException {
         File file = new File(context.getFilesDir(), WALLET_FILE_NAME);
 
         if (file.exists()) {
@@ -277,7 +277,7 @@ public class WalletManager {
     public void createWalletFromFile(Context context, Uri uri, @Nullable String password, boolean encryptWallet) throws IOException, UnreadableWalletException {
         if (kit == null) {
             if (password == null) {
-                importWalletFile(context, uri);
+                saveWalletFile(context, uri);
             } else {
                 application.getPasswordManager().newPassword(password);
                 if (encryptWallet) {
@@ -285,7 +285,7 @@ public class WalletManager {
                     encryptedWallet.encrypt(password);
                     saveWallet(context, encryptedWallet);
                 } else {
-                    importWalletFile(context, uri);
+                    saveWalletFile(context, uri);
                 }
             }
             startWalletAsync();

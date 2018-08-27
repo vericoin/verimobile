@@ -17,13 +17,10 @@ import org.bitcoinj.wallet.Wallet;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static android.view.View.GONE;
-import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
 public class ProcessTransactionActivity extends WalletAppKitActivity {
 
-    private final static String ADDRESS_EXTRA = "address";
-    private final static String AMOUNT_EXTRA = "amount";
-    private final static String PASSWORD_EXTRA = "password";
+    private final static String VERI_TRANSACTION = "veriTransaction";
 
     private TextView txHashView;
 
@@ -35,21 +32,13 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
 
     private Button doneButton;
 
-    private Address address;
-    private Coin amount;
     private ProgressBar progressBar;
 
-    private String password;
+    private VeriTransaction veriTransaction;
 
-    public static Intent createIntent(Context context, Address toAddr, Coin amount) {
-        return createIntent(context, toAddr, amount, "");
-    }
-
-    public static Intent createIntent(Context context, Address toAddr, Coin amount, String password) {
+    public static Intent createIntent(Context context, VeriTransaction veriTransaction) {
         Intent intent = new Intent(context, ProcessTransactionActivity.class);
-        intent.putExtra(ADDRESS_EXTRA, toAddr);
-        intent.putExtra(AMOUNT_EXTRA, amount);
-        intent.putExtra(PASSWORD_EXTRA, password);
+        intent.putExtra(VERI_TRANSACTION, veriTransaction);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
@@ -63,9 +52,7 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_process_transaction);
 
-        address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
-        amount = (Coin) getIntent().getSerializableExtra(AMOUNT_EXTRA);
-        password = getIntent().getStringExtra(PASSWORD_EXTRA);
+        veriTransaction = (VeriTransaction) getIntent().getSerializableExtra(VERI_TRANSACTION);
 
         txHashView = findViewById(R.id.txHash);
         txHashBox = findViewById(R.id.txHashBox);
@@ -96,11 +83,10 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    SendRequest request = SendRequest.to(address, amount);
-                    request.feeNeeded = BTC_TRANSACTION_FEE;
+                    SendRequest request = SendRequest.to(veriTransaction.getAddress(), veriTransaction.getAmount());
 
-                    if (!password.isEmpty()) { //If password is required to decrypt wallet add it to request.
-                        request.aesKey = kit.wallet().getKeyCrypter().deriveKey(password);
+                    if (kit.wallet().isEncrypted()) { //If password is required to decrypt wallet add it to request.
+                        request.aesKey = kit.wallet().getKeyCrypter().deriveKey(veriTransaction.getPassword());
                     }
 
                     final Wallet.SendResult sendResult = kit.wallet().sendCoins(request);

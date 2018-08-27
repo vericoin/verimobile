@@ -71,10 +71,21 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
             public void onClick(View v) {
                 newPasswordValidation.resetErrors();
                 currentPasswordLayout.setErrorEnabled(false);
-                if (!isCurrentPasswordCorrect(getCurrentPassword())) {
-                    currentPasswordLayout.setError(getString(R.string.password_is_incorrect));
-                } else if (newPasswordValidation.checkValidity()) {
-                    updatePassword(newPasswordValidation.getPassword());
+
+                if(doesPasswordExist()){
+                    if(isCurrentPasswordCorrect(getCurrentPassword())){
+                        if(noPasswordBox.isChecked()){
+                            updatePassword();
+                        }else{
+                            if(newPasswordValidation.checkValidity()){
+                                updatePassword();
+                            }
+                        }
+                    }else{
+                        currentPasswordLayout.setError(getString(R.string.password_is_incorrect));
+                    }
+                }else{
+                    updatePassword();
                 }
             }
         });
@@ -108,11 +119,11 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
         return passwordManager.doesPasswordExist();
     }
 
-    public void updatePassword(final String password) {
+    public void updatePassword() {
 
-        changePasswordButton.setEnabled(false);
-        progressBar.setVisibility(View.VISIBLE);
-        changePasswordButton.setText("");
+        loading();
+
+        final String password = newPasswordValidation.getPassword();
 
         if (noPasswordBox.isChecked()) {
             passwordManager.removePassword();
@@ -123,24 +134,45 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
-                if (kit.wallet().isEncrypted()) {
-                    decryptWallet(getCurrentPassword());
-                }
-
-                if (encryptWalletBox.isChecked() && !noPasswordBox.isChecked()) {
-                    encryptWallet(password);
-                }
-
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(ChangePasswordActivity.this, getString(R.string.password_updated), Toast.LENGTH_LONG).show();
-                        finish();
+                try {
+                    if (kit.wallet().isEncrypted()) {
+                        decryptWallet(getCurrentPassword());
                     }
-                });
+
+                    if (encryptWalletBox.isChecked() && !noPasswordBox.isChecked()) {
+                        encryptWallet(password);
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(ChangePasswordActivity.this, getString(R.string.password_updated), Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    });
+                }catch(final Exception e){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            failed(e.toString());
+                        }
+                    });
+                }
             }
         }).start();
+    }
+
+    public void loading(){
+        changePasswordButton.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+        changePasswordButton.setText("");
+    }
+
+    public void failed(String error){
+        changePasswordButton.setEnabled(true);
+        progressBar.setVisibility(View.GONE);
+        changePasswordButton.setText(R.string.update_password_button);
+        Toast.makeText(ChangePasswordActivity.this, error, Toast.LENGTH_LONG).show();
     }
 
     public String getCurrentPasswordHash() {

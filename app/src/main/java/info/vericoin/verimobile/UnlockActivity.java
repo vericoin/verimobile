@@ -18,8 +18,7 @@ import info.vericoin.verimobile.Util.FingerprintHelper;
 @TargetApi(28)
 public class UnlockActivity extends VeriActivity {
 
-    public final static String COIN_EXTRA = "coin";
-    public final static String ADDRESS_EXTRA = "address";
+    public final static String VERI_TRANSACTION = "veriTransaction";
 
     private TextInputLayout passwordLayout;
 
@@ -33,17 +32,15 @@ public class UnlockActivity extends VeriActivity {
 
     private PasswordManager passwordManager;
 
-    private Coin coin;
-    private Address address;
+    private VeriTransaction veriTransaction;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, UnlockActivity.class);
     }
 
-    public static Intent createIntent(Context context, Coin coin, Address address) {
+    public static Intent createIntent(Context context, VeriTransaction veriTransaction) {
         Intent intent = new Intent(context, UnlockActivity.class);
-        intent.putExtra(COIN_EXTRA, coin);
-        intent.putExtra(ADDRESS_EXTRA, address);
+        intent.putExtra(VERI_TRANSACTION, veriTransaction);
         return intent;
     }
 
@@ -55,8 +52,7 @@ public class UnlockActivity extends VeriActivity {
         veriMobileApplication = (VeriMobileApplication) getApplication();
         passwordManager = veriMobileApplication.getPasswordManager();
 
-        coin = (Coin) getIntent().getSerializableExtra(COIN_EXTRA);
-        address = (Address) getIntent().getSerializableExtra(ADDRESS_EXTRA);
+        veriTransaction = (VeriTransaction) getIntent().getSerializableExtra(VERI_TRANSACTION);
 
         fingerprintHelper = new FingerprintHelper(this);
 
@@ -116,10 +112,10 @@ public class UnlockActivity extends VeriActivity {
     }
 
     public void unlockWallet() {
-        if (coin == null || address == null) {
+        if (veriTransaction == null) {
             startActivity(MainActivity.createIntent(UnlockActivity.this));
         } else {
-            startActivity(ProcessTransactionActivity.createIntent(this, address, coin));
+            startActivity(AmountActivity.createIntent(this, veriTransaction));
         }
         finish(); //Prevent app from going back to this activity after its finished.
     }
