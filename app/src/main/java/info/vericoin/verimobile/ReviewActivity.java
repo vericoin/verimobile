@@ -8,11 +8,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 
 import static android.view.View.GONE;
-import static info.vericoin.verimobile.VeriTransaction.BTC_TRANSACTION_FEE;
 
 public class ReviewActivity extends WalletAppKitActivity {
 

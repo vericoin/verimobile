@@ -84,6 +84,7 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
             public void run() {
                 try {
                     SendRequest request = SendRequest.to(veriTransaction.getAddress(), veriTransaction.getAmount());
+                    request.staticFee = veriTransaction.getFee();
 
                     if (kit.wallet().isEncrypted()) { //If password is required to decrypt wallet add it to request.
                         request.aesKey = kit.wallet().getKeyCrypter().deriveKey(veriTransaction.getPassword());

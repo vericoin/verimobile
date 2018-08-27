@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class VeriTransaction implements Serializable {
 
-    public static final Coin BTC_TRANSACTION_FEE = Coin.valueOf(50_000);
+    public static final Coin DEFAULT_STATIC_FEE = Coin.valueOf(50_000);
 
     private Coin amount;
 

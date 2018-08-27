@@ -78,7 +78,10 @@ public class SendRequest {
      */
     public Address changeAddress = null;
 
-    public Coin feeNeeded = Coin.valueOf(100_000);
+    /**
+     * If staticFee is set then feePerKb is ignored.
+     */
+    public Coin staticFee = null;
 
     /**
      * <p>A transaction can have a fee attached, which is defined as the difference between the input values

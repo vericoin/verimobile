@@ -46,9 +46,15 @@ public class VeriMobileApplication extends MultiDexApplication {
         sharedPref = getSharedPreferences(PREFERENCE_FILE_KEY, Context.MODE_PRIVATE);
         defaultPref = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-        passwordManager = new PasswordManager(sharedPref);
-        walletManager = new WalletManager(this);
-        peerManager = new CustomPeerManager(sharedPref, walletManager);
+        if(passwordManager == null) {
+            passwordManager = new PasswordManager(sharedPref);
+        }
+        if(walletManager == null) {
+            walletManager = new WalletManager(this);
+        }
+        if(peerManager == null) {
+            peerManager = new CustomPeerManager(sharedPref, walletManager);
+        }
 
         UtilMethods.setContext(this);
 

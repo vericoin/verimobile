@@ -9,11 +9,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.wallet.SendRequest;
-import org.spongycastle.crypto.params.KeyParameter;
 
 import static android.view.View.GONE;
 
@@ -111,6 +109,10 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
                         try {
                             final Coin amount = Coin.parseCoin(amountParser.getAmount());
                             SendRequest request = SendRequest.to(veriTransaction.getAddress(), amount);
+
+                            //Remove static fee if you want to use feePerKb instead
+                            request.staticFee = VeriTransaction.DEFAULT_STATIC_FEE;
+
                             if(kit.wallet().isEncrypted()){
                                 request.aesKey = kit.wallet().getKeyCrypter().deriveKey(veriTransaction.getPassword());
                             }
