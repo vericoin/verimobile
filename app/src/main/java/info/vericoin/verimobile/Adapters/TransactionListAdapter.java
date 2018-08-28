@@ -44,7 +44,7 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
                                                                 int viewType) {
         // create a new view
         ConstraintLayout v = (ConstraintLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.transaction_item, parent, false);
+                .inflate(R.layout.item_transaction, parent, false);
 
         ViewHolder vh = new ViewHolder(v);
         return vh;

@@ -13,6 +13,8 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.wallet.SendRequest;
 
+import info.vericoin.verimobile.Models.VeriTransaction;
+
 import static android.view.View.GONE;
 
 public class AmountActivity extends WalletAppKitActivity implements View.OnClickListener {

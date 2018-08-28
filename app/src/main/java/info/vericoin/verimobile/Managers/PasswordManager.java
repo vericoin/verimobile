@@ -1,4 +1,4 @@
-package info.vericoin.verimobile;
+package info.vericoin.verimobile.Managers;
 
 import android.content.SharedPreferences;
 

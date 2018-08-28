@@ -15,6 +15,8 @@ import com.google.zxing.integration.android.IntentResult;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 
+import info.vericoin.verimobile.Models.VeriTransaction;
+
 public class RecipientActivity extends WalletAppKitActivity {
 
     private TextInputLayout sendAddr;

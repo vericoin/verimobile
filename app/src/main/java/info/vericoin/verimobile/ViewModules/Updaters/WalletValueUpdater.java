@@ -6,7 +6,7 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
-import info.vericoin.verimobile.WalletManager;
+import info.vericoin.verimobile.Managers.WalletManager;
 
 public class WalletValueUpdater implements WalletChangeEventListener {
 

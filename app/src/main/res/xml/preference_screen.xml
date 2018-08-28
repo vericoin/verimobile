@@ -27,6 +27,9 @@
     <PreferenceCategory android:title="Wallet"
         android:key="wallet">
         <Preference
+            android:key="@string/view_contacts_key"
+            android:title="@string/view_contacts_button" />
+        <Preference
             android:key="@string/export_wallet_button"
             android:title="Export Wallet" />
         <Preference

@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import org.bitcoinj.wallet.Wallet;
 
+import info.vericoin.verimobile.Managers.WalletManager;
+
 public class SetUpEncryptedWallet extends VeriActivity {
 
     private final static String URI_EXTRA = "uri";

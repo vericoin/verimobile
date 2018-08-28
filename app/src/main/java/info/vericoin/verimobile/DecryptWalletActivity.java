@@ -7,8 +7,8 @@ import android.support.design.widget.TextInputLayout;
 import android.view.View;
 import android.widget.Button;
 
-import org.bitcoinj.core.Address;
-import org.bitcoinj.core.Coin;
+import info.vericoin.verimobile.Managers.PasswordManager;
+import info.vericoin.verimobile.Models.VeriTransaction;
 
 
 public class DecryptWalletActivity extends VeriActivity {

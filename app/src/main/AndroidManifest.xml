@@ -137,10 +137,23 @@
             android:theme="@style/AppTheme.Light"
             android:label="@string/custom_peers_title"/>
 
-        <activity android:name=".ActivityAddPeer"
+        <activity android:name=".AddPeerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"
             android:label="@string/add_peer_label"/>
+
+        <activity android:name=".ContactListActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/contact_list_label"
+            android:theme="@style/AppTheme.Light"/>
+
+        <activity android:name=".AddContactActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".EditContactActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="preloaded_fonts"

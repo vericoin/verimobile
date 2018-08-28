@@ -37,7 +37,7 @@ public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.Vi
                                                            int viewType) {
         // create a new view
         ConstraintLayout v = (ConstraintLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.transaction_put, parent, false);
+                .inflate(R.layout.item_transaction_put, parent, false);
 
         ViewHolder vh = new ViewHolder(v);
         return vh;

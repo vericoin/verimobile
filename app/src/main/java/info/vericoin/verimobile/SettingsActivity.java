@@ -18,6 +18,7 @@ import org.bitcoinj.kits.WalletAppKit;
 import java.io.IOException;
 
 import info.vericoin.verimobile.Dialogs.PasswordDialog;
+import info.vericoin.verimobile.Managers.PasswordManager;
 import info.vericoin.verimobile.Util.FingerprintHelper;
 
 public class SettingsActivity extends WalletAppKitActivity {
@@ -57,6 +58,7 @@ public class SettingsActivity extends WalletAppKitActivity {
         private Preference exportWallet;
         private Preference viewSeed;
         private Preference deleteWallet;
+        private Preference viewContacts;
         private CheckBoxPreference lockTransactions;
         private CheckBoxPreference fingerPrint;
         private PasswordManager passwordManager;
@@ -139,6 +141,15 @@ public class SettingsActivity extends WalletAppKitActivity {
             }
 
             viewSeed = findPreference(getString(R.string.view_seed_button));
+
+            viewContacts = findPreference(getString(R.string.view_contacts_key));
+            viewContacts.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    startActivity(ContactListActivity.getIntent(getActivity()));
+                    return true;
+                }
+            });
         }
 
         public void deleteWallet() {

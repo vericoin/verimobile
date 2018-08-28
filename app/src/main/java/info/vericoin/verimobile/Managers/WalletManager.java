@@ -1,4 +1,4 @@
-package info.vericoin.verimobile;
+package info.vericoin.verimobile.Managers;
 
 import android.content.Context;
 import android.net.Uri;
@@ -29,6 +29,8 @@ import javax.annotation.Nullable;
 
 import info.vericoin.verimobile.Listeners.BlockDownloadListener;
 import info.vericoin.verimobile.Listeners.OnConnectListener;
+import info.vericoin.verimobile.VeriMobileApplication;
+import info.vericoin.verimobile.WelcomeActivity;
 
 public class WalletManager {
 
@@ -161,6 +163,7 @@ public class WalletManager {
         kit = new WalletAppKit(params, context.getFilesDir(), FILE_PREFIX) {
             @Override
             protected void onSetupCompleted() {
+
                 //WalletAppKit is now ready to be used.
                 runInUIThread.execute(new Runnable() {
                     @Override

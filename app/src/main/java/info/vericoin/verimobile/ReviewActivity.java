@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import org.bitcoinj.core.Coin;
 
+import info.vericoin.verimobile.Models.VeriTransaction;
+
 import static android.view.View.GONE;
 
 public class ReviewActivity extends WalletAppKitActivity {

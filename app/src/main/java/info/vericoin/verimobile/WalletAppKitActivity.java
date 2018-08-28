@@ -5,6 +5,7 @@ import android.os.Bundle;
 import org.bitcoinj.kits.WalletAppKit;
 
 import info.vericoin.verimobile.Listeners.OnConnectListener;
+import info.vericoin.verimobile.Managers.WalletManager;
 
 public abstract class WalletAppKitActivity extends VeriActivity implements OnConnectListener {
 

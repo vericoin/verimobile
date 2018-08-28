@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
-import info.vericoin.verimobile.PasswordManager;
+import info.vericoin.verimobile.Managers.PasswordManager;
 import info.vericoin.verimobile.R;
 import info.vericoin.verimobile.VeriMobileApplication;
 

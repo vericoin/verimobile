@@ -34,7 +34,7 @@ public class CustomPeerListActivity extends WalletAppKitActivity {
 
     @Override
     protected void onWalletKitReady() {
-        setContentView(R.layout.activity_edit_peers);
+        setContentView(R.layout.recycler_view_add_button);
         veriMobileApplication = (VeriMobileApplication) getApplication();
 
         emptyTextView = findViewById(R.id.emptyTextView);
@@ -42,7 +42,7 @@ public class CustomPeerListActivity extends WalletAppKitActivity {
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setEmptyView(emptyTextView
         );
-        addPeerfab = findViewById(R.id.addPeerfab);
+        addPeerfab = findViewById(R.id.addFab);
 
         if (adapter == null) {
             adapter = new CustomPeerListAdapter(this);
@@ -61,7 +61,7 @@ public class CustomPeerListActivity extends WalletAppKitActivity {
         addPeerfab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivityForResult(ActivityAddPeer.createIntent(CustomPeerListActivity.this), REQUEST_CODE);
+                startActivityForResult(AddPeerActivity.createIntent(CustomPeerListActivity.this), REQUEST_CODE);
             }
         });
 

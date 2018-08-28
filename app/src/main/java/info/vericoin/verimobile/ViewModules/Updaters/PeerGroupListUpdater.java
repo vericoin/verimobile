@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import info.vericoin.verimobile.Adapters.PeerGroupListAdapter;
-import info.vericoin.verimobile.WalletManager;
+import info.vericoin.verimobile.Managers.WalletManager;
 
 public class PeerGroupListUpdater {
 

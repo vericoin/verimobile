@@ -28,7 +28,7 @@ public class PeerGroupListActivity extends WalletAppKitActivity {
 
     @Override
     protected void onWalletKitReady() {
-        setContentView(R.layout.activity_recycler_view);
+        setContentView(R.layout.recycler_view);
         veriMobileApplication = (VeriMobileApplication) getApplication();
 
         emptyTextView = findViewById(R.id.emptyTextView);

@@ -29,7 +29,7 @@ public class PeerGroupListAdapter extends RecyclerView.Adapter<PeerGroupListAdap
     public PeerGroupListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
         ConstraintLayout v = (ConstraintLayout) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.peer_item, parent, false);
+                .inflate(R.layout.item_peer, parent, false);
 
         PeerGroupListAdapter.ViewHolder vh = new PeerGroupListAdapter.ViewHolder(v);
         return vh;

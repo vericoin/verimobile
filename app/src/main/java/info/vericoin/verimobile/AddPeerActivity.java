@@ -8,14 +8,14 @@ import android.widget.Button;
 
 import java.net.InetAddress;
 
-public class ActivityAddPeer extends WalletAppKitActivity {
+public class AddPeerActivity extends WalletAppKitActivity {
 
     private TextInputLayout hostNameLayout;
     private Button addPeerButton;
     private VeriMobileApplication veriMobileApplication;
 
     public static Intent createIntent(Context context) {
-        return new Intent(context, ActivityAddPeer.class);
+        return new Intent(context, AddPeerActivity.class);
     }
 
     @Override

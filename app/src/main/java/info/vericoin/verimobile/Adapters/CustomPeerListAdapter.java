@@ -43,7 +43,7 @@ public class CustomPeerListAdapter extends RecyclerView.Adapter<CustomPeerListAd
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomPeerListAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final CustomPeerListAdapter.ViewHolder holder, int position) {
 
         final PeerAddress peerAddress = peerList.get(position);
 
@@ -60,7 +60,7 @@ public class CustomPeerListAdapter extends RecyclerView.Adapter<CustomPeerListAd
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         activity.getVeriMobileApplication().getPeerManager().removePeerAddress(peerAddress.getAddr().getHostAddress());
-                        peerList.remove(position);
+                        peerList.remove(holder.getAdapterPosition());
                         notifyDataSetChanged();
                     }
                 })

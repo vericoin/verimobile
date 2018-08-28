@@ -1,4 +1,4 @@
-package info.vericoin.verimobile;
+package info.vericoin.verimobile.Models;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;

@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import info.vericoin.verimobile.Adapters.TransactionListAdapter;
+import info.vericoin.verimobile.Managers.WalletManager;
 import info.vericoin.verimobile.Util.RecyclerViewEmptySupport;
 import info.vericoin.verimobile.ViewModules.Updaters.BlockchainUpdater;
 import info.vericoin.verimobile.ViewModules.Updaters.PeerGroupUpdater;

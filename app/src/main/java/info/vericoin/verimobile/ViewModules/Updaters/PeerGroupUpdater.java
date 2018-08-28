@@ -7,7 +7,7 @@ import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.listeners.PeerConnectedEventListener;
 import org.bitcoinj.core.listeners.PeerDisconnectedEventListener;
 
-import info.vericoin.verimobile.WalletManager;
+import info.vericoin.verimobile.Managers.WalletManager;
 
 public class PeerGroupUpdater implements PeerConnectedEventListener, PeerDisconnectedEventListener {
 

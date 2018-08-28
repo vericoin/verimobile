@@ -1,4 +1,4 @@
-package info.vericoin.verimobile;
+package info.vericoin.verimobile.Managers;
 
 import android.content.SharedPreferences;
 
@@ -10,6 +10,8 @@ import org.bitcoinj.core.PeerAddress;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+
+import info.vericoin.verimobile.Managers.WalletManager;
 
 public class CustomPeerManager {
 

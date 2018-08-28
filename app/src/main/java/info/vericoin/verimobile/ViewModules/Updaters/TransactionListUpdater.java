@@ -7,7 +7,7 @@ import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 import java.util.List;
 
 import info.vericoin.verimobile.Adapters.TransactionListAdapter;
-import info.vericoin.verimobile.WalletManager;
+import info.vericoin.verimobile.Managers.WalletManager;
 
 public class TransactionListUpdater implements WalletChangeEventListener {
 

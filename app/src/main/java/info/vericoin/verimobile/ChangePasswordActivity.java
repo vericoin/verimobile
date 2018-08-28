@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import info.vericoin.verimobile.Managers.PasswordManager;
 import info.vericoin.verimobile.Util.UtilMethods;
 import info.vericoin.verimobile.ViewModules.NewPasswordValidation;
 
@@ -72,35 +73,36 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
                 newPasswordValidation.resetErrors();
                 currentPasswordLayout.setErrorEnabled(false);
 
-                if(doesPasswordExist()){
-                    if(isCurrentPasswordCorrect(getCurrentPassword())){
-                        if(noPasswordBox.isChecked()){
-                            updatePassword();
-                        }else{
-                            if(newPasswordValidation.checkValidity()){
-                                updatePassword();
-                            }
-                        }
-                    }else{
-                        currentPasswordLayout.setError(getString(R.string.password_is_incorrect));
-                    }
-                }else{
+                if(isInputValid()){
                     updatePassword();
                 }
             }
         });
     }
 
-    public void disableNewPassword() {
+    private void disableNewPassword() {
         newPasswordLayout.setEnabled(false);
         reNewPasswordLayout.setEnabled(false);
         encryptWalletBox.setEnabled(false);
     }
 
-    public void enableNewPassword() {
+    private void enableNewPassword() {
         newPasswordLayout.setEnabled(true);
         reNewPasswordLayout.setEnabled(true);
         encryptWalletBox.setEnabled(true);
+    }
+
+    private boolean isInputValid(){
+        if(doesPasswordExist()){
+            if(isCurrentPasswordCorrect(getCurrentPassword())){
+                return (noPasswordBox.isChecked() || newPasswordValidation.checkValidity());
+            }else{
+                currentPasswordLayout.setError(getString(R.string.password_is_incorrect));
+                return false;
+            }
+        }else{
+            return true;
+        }
     }
 
     @Override
@@ -119,11 +121,12 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
         return passwordManager.doesPasswordExist();
     }
 
-    public void updatePassword() {
+    private void updatePassword() {
 
         loading();
 
         final String password = newPasswordValidation.getPassword();
+        final String currentPassword = getCurrentPassword();
 
         if (noPasswordBox.isChecked()) {
             passwordManager.removePassword();
@@ -136,7 +139,7 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
             public void run() {
                 try {
                     if (kit.wallet().isEncrypted()) {
-                        decryptWallet(getCurrentPassword());
+                        decryptWallet(currentPassword);
                     }
 
                     if (encryptWalletBox.isChecked() && !noPasswordBox.isChecked()) {
@@ -162,16 +165,28 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
         }).start();
     }
 
-    public void loading(){
+    private void loading(){
         changePasswordButton.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
         changePasswordButton.setText("");
+
+        currentPasswordLayout.setEnabled(false);
+        newPasswordLayout.setEnabled(false);
+        reNewPasswordLayout.setEnabled(false);
+        noPasswordBox.setEnabled(false);
+        encryptWalletBox.setEnabled(false);
     }
 
-    public void failed(String error){
+    private void failed(String error){
         changePasswordButton.setEnabled(true);
         progressBar.setVisibility(View.GONE);
         changePasswordButton.setText(R.string.update_password_button);
+
+        currentPasswordLayout.setEnabled(true);
+        newPasswordLayout.setEnabled(true);
+        reNewPasswordLayout.setEnabled(true);
+        noPasswordBox.setEnabled(true);
+        encryptWalletBox.setEnabled(true);
         Toast.makeText(ChangePasswordActivity.this, error, Toast.LENGTH_LONG).show();
     }
 
@@ -179,11 +194,11 @@ public class ChangePasswordActivity extends WalletAppKitActivity {
         return passwordManager.getPasswordHash();
     }
 
-    public void decryptWallet(String password) {
+    private void decryptWallet(String password) {
         kit.wallet().decrypt(password);
     }
 
-    public void encryptWallet(String password) {
+    private void encryptWallet(String password) {
         kit.wallet().encrypt(password);
     }
 

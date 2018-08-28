@@ -7,6 +7,10 @@ import android.support.multidex.MultiDexApplication;
 
 import org.bitcoinj.utils.BriefLogFormatter;
 
+import info.vericoin.verimobile.Managers.ContactManager;
+import info.vericoin.verimobile.Managers.CustomPeerManager;
+import info.vericoin.verimobile.Managers.PasswordManager;
+import info.vericoin.verimobile.Managers.WalletManager;
 import info.vericoin.verimobile.Util.UtilMethods;
 
 public class VeriMobileApplication extends MultiDexApplication {
@@ -22,6 +26,12 @@ public class VeriMobileApplication extends MultiDexApplication {
     private WalletManager walletManager;
 
     private PasswordManager passwordManager;
+
+    private ContactManager contactManager;
+
+    public ContactManager getContactManager() {
+        return contactManager;
+    }
 
     public CustomPeerManager getPeerManager() {
         return peerManager;
@@ -54,6 +64,9 @@ public class VeriMobileApplication extends MultiDexApplication {
         }
         if(peerManager == null) {
             peerManager = new CustomPeerManager(sharedPref, walletManager);
+        }
+        if(contactManager == null){
+            contactManager = new ContactManager(sharedPref);
         }
 
         UtilMethods.setContext(this);

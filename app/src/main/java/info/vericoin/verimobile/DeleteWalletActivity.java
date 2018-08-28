@@ -3,6 +3,8 @@ package info.vericoin.verimobile;
 import android.content.Context;
 import android.content.Intent;
 
+import info.vericoin.verimobile.Managers.WalletManager;
+
 public class DeleteWalletActivity extends WalletAppKitActivity {
 
     private WalletManager walletManager;

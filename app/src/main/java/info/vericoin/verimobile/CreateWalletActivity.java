@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import info.vericoin.verimobile.Managers.WalletManager;
 import info.vericoin.verimobile.ViewModules.NewPasswordValidation;
 
 public class CreateWalletActivity extends VeriActivity {
