@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -15,9 +17,15 @@ import com.google.zxing.integration.android.IntentResult;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
 
-import info.vericoin.verimobile.Models.VeriTransaction;
+import java.util.ArrayList;
 
-public class RecipientActivity extends WalletAppKitActivity {
+import info.vericoin.verimobile.Adapters.ContactListAdapter;
+import info.vericoin.verimobile.Managers.ContactManager;
+import info.vericoin.verimobile.Models.Contact;
+import info.vericoin.verimobile.Models.VeriTransaction;
+import info.vericoin.verimobile.Util.SendHelper;
+
+public class RecipientActivity extends WalletAppKitActivity implements ContactListAdapter.OnContactListener {
 
     private TextInputLayout sendAddr;
 
@@ -26,6 +34,14 @@ public class RecipientActivity extends WalletAppKitActivity {
     private ConstraintLayout scanButton;
 
     private VeriMobileApplication veriMobileApplication;
+
+    private ContactManager contactManager;
+
+    private RecyclerView recyclerView;
+
+    private ContactListAdapter adapter;
+
+    private LinearLayoutManager layoutManager;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, RecipientActivity.class);
@@ -41,6 +57,26 @@ public class RecipientActivity extends WalletAppKitActivity {
         setContentView(R.layout.activity_recipient);
 
         veriMobileApplication = (VeriMobileApplication) getApplication();
+        contactManager = veriMobileApplication.getContactManager();
+
+        recyclerView = findViewById(R.id.recyclerView);
+
+        if(adapter == null){
+            adapter = new ContactListAdapter(this, contactManager, true);
+        }
+
+        layoutManager = new LinearLayoutManager(this);
+
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
+
+        ArrayList<Contact> contactList = contactManager.getContactList();
+
+        if(contactList.isEmpty()){
+            recyclerView.setVisibility(View.GONE);
+        }else {
+            adapter.setContactList(contactList);
+        }
 
         sendAddr = findViewById(R.id.sendAddr);
 
@@ -77,8 +113,8 @@ public class RecipientActivity extends WalletAppKitActivity {
                 sendAddr.setErrorEnabled(false);
                 String addressString = sendAddr.getEditText().getText().toString();
                 try {
-                    Address address = Address.fromString(kit.params(), addressString);
-                    verifyUser(address);
+                    Address.fromString(kit.params(), addressString); //Make sure Address is valid
+                    verifyUser(addressString);
                 } catch (AddressFormatException e) {
                     e.printStackTrace();
                     sendAddr.setError(getString(R.string.invalid_address));
@@ -87,17 +123,12 @@ public class RecipientActivity extends WalletAppKitActivity {
         });
     }
 
-    public void verifyUser(Address address){
+    public void verifyUser(String address){
         VeriTransaction veriTransaction = new VeriTransaction();
-        veriTransaction.setAddress(address);
+        veriTransaction.setContact(new Contact(address));
 
-        if(isWalletEncrypted()){
-            startActivity(DecryptWalletActivity.createIntent(RecipientActivity.this, veriTransaction));
-        }else if(isLockTransactions() && passwordExist()){
-            startActivity(UnlockActivity.createIntent(RecipientActivity.this, veriTransaction));
-        }else {
-            startActivity(AmountActivity.createIntent(RecipientActivity.this, veriTransaction));
-        }
+        SendHelper sendHelper = new SendHelper(kit, this, veriTransaction);
+        sendHelper.startNextActivity();
     }
 
     @Override
@@ -112,14 +143,11 @@ public class RecipientActivity extends WalletAppKitActivity {
         }
     }
 
-    public boolean isWalletEncrypted() {
-        return kit.wallet().isEncrypted();
+    @Override
+    public void onClick(Contact contact, int index) {
+        VeriTransaction veriTransaction = new VeriTransaction();
+        veriTransaction.setContact(contact);
+        SendHelper sendHelper = new SendHelper(kit, this, veriTransaction);
+        sendHelper.startNextActivity();
     }
-
-    public boolean isLockTransactions() {
-        return veriMobileApplication.isLockTransactions();
-    }
-
-    public boolean passwordExist(){ return veriMobileApplication.getPasswordManager().doesPasswordExist(); }
-
 }

@@ -54,6 +54,19 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/contactName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="Contact Name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintStart_toStartOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/amount" />
+
+            <TextView
                 android:id="@+id/amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,18 +82,19 @@
             <TextView
                 android:id="@+id/sendAddr"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="24dp"
                 android:layout_marginBottom="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="mhNVSAYYBeLeJuvg4daTcPhgwxCRxcvXgL"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textIsSelectable="true"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/amount"
                 card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintEnd_toEndOf="parent" />
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintHorizontal_bias="0.0"
+                card_view:layout_constraintTop_toBottomOf="@+id/contactName" />
 
             <ImageView
                 android:id="@+id/imageView"

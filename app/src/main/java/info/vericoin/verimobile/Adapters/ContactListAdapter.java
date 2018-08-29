@@ -1,8 +1,5 @@
 package info.vericoin.verimobile.Adapters;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -13,25 +10,43 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import info.vericoin.verimobile.ContactListActivity;
-import info.vericoin.verimobile.EditContactActivity;
+import info.vericoin.verimobile.ItemTouchHelperAdapter;
+import info.vericoin.verimobile.Managers.ContactManager;
 import info.vericoin.verimobile.Models.Contact;
 import info.vericoin.verimobile.R;
 
-public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHolder> {
-
-
-    private ContactListActivity activity;
+public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHolder> implements ItemTouchHelperAdapter{
 
     private ArrayList<Contact> contactList = new ArrayList<>();
+
+    private OnContactListener listener;
+
+    private ContactManager contactManager;
+
+    private boolean removeBackground;
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        Contact contact = contactList.get(fromPosition);
+        contactList.remove(fromPosition);
+        contactList.add(toPosition, contact);
+        notifyItemMoved(fromPosition, toPosition);
+        contactManager.moveContact(fromPosition, toPosition);
+    }
+
+    public interface OnContactListener{
+        void onClick(Contact contact, int index);
+    }
 
     public void setContactList(ArrayList<Contact> contactList) {
         this.contactList = contactList;
         notifyDataSetChanged();
     }
 
-    public ContactListAdapter(ContactListActivity activity) {
-        this.activity = activity;
+    public ContactListAdapter(OnContactListener listener, ContactManager contactManager, boolean removeBackground) {
+        this.listener = listener;
+        this.contactManager = contactManager;
+        this.removeBackground = removeBackground;
     }
 
     @NonNull
@@ -40,6 +55,10 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         // create a new view
         ConstraintLayout v = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_contact, parent, false);
+
+        if(removeBackground){
+            v.setBackgroundColor(0);
+        }
 
         ContactListAdapter.ViewHolder vh = new ContactListAdapter.ViewHolder(v);
         return vh;
@@ -62,22 +81,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                // Add the buttons
-                builder.setItems(R.array.contact_options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int index) {
-                        if(index == 0){ //Edit
-                            activity.startActivityForResult(EditContactActivity.createIntent(activity, holder.getAdapterPosition(), contact), ContactListActivity.REQUEST_CODE);
-                        }else{ //Send
-
-                        }
-                    }
-                });
-
-                // Create the AlertDialog
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                listener.onClick(contact, holder.getAdapterPosition());
             }
         });
 
@@ -91,16 +95,23 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         private TextView contactView;
         private TextView addressView;
-
 
         private ViewHolder(ConstraintLayout v) {
             super(v);
             contactView = v.findViewById(R.id.contact);
             addressView = v.findViewById(R.id.address);
+        }
+
+        public void onItemSelected() {
+            itemView.setBackgroundResource(R.color.selectLTGray);
+        }
+
+        public void onItemClear() {
+            itemView.setBackgroundResource(R.color.itemLTGray);
         }
     }
 }

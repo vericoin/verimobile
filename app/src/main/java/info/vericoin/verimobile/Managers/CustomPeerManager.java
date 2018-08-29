@@ -11,8 +11,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import info.vericoin.verimobile.Managers.WalletManager;
-
 public class CustomPeerManager {
 
     private final static String CUSTOM_PEER_LIST = "customPeerList";

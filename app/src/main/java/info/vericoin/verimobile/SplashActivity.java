@@ -22,11 +22,6 @@ public class SplashActivity extends WalletAppKitActivity {
         setContentView(R.layout.activity_splash);
         veriMobileApplication = (VeriMobileApplication) getApplication();
         walletManager = veriMobileApplication.getWalletManager();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
 
         if (walletManager.doesWalletExist(SplashActivity.this)) {
             walletManager.startWallet(SplashActivity.this);
@@ -38,6 +33,7 @@ public class SplashActivity extends WalletAppKitActivity {
 
     @Override
     protected void onWalletKitReady() {
+
         if (doesPasswordExist()) {
             startActivity(UnlockActivity.createIntent(SplashActivity.this)); //Ask for password;
         } else {

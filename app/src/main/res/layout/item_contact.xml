@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground">
+    android:foreground="?selectableItemBackground"
+    android:background="@color/itemLTGray">
 
     <TextView
         android:id="@+id/contact"
@@ -29,6 +30,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:ellipsize="end"
+        android:gravity="right"
         android:singleLine="true"
         android:text="31jAYfYfLfRqq9stLs3bX2MmPRyE1APvqX"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"

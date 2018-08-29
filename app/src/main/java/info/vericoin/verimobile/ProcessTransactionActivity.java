@@ -10,6 +10,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.wallet.SendRequest;
 import org.bitcoinj.wallet.Wallet;
 
@@ -84,7 +85,8 @@ public class ProcessTransactionActivity extends WalletAppKitActivity {
         new Thread(new Runnable() {
             public void run() {
                 try {
-                    SendRequest request = SendRequest.to(veriTransaction.getAddress(), veriTransaction.getAmount());
+                    String addressString = veriTransaction.getContact().getAddress();
+                    SendRequest request = SendRequest.to(Address.fromString(kit.params(), addressString), veriTransaction.getAmount());
                     request.staticFee = veriTransaction.getFee();
 
                     if (kit.wallet().isEncrypted()) { //If password is required to decrypt wallet add it to request.

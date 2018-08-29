@@ -1,6 +1,5 @@
 package info.vericoin.verimobile.Models;
 
-import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 
 import java.io.Serializable;
@@ -11,7 +10,7 @@ public class VeriTransaction implements Serializable {
 
     private Coin amount;
 
-    private Address address;
+    private Contact contact;
 
     private Coin fee;
 
@@ -19,10 +18,6 @@ public class VeriTransaction implements Serializable {
 
     public void setAmount(Coin amount) {
         this.amount = amount;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 
     public void setFee(Coin fee) {
@@ -33,16 +28,20 @@ public class VeriTransaction implements Serializable {
         this.password = password;
     }
 
+    public Contact getContact() {
+        return contact;
+    }
+
+    public void setContact(Contact contact) {
+        this.contact = contact;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public Coin getAmount() {
         return amount;
-    }
-
-    public Address getAddress() {
-        return address;
     }
 
     public Coin getFee() {

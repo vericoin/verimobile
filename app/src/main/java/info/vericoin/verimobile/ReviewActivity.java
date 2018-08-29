@@ -24,6 +24,7 @@ public class ReviewActivity extends WalletAppKitActivity {
     private TextView feeView;
     private TextView amountView;
     private TextView addrView;
+    private TextView contactView;
     private VeriTransaction veriTransaction;
 
     public static Intent createIntent(Context context, VeriTransaction veriTransaction) {
@@ -50,6 +51,7 @@ public class ReviewActivity extends WalletAppKitActivity {
         addrView = findViewById(R.id.sendAddr);
         progressBar = findViewById(R.id.progressBar);
         sendButton = findViewById(R.id.sendButton);
+        contactView = findViewById(R.id.contactName);
 
         progressBar.setVisibility(GONE);
 
@@ -58,7 +60,14 @@ public class ReviewActivity extends WalletAppKitActivity {
             amountView.setText(veriTransaction.getAmount().toFriendlyString());
             feeView.setText(veriTransaction.getFee().toFriendlyString());
             totalView.setText(total.toFriendlyString());
-            addrView.setText(veriTransaction.getAddress().toString());
+            addrView.setText(veriTransaction.getContact().getAddress());
+
+            String name = veriTransaction.getContact().getName();
+            if(name == null || name.isEmpty()){
+                contactView.setVisibility(GONE);
+            }else{
+                contactView.setText(name);
+            }
         } catch (Exception e) {
             Toast.makeText(ReviewActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
             e.printStackTrace();

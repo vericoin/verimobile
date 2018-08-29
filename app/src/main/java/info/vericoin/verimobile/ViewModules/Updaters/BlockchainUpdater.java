@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import info.vericoin.verimobile.Listeners.BlockDownloadListener;
-import info.vericoin.verimobile.Util.UtilMethods;
 import info.vericoin.verimobile.Managers.WalletManager;
+import info.vericoin.verimobile.Util.UtilMethods;
 
 public class BlockchainUpdater implements NewBestBlockListener, BlockDownloadListener {
 

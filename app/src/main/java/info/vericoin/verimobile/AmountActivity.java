@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.wallet.SendRequest;
@@ -110,7 +111,8 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
                     public void run() {
                         try {
                             final Coin amount = Coin.parseCoin(amountParser.getAmount());
-                            SendRequest request = SendRequest.to(veriTransaction.getAddress(), amount);
+                            String addressString = veriTransaction.getContact().getAddress();
+                            SendRequest request = SendRequest.to(Address.fromString(kit.params(), addressString), amount);
 
                             //Remove static fee if you want to use feePerKb instead
                             request.staticFee = VeriTransaction.DEFAULT_STATIC_FEE;

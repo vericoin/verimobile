@@ -55,6 +55,14 @@ public class ContactManager {
         saveContactList(contactList);
     }
 
+    public void moveContact(int fromPos, int toPos){
+        ArrayList<Contact> contactList = getContactList();
+        Contact contact = contactList.get(fromPos);
+        contactList.remove(fromPos);
+        contactList.add(toPos, contact);
+        saveContactList(contactList);
+    }
+
     private void saveContactList(ArrayList<Contact> contactList) {
         Gson gson = new Gson();
         String contactListJson = gson.toJson(contactList);

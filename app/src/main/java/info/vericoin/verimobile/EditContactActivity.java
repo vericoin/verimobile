@@ -1,23 +1,23 @@
 package info.vericoin.verimobile;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.TextInputLayout;
-import android.view.ContextThemeWrapper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import info.vericoin.verimobile.Dialogs.DeleteContactDialog;
 import info.vericoin.verimobile.Managers.ContactManager;
 import info.vericoin.verimobile.Managers.WalletManager;
 import info.vericoin.verimobile.Models.Contact;
 
-public class EditContactActivity extends WalletAppKitActivity {
+public class EditContactActivity extends WalletAppKitActivity implements DialogInterface.OnClickListener{
 
+    private final static String DELETE_CONTACT_DIALOG = "deleteContactDialog";
     private final static String INDEX_EXTRA = "index";
     private final static String CONTACT_EXTRA = "contact";
 
@@ -74,24 +74,8 @@ public class EditContactActivity extends WalletAppKitActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 1. Instantiate an AlertDialog.Builder with its constructor
-                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(EditContactActivity.this, R.style.AppTheme_Light));
-
-                // 2. Chain together various setter methods to set the dialog characteristics
-                builder.setMessage(R.string.delete_contact_msg)
-                        .setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                removeContact();
-                                setResult(RESULT_OK);
-                                finish();
-                            }
-                        })
-                        .setTitle(R.string.delete_contact);
-
-                // 3. Get the AlertDialog from create()
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                DeleteContactDialog dialog = new DeleteContactDialog();
+                dialog.show(getSupportFragmentManager(), DELETE_CONTACT_DIALOG);
             }
         });
     }
@@ -105,7 +89,16 @@ public class EditContactActivity extends WalletAppKitActivity {
     }
 
     public void updateContact(String name){
-        contact.setName(name);
+        if(!name.isEmpty()) {
+            contact.setName(name);
+        }
         contactManager.updateContact(index, contact);
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        removeContact();
+        setResult(RESULT_OK);
+        finish();
     }
 }
