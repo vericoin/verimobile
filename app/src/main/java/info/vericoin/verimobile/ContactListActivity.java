@@ -11,20 +11,20 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
 
-import info.vericoin.verimobile.Adapters.ContactListAdapter;
+import info.vericoin.verimobile.Adapters.ContactListAdapterDrag;
 import info.vericoin.verimobile.Managers.ContactManager;
 import info.vericoin.verimobile.Models.Contact;
 import info.vericoin.verimobile.Models.VeriTransaction;
 import info.vericoin.verimobile.Util.RecyclerViewEmptySupport;
 import info.vericoin.verimobile.Util.SendHelper;
 
-public class ContactListActivity extends WalletAppKitActivity implements ContactListAdapter.OnContactListener{
+public class ContactListActivity extends WalletAppKitActivity implements ContactListAdapterDrag.OnContactListener{
 
     public final static int REQUEST_CODE = 2;
 
     private FloatingActionButton addFab;
     private RecyclerViewEmptySupport recyclerView;
-    private ContactListAdapter adapter;
+    private ContactListAdapterDrag adapter;
     private LinearLayoutManager layoutManager;
     private TextView emptyView;
 
@@ -49,7 +49,7 @@ public class ContactListActivity extends WalletAppKitActivity implements Contact
         recyclerView.setEmptyView(emptyView);
 
         if(adapter == null){
-            adapter = new ContactListAdapter(this, contactManager, false);
+            adapter = new ContactListAdapterDrag(this, contactManager, false);
         }
 
         layoutManager = new LinearLayoutManager(this);
@@ -58,8 +58,9 @@ public class ContactListActivity extends WalletAppKitActivity implements Contact
 
         recyclerView.setAdapter(adapter);
 
-        ContactItemTouchHelper contactItemTouchHelper = new ContactItemTouchHelper(adapter);
-        ItemTouchHelper touchHelper = new ItemTouchHelper(contactItemTouchHelper);
+        //Allow user to move contacts using dragging gesture
+        DragItemTouchHelperCallback dragItemTouchHelperCallback = new DragItemTouchHelperCallback(adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(dragItemTouchHelperCallback);
         touchHelper.attachToRecyclerView(recyclerView);
 
         // use this setting to improve performance if you know that changes

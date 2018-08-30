@@ -19,13 +19,13 @@ import org.bitcoinj.core.AddressFormatException;
 
 import java.util.ArrayList;
 
-import info.vericoin.verimobile.Adapters.ContactListAdapter;
+import info.vericoin.verimobile.Adapters.ContactListAdapterDrag;
 import info.vericoin.verimobile.Managers.ContactManager;
 import info.vericoin.verimobile.Models.Contact;
 import info.vericoin.verimobile.Models.VeriTransaction;
 import info.vericoin.verimobile.Util.SendHelper;
 
-public class RecipientActivity extends WalletAppKitActivity implements ContactListAdapter.OnContactListener {
+public class RecipientActivity extends WalletAppKitActivity implements ContactListAdapterDrag.OnContactListener {
 
     private TextInputLayout sendAddr;
 
@@ -39,7 +39,7 @@ public class RecipientActivity extends WalletAppKitActivity implements ContactLi
 
     private RecyclerView recyclerView;
 
-    private ContactListAdapter adapter;
+    private ContactListAdapterDrag adapter;
 
     private LinearLayoutManager layoutManager;
 
@@ -62,7 +62,7 @@ public class RecipientActivity extends WalletAppKitActivity implements ContactLi
         recyclerView = findViewById(R.id.recyclerView);
 
         if(adapter == null){
-            adapter = new ContactListAdapter(this, contactManager, true);
+            adapter = new ContactListAdapterDrag(this, contactManager, true);
         }
 
         layoutManager = new LinearLayoutManager(this);

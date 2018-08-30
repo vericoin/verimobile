@@ -3,13 +3,13 @@ package info.vericoin.verimobile;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import info.vericoin.verimobile.Adapters.ContactListAdapter;
+import info.vericoin.verimobile.Adapters.ContactListAdapterDrag;
 
-public class ContactItemTouchHelper extends ItemTouchHelper.Callback {
+public class DragItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    private final ItemTouchHelperAdapter mAdapter;
+    private final DragItemTouchHelperAdapter mAdapter;
 
-    public ContactItemTouchHelper(ItemTouchHelperAdapter adapter) {
+    public DragItemTouchHelperCallback(DragItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
     }
 
@@ -47,9 +47,9 @@ public class ContactItemTouchHelper extends ItemTouchHelper.Callback {
                                   int actionState) {
         // We only want the active item
         if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
-            if (viewHolder instanceof ContactListAdapter.ViewHolder) {
-                ContactListAdapter.ViewHolder itemViewHolder =
-                        (ContactListAdapter.ViewHolder) viewHolder;
+            if (viewHolder instanceof ContactListAdapterDrag.ViewHolder) {
+                ContactListAdapterDrag.ViewHolder itemViewHolder =
+                        (ContactListAdapterDrag.ViewHolder) viewHolder;
                 itemViewHolder.onItemSelected();
             }
         }
@@ -61,9 +61,9 @@ public class ContactItemTouchHelper extends ItemTouchHelper.Callback {
                           RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
 
-        if (viewHolder instanceof ContactListAdapter.ViewHolder) {
-            ContactListAdapter.ViewHolder itemViewHolder =
-                    (ContactListAdapter.ViewHolder) viewHolder;
+        if (viewHolder instanceof ContactListAdapterDrag.ViewHolder) {
+            ContactListAdapterDrag.ViewHolder itemViewHolder =
+                    (ContactListAdapterDrag.ViewHolder) viewHolder;
             itemViewHolder.onItemClear();
         }
     }

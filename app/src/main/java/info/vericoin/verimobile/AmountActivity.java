@@ -12,11 +12,15 @@ import android.widget.Toast;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
+import org.bitcoinj.core.Sha256Hash;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.wallet.SendRequest;
 
 import info.vericoin.verimobile.Models.VeriTransaction;
 
 import static android.view.View.GONE;
+import static org.bitcoinj.core.Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
 
 public class AmountActivity extends WalletAppKitActivity implements View.OnClickListener {
 
@@ -106,6 +110,7 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
             @Override
             public void onClick(View v) {
                 waiting();
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -121,6 +126,7 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
                                 request.aesKey = kit.wallet().getKeyCrypter().deriveKey(veriTransaction.getPassword());
                             }
                             kit.wallet().completeTx(request); //Complete TX to see if we have enough funds to cover the fee.
+
                             final Coin fee = request.tx.getFee();
                             runOnUiThread(new Runnable() {
                                 @Override

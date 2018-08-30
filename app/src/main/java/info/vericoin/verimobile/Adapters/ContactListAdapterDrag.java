@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import info.vericoin.verimobile.ItemTouchHelperAdapter;
+import info.vericoin.verimobile.DragItemTouchHelperAdapter;
 import info.vericoin.verimobile.Managers.ContactManager;
 import info.vericoin.verimobile.Models.Contact;
 import info.vericoin.verimobile.R;
 
-public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.ViewHolder> implements ItemTouchHelperAdapter{
+public class ContactListAdapterDrag extends RecyclerView.Adapter<ContactListAdapterDrag.ViewHolder> implements DragItemTouchHelperAdapter {
 
     private ArrayList<Contact> contactList = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
         notifyDataSetChanged();
     }
 
-    public ContactListAdapter(OnContactListener listener, ContactManager contactManager, boolean removeBackground) {
+    public ContactListAdapterDrag(OnContactListener listener, ContactManager contactManager, boolean removeBackground) {
         this.listener = listener;
         this.contactManager = contactManager;
         this.removeBackground = removeBackground;
@@ -51,7 +51,7 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
 
     @NonNull
     @Override
-    public ContactListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ContactListAdapterDrag.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
         ConstraintLayout v = (ConstraintLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_contact, parent, false);
@@ -60,12 +60,12 @@ public class ContactListAdapter extends RecyclerView.Adapter<ContactListAdapter.
             v.setBackgroundColor(0);
         }
 
-        ContactListAdapter.ViewHolder vh = new ContactListAdapter.ViewHolder(v);
+        ContactListAdapterDrag.ViewHolder vh = new ContactListAdapterDrag.ViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ContactListAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ContactListAdapterDrag.ViewHolder holder, final int position) {
 
         final Contact contact = contactList.get(position);
 

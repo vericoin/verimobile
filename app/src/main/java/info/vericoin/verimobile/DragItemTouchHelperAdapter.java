@@ -1,6 +1,6 @@
 package info.vericoin.verimobile;
 
-public interface ItemTouchHelperAdapter {
+public interface DragItemTouchHelperAdapter {
 
     void onItemMove(int fromPosition, int toPosition);
 

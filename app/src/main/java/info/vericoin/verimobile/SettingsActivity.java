@@ -86,45 +86,8 @@ public class SettingsActivity extends WalletAppKitActivity {
             });
 
             exportWallet = findPreference(getString(R.string.export_wallet_button));
-            exportWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    PasswordDialog dialog = new PasswordDialog();
-                    dialog.setListener(new PasswordDialog.OnPasswordListener() {
-                        @Override
-                        public void onSuccess(String password) {
-                            createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
-                            ;
-                        }
-                    });
-                    if (doesPasswordExist()) {
-                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
-                    } else {
-                        createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
-                    }
-                    return true;
-                }
-            });
 
             deleteWallet = findPreference(getString(R.string.delete_wallet_button));
-            deleteWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    PasswordDialog dialog = new PasswordDialog();
-                    dialog.setListener(new PasswordDialog.OnPasswordListener() {
-                        @Override
-                        public void onSuccess(String password) {
-                            deleteWallet();
-                        }
-                    });
-                    if (doesPasswordExist()) {
-                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
-                    } else {
-                        deleteWallet();
-                    }
-                    return true;
-                }
-            });
 
             securityCategory = (PreferenceCategory) findPreference(getString(R.string.security_key));
 
@@ -251,7 +214,49 @@ public class SettingsActivity extends WalletAppKitActivity {
                         return true;
                     }
                 });
+                exportWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        PasswordDialog dialog = new PasswordDialog();
+                        dialog.setListener(new PasswordDialog.OnPasswordListener() {
+                            @Override
+                            public void onSuccess(String password) {
+                                createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
+                            }
+                        });
+                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
+                        return true;
+                    }
+                });
+                deleteWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        PasswordDialog dialog = new PasswordDialog();
+                        dialog.setListener(new PasswordDialog.OnPasswordListener() {
+                            @Override
+                            public void onSuccess(String password) {
+                                deleteWallet();
+                            }
+                        });
+                        dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
+                        return true;
+                    }
+                });
             } else {
+                exportWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
+                        return true;
+                    }
+                });
+                deleteWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference preference) {
+                        deleteWallet();
+                        return true;
+                    }
+                });
                 viewSeed.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
@@ -262,6 +267,12 @@ public class SettingsActivity extends WalletAppKitActivity {
                 lockTransactions.setOnPreferenceClickListener(null);
                 secureWindow.setOnPreferenceClickListener(null);
                 fingerPrint.setOnPreferenceClickListener(null);
+            }
+
+            if(kit.wallet().isEncrypted()) {
+                exportWallet.setSummary(R.string.wallet_is_encrypted);
+            }else{
+                exportWallet.setSummary(R.string.wallet_is_not_encrypted);
             }
 
             if (kit.wallet().isEncrypted()) { //Wallet is encrypted and there is a password.
