@@ -68,6 +68,8 @@ public class TransactionDetailActivity extends WalletAppKitActivity {
         outputLayoutManager = new LinearLayoutManager(this);
         inputRecyclerView = findViewById(R.id.inputRecyclerView);
         outputRecyclerView = findViewById(R.id.outputRecyclerView);
+        inputRecyclerView.setNestedScrollingEnabled(false);
+        outputRecyclerView.setNestedScrollingEnabled(false);
 
         inputRecyclerView.setLayoutManager(inputLayoutManager);
         outputRecyclerView.setLayoutManager(outputLayoutManager);
