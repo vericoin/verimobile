@@ -45,6 +45,7 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.android.volley:volley:1.1.1'
 
     //Logging for bitcoinJ to display in Logcat
     implementation 'org.slf4j:slf4j-api:1.7.25'

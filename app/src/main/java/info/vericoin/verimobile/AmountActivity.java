@@ -2,6 +2,7 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,15 +13,13 @@ import android.widget.Toast;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
-import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionOutput;
+import org.bitcoinj.utils.Fiat;
 import org.bitcoinj.wallet.SendRequest;
 
+import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Models.VeriTransaction;
 
 import static android.view.View.GONE;
-import static org.bitcoinj.core.Transaction.REFERENCE_DEFAULT_MIN_TX_FEE;
 
 public class AmountActivity extends WalletAppKitActivity implements View.OnClickListener {
 
@@ -28,7 +27,10 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
 
     private VeriTransaction veriTransaction;
 
-    private TextView amount;
+    private ExchangeManager exchangeManager;
+
+    private TextView primaryAmount;
+    private TextView secondaryAmount;
 
     private AmountParser amountParser;
 
@@ -53,6 +55,13 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
 
     private Button nextButton;
 
+    private ConstraintLayout swapAmountButton;
+
+    private boolean fiatIsPrimary = false;
+
+    private Coin coin;
+    private Fiat fiat;
+
     public static Intent createIntent(Context context, VeriTransaction veriTransaction) {
         Intent intent = new Intent(context, AmountActivity.class);
         intent.putExtra(VERI_TRANSACTION, veriTransaction);
@@ -68,13 +77,33 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_amount);
         veriMobileApplication = (VeriMobileApplication) getApplication();
+        exchangeManager = veriMobileApplication.getExchangeManager();
 
         veriTransaction = (VeriTransaction) getIntent().getSerializableExtra(VERI_TRANSACTION);
 
         amountParser = new AmountParser(AMOUNT_DEFAULT.toPlainString());
 
-        amount = findViewById(R.id.amount);
-        amount.setText(amountParser.getAmount() + " BTC");
+        primaryAmount = findViewById(R.id.primaryAmount);
+        secondaryAmount = findViewById(R.id.secondaryAmount);
+        setAmountText();
+
+        swapAmountButton = findViewById(R.id.swapAmountButton);
+        swapAmountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fiatIsPrimary = !fiatIsPrimary;
+                if(fiatIsPrimary) {
+                    amountParser.setAmount(fiat.toPlainString());
+                    amountParser.setMaxDecimalPlaces(2);
+                    amountParser.setMaxIntegerPlaces(12);
+                }else{
+                    amountParser.setAmount(coin.toPlainString());
+                    amountParser.setMaxDecimalPlaces(8);
+                    amountParser.setMaxIntegerPlaces(8);
+                }
+                setAmountText();
+            }
+        });
 
         nextButton = findViewById(R.id.nextButton);
         progressBar = findViewById(R.id.progressBar);
@@ -115,7 +144,12 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
                     @Override
                     public void run() {
                         try {
-                            final Coin amount = Coin.parseCoin(amountParser.getAmount());
+                            final Coin amount;
+                            if(fiatIsPrimary){
+                                amount = exchangeManager.getExchangeRate().fiatToCoin(Fiat.parseFiat("USD", amountParser.getAmount()));
+                            }else {
+                                amount = Coin.parseCoin(amountParser.getAmount());
+                            }
                             String addressString = veriTransaction.getContact().getAddress();
                             SendRequest request = SendRequest.to(Address.fromString(kit.params(), addressString), amount);
 
@@ -208,7 +242,27 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
                 amountParser.backspace();
                 break;
         }
-        amount.setText(amountParser.getAmount() + " BTC");
+        setAmountText();
+    }
+
+    public void setAmountText(){
+
+        if(fiatIsPrimary && exchangeManager.doesExchangeRateExist()){
+            fiat = Fiat.parseFiat(exchangeManager.getCurrencyCode(), amountParser.getAmount());
+            coin = exchangeManager.getExchangeRate().fiatToCoin(fiat);
+
+            primaryAmount.setText(amountParser.getAmount() + " USD");
+            secondaryAmount.setText(coin.toFriendlyString());
+
+        }else {
+            coin = Coin.parseCoin(amountParser.getAmount());
+            fiat = exchangeManager.getExchangeRate().coinToFiat(coin);
+            long roundFiat = Math.round((double) fiat.getValue() / 100) * 100;
+            fiat = Fiat.valueOf("USD", roundFiat);
+
+            primaryAmount.setText(amountParser.getAmount() + " BTC");
+            secondaryAmount.setText(fiat.toFriendlyString());
+        }
     }
 
     public void reviewTransaction(Coin amount, Coin fee) {

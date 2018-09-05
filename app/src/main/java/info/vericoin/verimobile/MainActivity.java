@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import info.vericoin.verimobile.Adapters.TransactionListAdapter;
+import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Managers.WalletManager;
 import info.vericoin.verimobile.Util.RecyclerViewEmptySupport;
 import info.vericoin.verimobile.ViewModules.Updaters.BlockchainUpdater;
@@ -35,6 +36,8 @@ public class MainActivity extends WalletAppKitActivity {
     private CardView blockChainView;
     private Button sendButton;
     private Button receiveButton;
+    private ConstraintLayout swapButton;
+    private ConstraintLayout coinBalanceLayout;
 
     private TextView percentComplete;
 
@@ -55,6 +58,8 @@ public class MainActivity extends WalletAppKitActivity {
     private PeerGroupUpdater peerGroupUpdater;
 
     private WalletManager walletManager;
+    private ExchangeManager exchangeManager;
+    private boolean showingFiat = false;
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -66,6 +71,7 @@ public class MainActivity extends WalletAppKitActivity {
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_main);
         walletManager = ((VeriMobileApplication) getApplication()).getWalletManager();
+        exchangeManager = ((VeriMobileApplication) getApplication()).getExchangeManager();
 
         unconfirmedBalance = findViewById(R.id.unconfirmedBalance);
         availableBalance = findViewById(R.id.availableBalance);
@@ -80,6 +86,8 @@ public class MainActivity extends WalletAppKitActivity {
         mRecyclerView = findViewById(R.id.recyclerView);
         blockChainView = findViewById(R.id.blockChainCard);
         emptyTextViewTXs = findViewById(R.id.emptyTextViewTXs);
+        swapButton = findViewById(R.id.swapAmountButton);
+        coinBalanceLayout = findViewById(R.id.coinBalanceLayout);
 
         mRecyclerView.setEmptyView(emptyTextViewTXs);
         mRecyclerView.setNestedScrollingEnabled(false);
@@ -132,6 +140,24 @@ public class MainActivity extends WalletAppKitActivity {
             @Override
             public void onClick(View v) {
                 startActivity(ReceiveActivity.createIntent(MainActivity.this));
+            }
+        });
+
+        swapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Swap between VRC and VRM
+            }
+        });
+
+        coinBalanceLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Swap between Fiat and Coin
+                if(exchangeManager.doesExchangeRateExist()){
+                    walletValueUpdater.setExchangeRate(exchangeManager.getExchangeRate());
+                    walletValueUpdater.swapCurrency();
+                }
             }
         });
 

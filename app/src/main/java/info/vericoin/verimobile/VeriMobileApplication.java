@@ -9,6 +9,7 @@ import org.bitcoinj.utils.BriefLogFormatter;
 
 import info.vericoin.verimobile.Managers.ContactManager;
 import info.vericoin.verimobile.Managers.CustomPeerManager;
+import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Managers.PasswordManager;
 import info.vericoin.verimobile.Managers.WalletManager;
 import info.vericoin.verimobile.Util.UtilMethods;
@@ -29,6 +30,8 @@ public class VeriMobileApplication extends MultiDexApplication {
 
     private ContactManager contactManager;
 
+    private ExchangeManager exchangeManager;
+
     public ContactManager getContactManager() {
         return contactManager;
     }
@@ -43,6 +46,10 @@ public class VeriMobileApplication extends MultiDexApplication {
 
     public PasswordManager getPasswordManager() {
         return passwordManager;
+    }
+
+    public ExchangeManager getExchangeManager() {
+        return exchangeManager;
     }
 
     // Called when the application is starting, before any other application objects have been created.
@@ -67,6 +74,10 @@ public class VeriMobileApplication extends MultiDexApplication {
         }
         if(contactManager == null){
             contactManager = new ContactManager(sharedPref);
+        }
+        if(exchangeManager == null){
+            exchangeManager = new ExchangeManager(sharedPref);
+            exchangeManager.updateExchangeRate(this);
         }
 
         UtilMethods.setContext(this);

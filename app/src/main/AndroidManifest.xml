@@ -40,6 +40,7 @@
         <activity android:name=".RecipientActivity"
             android:label="@string/recipient_label"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme"/>
 
         <activity android:name=".AmountActivity"
@@ -84,6 +85,7 @@
 
         <activity android:name=".UnlockActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".DecryptWalletActivity"
@@ -149,6 +151,7 @@
 
         <activity android:name=".AddContactActivity"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity android:name=".EditContactActivity"

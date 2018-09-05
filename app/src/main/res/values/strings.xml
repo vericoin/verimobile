@@ -152,4 +152,5 @@
     </string-array>
     <string name="wallet_is_encrypted">Your wallet is encrypted with your current password.</string>
     <string name="wallet_is_not_encrypted">Your wallet is not encrypted!</string>
+    <string name="swap_amount_button">Swap Amount</string>
 </resources>
