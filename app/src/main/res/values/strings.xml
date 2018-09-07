@@ -160,21 +160,33 @@
     <array name="fiat_currency_entries">
         <item>AUD</item>
         <item>CAD</item>
+        <item>CHF</item>
+        <item>CNY</item>
         <item>EUR</item>
         <item>GBP</item>
+        <item>INR</item>
         <item>JPY</item>
+        <item>KRW</item>
+        <item>RUB</item>
         <item>USD</item>
     </array>
     <array name="fiat_currency_values">
         <item>aud</item>
         <item>cad</item>
+        <item>chf</item>
+        <item>cny</item>
         <item>eur</item>
         <item>gbp</item>
+        <item>inr</item>
         <item>jpy</item>
+        <item>krw</item>
+        <item>rub</item>
         <item>usd</item>
     </array>
     <string name="default_fiat_value">usd</string>
 
     <string name="refreshing_exchange_rate">Refreshing Exchange Rate</string>
+
+    <string name="provided_by_coin_gecko">Powered by CoinGecko API</string>
 
 </resources>

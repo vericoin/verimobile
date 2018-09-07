@@ -150,7 +150,8 @@ public class SettingsActivity extends WalletAppKitActivity {
         }
 
         public void updateExchangeRate(ExchangeRate exchangeRate){
-            fiatType.setSummary(exchangeRate.coin.toFriendlyString() + " = " + exchangeRate.fiat.toFriendlyString());
+            fiatType.setSummary(exchangeRate.coin.toFriendlyString() + " = " + exchangeRate.fiat.toFriendlyString() + "\n"
+                                + getString(R.string.provided_by_coin_gecko));
         }
 
         public void deleteWallet() {
