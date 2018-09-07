@@ -124,6 +124,6 @@ public class UtilMethods {
 
     public static Fiat roundFiat(Fiat fiat){
         long roundFiat = Math.round((double) fiat.getValue() / 100) * 100;
-        return Fiat.valueOf("USD", roundFiat);
+        return Fiat.valueOf(fiat.currencyCode, roundFiat);
     }
 }

@@ -129,11 +129,19 @@ public class SettingsActivity extends WalletAppKitActivity {
             refreshFiat = findPreference("refreshFiat");
             fiatType = (ListPreference) findPreference("fiatType");
 
+            fiatType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    exchangeManager.updateExchangeRate(newValue.toString());
+                    return true;
+                }
+            });
+
             refreshFiat.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
                     Toast.makeText(getActivity(), R.string.refreshing_exchange_rate, Toast.LENGTH_LONG).show();
-                    exchangeManager.updateExchangeRate(getActivity());
+                    exchangeManager.downloadExchangeRateList(getActivity());
                     return true;
                 }
             });

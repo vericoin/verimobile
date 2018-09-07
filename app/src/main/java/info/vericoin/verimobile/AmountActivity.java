@@ -246,7 +246,7 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
             fiat = Fiat.parseFiat(exchangeManager.getCurrencyCode(), amountParser.getAmount());
             coin = exchangeManager.getExchangeRate().fiatToCoin(fiat);
 
-            primaryAmount.setText(amountParser.getAmount() + " USD");
+            primaryAmount.setText(amountParser.getAmount() + " " + fiat.currencyCode.toUpperCase());
             secondaryAmount.setText(coin.toFriendlyString());
 
         }else {

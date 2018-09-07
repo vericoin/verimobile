@@ -28,8 +28,8 @@
         android:key="currency">
         <ListPreference
             android:key="fiatType"
-            android:entries="@array/fiatCurrencies"
-            android:entryValues="@array/fiatCurrencies"
+            android:entries="@array/fiat_currency_entries"
+            android:entryValues="@array/fiat_currency_values"
             android:defaultValue="@string/default_fiat_value"
             android:title="@string/fiatType" />
         <Preference

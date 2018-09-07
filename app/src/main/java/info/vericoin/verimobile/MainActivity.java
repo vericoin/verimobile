@@ -72,7 +72,6 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
         setContentView(R.layout.activity_main);
         walletManager = ((VeriMobileApplication) getApplication()).getWalletManager();
         exchangeManager = ((VeriMobileApplication) getApplication()).getExchangeManager();
-        exchangeManager.addExchangeRateChangeListener(this);
 
         unconfirmedBalance = findViewById(R.id.unconfirmedBalance);
         availableBalance = findViewById(R.id.availableBalance);
@@ -186,6 +185,8 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
 
         peerGroupUpdater.updatePeerView();
         peerGroupUpdater.listenForPeerConnections();
+
+        exchangeManager.addExchangeRateChangeListener(this);
     }
 
     @Override

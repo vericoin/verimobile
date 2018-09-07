@@ -7,7 +7,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.gson.Gson;
 
 import org.bitcoinj.utils.ExchangeRate;
 import org.bitcoinj.utils.Fiat;
@@ -20,20 +19,23 @@ import info.vericoin.verimobile.VolleySingleton;
 
 public class ExchangeManager {
 
-    private final String EXCHANGE_RATE = "exchangeRate";
+    private final String EXCHANGE_RATE_LIST = "exchangeRateList";
 
     private final String CURRENCY_CODE = "USD";
 
     private SharedPreferences sharedPref;
 
+    private SharedPreferences defaultPref;
+
     private ExchangeRate exchangeRate;
 
     public String getCurrencyCode() {
-        return CURRENCY_CODE;
+        return exchangeRate.fiat.currencyCode;
     }
 
-    public ExchangeManager(SharedPreferences sharedPref) {
+    public ExchangeManager(SharedPreferences sharedPref, SharedPreferences defaultPref) {
         this.sharedPref = sharedPref;
+        this.defaultPref = defaultPref;
     }
 
     public interface OnExchangeRateChange{
@@ -52,7 +54,7 @@ public class ExchangeManager {
         listeners.remove(listener);
     }
 
-    public void updateExchangeRate(Context context){
+    public void downloadExchangeRateList(Context context){
         //get rate from CoinGecko
         String url = "https://api.coingecko.com/api/v3/coins/bitcoin?localization=false";
 
@@ -62,9 +64,9 @@ public class ExchangeManager {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            double usd = response.getJSONObject("market_data").getJSONObject("current_price").getDouble("usd");
-                            saveExchangeRate(Double.toString(usd));
-                            notifyExchangeRateUpdated();
+                            JSONObject exchangeList = response.getJSONObject("market_data").getJSONObject("current_price");
+                            saveExchangeList(exchangeList);
+                            updateExchangeRate();
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -88,22 +90,29 @@ public class ExchangeManager {
         }
     }
 
-    private void saveExchangeRate(String usd){
-        Double roundedFiat = UtilMethods.round(Double.parseDouble(usd), 2);
-        Gson gson = new Gson();
-        exchangeRate = new ExchangeRate(Fiat.parseFiat(CURRENCY_CODE, roundedFiat.toString()));
-        sharedPref.edit().putString(EXCHANGE_RATE, gson.toJson(exchangeRate)).apply();
+    private void saveExchangeList(JSONObject exchangeList){
+        sharedPref.edit().putString(EXCHANGE_RATE_LIST, exchangeList.toString()).apply();
+    }
+
+    public void updateExchangeRate(){
+        updateExchangeRate(defaultPref.getString("fiatType", "usd"));
+    }
+
+    public void updateExchangeRate(String fiatType){
+        try {
+            String exchangeListJson = sharedPref.getString(EXCHANGE_RATE_LIST, "");
+            JSONObject exchangeList = new JSONObject(exchangeListJson);
+            double fiatAmount = exchangeList.getDouble(fiatType);
+            exchangeRate = new ExchangeRate(Fiat.parseFiat(fiatType.toUpperCase(), Double.toString(UtilMethods.round(fiatAmount, 2))));
+        }catch (Exception e){
+            exchangeRate = new ExchangeRate(Fiat.parseFiat("usd".toUpperCase(), "1.00")); //Don't use 0 for default. It will throw exception. (Can't divide by 0)
+        }
+        notifyExchangeRateUpdated();
     }
 
     public ExchangeRate getExchangeRate() {
         if(exchangeRate == null) {
-            Gson gson = new Gson();
-            String exchangeRateJson = sharedPref.getString(EXCHANGE_RATE, "");
-            if(exchangeRateJson.isEmpty()){
-                exchangeRate = new ExchangeRate(Fiat.parseFiat(CURRENCY_CODE, "0")); //Default 0
-            }else {
-                exchangeRate = gson.fromJson(exchangeRateJson, ExchangeRate.class);
-            }
+            updateExchangeRate();
         }
         return exchangeRate;
     }

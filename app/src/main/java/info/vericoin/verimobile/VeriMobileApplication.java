@@ -76,8 +76,8 @@ public class VeriMobileApplication extends MultiDexApplication {
             contactManager = new ContactManager(sharedPref);
         }
         if(exchangeManager == null){
-            exchangeManager = new ExchangeManager(sharedPref);
-            exchangeManager.updateExchangeRate(this);
+            exchangeManager = new ExchangeManager(sharedPref, defaultPref);
+            exchangeManager.downloadExchangeRateList(this);
         }
 
         UtilMethods.setContext(this);

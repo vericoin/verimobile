@@ -157,11 +157,24 @@
     <string name="fiatType">Fiat Type</string>
     <string name="refreshButton">Refresh</string>
 
-    <array name="fiatCurrencies">
-        <item>USD</item>
+    <array name="fiat_currency_entries">
+        <item>AUD</item>
         <item>CAD</item>
+        <item>EUR</item>
+        <item>GBP</item>
+        <item>JPY</item>
+        <item>USD</item>
     </array>
-    <string name="default_fiat_value">USD</string>
+    <array name="fiat_currency_values">
+        <item>aud</item>
+        <item>cad</item>
+        <item>eur</item>
+        <item>gbp</item>
+        <item>jpy</item>
+        <item>usd</item>
+    </array>
+    <string name="default_fiat_value">usd</string>
+
     <string name="refreshing_exchange_rate">Refreshing Exchange Rate</string>
 
 </resources>
