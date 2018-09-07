@@ -18,6 +18,7 @@ import org.bitcoinj.wallet.SendRequest;
 
 import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Models.VeriTransaction;
+import info.vericoin.verimobile.Util.UtilMethods;
 
 import static android.view.View.GONE;
 
@@ -93,7 +94,7 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
             public void onClick(View view) {
                 fiatIsPrimary = !fiatIsPrimary;
                 if(fiatIsPrimary) {
-                    amountParser.setAmount(fiat.toPlainString());
+                    amountParser.setAmount(UtilMethods.roundFiat(fiat).toPlainString());
                     amountParser.setMaxDecimalPlaces(2);
                     amountParser.setMaxIntegerPlaces(12);
                 }else{
@@ -144,14 +145,8 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
                     @Override
                     public void run() {
                         try {
-                            final Coin amount;
-                            if(fiatIsPrimary){
-                                amount = exchangeManager.getExchangeRate().fiatToCoin(Fiat.parseFiat("USD", amountParser.getAmount()));
-                            }else {
-                                amount = Coin.parseCoin(amountParser.getAmount());
-                            }
                             String addressString = veriTransaction.getContact().getAddress();
-                            SendRequest request = SendRequest.to(Address.fromString(kit.params(), addressString), amount);
+                            SendRequest request = SendRequest.to(Address.fromString(kit.params(), addressString), coin);
 
                             //Remove static fee if you want to use feePerKb instead
                             request.staticFee = VeriTransaction.DEFAULT_STATIC_FEE;
@@ -165,7 +160,7 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    reviewTransaction(amount, fee);
+                                    reviewTransaction(coin, fee);
                                 }
                             });
                         } catch (InsufficientMoneyException e) {
@@ -247,7 +242,7 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
 
     public void setAmountText(){
 
-        if(fiatIsPrimary && exchangeManager.doesExchangeRateExist()){
+        if(fiatIsPrimary){
             fiat = Fiat.parseFiat(exchangeManager.getCurrencyCode(), amountParser.getAmount());
             coin = exchangeManager.getExchangeRate().fiatToCoin(fiat);
 
@@ -257,11 +252,9 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
         }else {
             coin = Coin.parseCoin(amountParser.getAmount());
             fiat = exchangeManager.getExchangeRate().coinToFiat(coin);
-            long roundFiat = Math.round((double) fiat.getValue() / 100) * 100;
-            fiat = Fiat.valueOf("USD", roundFiat);
 
             primaryAmount.setText(amountParser.getAmount() + " BTC");
-            secondaryAmount.setText(fiat.toFriendlyString());
+            secondaryAmount.setText(UtilMethods.roundFiat(fiat).toFriendlyString());
         }
     }
 

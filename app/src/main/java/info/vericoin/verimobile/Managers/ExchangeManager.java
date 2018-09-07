@@ -13,6 +13,9 @@ import org.bitcoinj.utils.ExchangeRate;
 import org.bitcoinj.utils.Fiat;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
+import info.vericoin.verimobile.Util.UtilMethods;
 import info.vericoin.verimobile.VolleySingleton;
 
 public class ExchangeManager {
@@ -33,6 +36,22 @@ public class ExchangeManager {
         this.sharedPref = sharedPref;
     }
 
+    public interface OnExchangeRateChange{
+
+        void exchangeRateUpdated(ExchangeRate exchangeRate);
+
+    }
+
+    private ArrayList<OnExchangeRateChange> listeners = new ArrayList<>();
+
+    public void addExchangeRateChangeListener(OnExchangeRateChange listener) {
+        listeners.add(listener);
+    }
+
+    public void removeExchangeRateChangeListener(OnExchangeRateChange listener){
+        listeners.remove(listener);
+    }
+
     public void updateExchangeRate(Context context){
         //get rate from CoinGecko
         String url = "https://api.coingecko.com/api/v3/coins/bitcoin?localization=false";
@@ -45,6 +64,7 @@ public class ExchangeManager {
                         try {
                             double usd = response.getJSONObject("market_data").getJSONObject("current_price").getDouble("usd");
                             saveExchangeRate(Double.toString(usd));
+                            notifyExchangeRateUpdated();
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -62,14 +82,17 @@ public class ExchangeManager {
         VolleySingleton.getInstance(context).addToRequestQueue(jsonObjectRequest);
     }
 
-    private void saveExchangeRate(String usd){
-        Gson gson = new Gson();
-        ExchangeRate exchangeRate = new ExchangeRate(Fiat.parseFiat(CURRENCY_CODE, usd));
-        sharedPref.edit().putString(EXCHANGE_RATE, gson.toJson(exchangeRate)).apply();
+    private void notifyExchangeRateUpdated(){
+        for(OnExchangeRateChange listener: listeners){
+            listener.exchangeRateUpdated(exchangeRate);
+        }
     }
 
-    public boolean doesExchangeRateExist(){
-        return (getExchangeRate() != null);
+    private void saveExchangeRate(String usd){
+        Double roundedFiat = UtilMethods.round(Double.parseDouble(usd), 2);
+        Gson gson = new Gson();
+        exchangeRate = new ExchangeRate(Fiat.parseFiat(CURRENCY_CODE, roundedFiat.toString()));
+        sharedPref.edit().putString(EXCHANGE_RATE, gson.toJson(exchangeRate)).apply();
     }
 
     public ExchangeRate getExchangeRate() {
@@ -77,7 +100,7 @@ public class ExchangeManager {
             Gson gson = new Gson();
             String exchangeRateJson = sharedPref.getString(EXCHANGE_RATE, "");
             if(exchangeRateJson.isEmpty()){
-                return null;
+                exchangeRate = new ExchangeRate(Fiat.parseFiat(CURRENCY_CODE, "0")); //Default 0
             }else {
                 exchangeRate = gson.fromJson(exchangeRateJson, ExchangeRate.class);
             }

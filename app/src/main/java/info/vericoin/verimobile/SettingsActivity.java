@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
@@ -14,10 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import org.bitcoinj.kits.WalletAppKit;
+import org.bitcoinj.utils.ExchangeRate;
 
 import java.io.IOException;
 
 import info.vericoin.verimobile.Dialogs.PasswordDialog;
+import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Managers.PasswordManager;
 import info.vericoin.verimobile.Util.FingerprintHelper;
 
@@ -50,7 +53,7 @@ public class SettingsActivity extends WalletAppKitActivity {
         getFragmentManager().beginTransaction().remove(fragment).commit();
     }
 
-    public static class MyPreferenceFragment extends PreferenceFragment {
+    public static class MyPreferenceFragment extends PreferenceFragment implements ExchangeManager.OnExchangeRateChange {
 
         // Unique request code.
         private static final int WRITE_REQUEST_CODE = 43;
@@ -61,18 +64,27 @@ public class SettingsActivity extends WalletAppKitActivity {
         private Preference viewContacts;
         private CheckBoxPreference lockTransactions;
         private CheckBoxPreference fingerPrint;
+        private VeriMobileApplication veriMobileApplication;
         private PasswordManager passwordManager;
+        private ExchangeManager exchangeManager;
         private FingerprintHelper fingerprintHelper;
         private PreferenceCategory securityCategory;
         private CheckBoxPreference secureWindow;
         private WalletAppKit kit;
         private SettingsActivity settingsActivity;
 
+        private Preference refreshFiat;
+        private ListPreference fiatType;
+
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preference_screen);
-            passwordManager = ((VeriMobileApplication) getActivity().getApplication()).getPasswordManager();
+            veriMobileApplication = (VeriMobileApplication) getActivity().getApplication();
+            passwordManager = veriMobileApplication.getPasswordManager();
+            exchangeManager = veriMobileApplication.getExchangeManager();
+            exchangeManager.addExchangeRateChangeListener(this);
+
             settingsActivity = (SettingsActivity) getActivity();
             kit = settingsActivity.kit;
 
@@ -113,6 +125,24 @@ public class SettingsActivity extends WalletAppKitActivity {
                     return true;
                 }
             });
+
+            refreshFiat = findPreference("refreshFiat");
+            fiatType = (ListPreference) findPreference("fiatType");
+
+            refreshFiat.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    Toast.makeText(getActivity(), R.string.refreshing_exchange_rate, Toast.LENGTH_LONG).show();
+                    exchangeManager.updateExchangeRate(getActivity());
+                    return true;
+                }
+            });
+
+            updateExchangeRate(exchangeManager.getExchangeRate());
+        }
+
+        public void updateExchangeRate(ExchangeRate exchangeRate){
+            fiatType.setSummary(exchangeRate.coin.toFriendlyString() + " = " + exchangeRate.fiat.toFriendlyString());
         }
 
         public void deleteWallet() {
@@ -324,5 +354,15 @@ public class SettingsActivity extends WalletAppKitActivity {
             }
         }
 
+        @Override
+        public void onDestroy(){
+            super.onDestroy();
+            exchangeManager.removeExchangeRateChangeListener(this);
+        }
+
+        @Override
+        public void exchangeRateUpdated(ExchangeRate exchangeRate) {
+            updateExchangeRate(exchangeRate);
+        }
     }
 }

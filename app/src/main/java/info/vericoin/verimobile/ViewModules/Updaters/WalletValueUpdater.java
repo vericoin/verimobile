@@ -9,6 +9,7 @@ import org.bitcoinj.wallet.Wallet;
 import org.bitcoinj.wallet.listeners.WalletChangeEventListener;
 
 import info.vericoin.verimobile.Managers.WalletManager;
+import info.vericoin.verimobile.Util.UtilMethods;
 
 public class WalletValueUpdater implements WalletChangeEventListener {
 
@@ -48,8 +49,8 @@ public class WalletValueUpdater implements WalletChangeEventListener {
         if(showFiatAmount && exchangeRate != null){
             Fiat confirmedFiat = exchangeRate.coinToFiat(confirmed);
             Fiat unconfirmedFiat = exchangeRate.coinToFiat(unconfirmed);
-            confirmedTextView.setText(confirmedFiat.toFriendlyString());
-            unconfirmedTextView.setText(unconfirmedFiat.toFriendlyString());
+            confirmedTextView.setText(UtilMethods.roundFiat(confirmedFiat).toFriendlyString());
+            unconfirmedTextView.setText(UtilMethods.roundFiat(unconfirmedFiat).toFriendlyString());
         }else {
             confirmedTextView.setText(confirmed.toFriendlyString());
             unconfirmedTextView.setText(unconfirmed.toFriendlyString());

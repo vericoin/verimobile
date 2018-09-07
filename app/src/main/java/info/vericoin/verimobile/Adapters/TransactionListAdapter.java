@@ -13,6 +13,8 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.kits.WalletAppKit;
+import org.bitcoinj.utils.ExchangeRate;
+import org.bitcoinj.utils.Fiat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +28,24 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
     private Context context;
 
     private WalletAppKit kit;
+    private ExchangeRate exchangeRate;
+
+    private boolean showFiatAmount = false;
+
+    public void setExchangeRate(ExchangeRate exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+    public void swapCurrency(){
+        showFiatAmount = !showFiatAmount;
+        notifyDataSetChanged();
+    }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public TransactionListAdapter(WalletAppKit kit, Context context) {
+    public TransactionListAdapter(WalletAppKit kit, Context context, ExchangeRate exchangeRate) {
         this.kit = kit;
         this.context = context;
+        this.exchangeRate = exchangeRate;
     }
 
     public void setmDataset(List<Transaction> mDataset) {
@@ -71,7 +86,13 @@ public class TransactionListAdapter extends RecyclerView.Adapter<TransactionList
         } else {
             holder.value.setTextColor(context.getResources().getColor(android.R.color.primary_text_light));
         }
-        holder.value.setText(amount.toFriendlyString());
+
+        if(showFiatAmount){
+            Fiat fiat = UtilMethods.roundFiat(exchangeRate.coinToFiat(amount));
+            holder.value.setText(fiat.toFriendlyString());
+        }else {
+            holder.value.setText(amount.toFriendlyString());
+        }
 
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override

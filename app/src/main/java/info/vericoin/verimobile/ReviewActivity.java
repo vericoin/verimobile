@@ -9,8 +9,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.utils.Fiat;
 
+import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Models.VeriTransaction;
+import info.vericoin.verimobile.Util.UtilMethods;
 
 import static android.view.View.GONE;
 
@@ -18,6 +21,7 @@ public class ReviewActivity extends WalletAppKitActivity {
 
     private final static String VERI_TRANSACTION = "veriTransaction";
     private VeriMobileApplication veriMobileApplication;
+    private ExchangeManager exchangeManager;
     private Button sendButton;
     private ProgressBar progressBar;
     private TextView totalView;
@@ -25,6 +29,11 @@ public class ReviewActivity extends WalletAppKitActivity {
     private TextView amountView;
     private TextView addrView;
     private TextView contactView;
+
+    private TextView totalFiatView;
+    private TextView amountFiatView;
+    private TextView feeFiatView;
+
     private VeriTransaction veriTransaction;
 
     public static Intent createIntent(Context context, VeriTransaction veriTransaction) {
@@ -42,6 +51,7 @@ public class ReviewActivity extends WalletAppKitActivity {
     protected void onWalletKitReady() {
         setContentView(R.layout.activity_transaction_review);
         veriMobileApplication = (VeriMobileApplication) getApplication();
+        exchangeManager = veriMobileApplication.getExchangeManager();
 
         veriTransaction = (VeriTransaction) getIntent().getSerializableExtra(VERI_TRANSACTION);
 
@@ -52,15 +62,28 @@ public class ReviewActivity extends WalletAppKitActivity {
         progressBar = findViewById(R.id.progressBar);
         sendButton = findViewById(R.id.sendButton);
         contactView = findViewById(R.id.contactName);
+        totalFiatView = findViewById(R.id.totalFiat);
+        feeFiatView = findViewById(R.id.feeFiat);
+        amountFiatView = findViewById(R.id.amountFiat);
 
         progressBar.setVisibility(GONE);
 
         try {
             Coin total = veriTransaction.getTotal();
-            amountView.setText(veriTransaction.getAmount().toFriendlyString());
-            feeView.setText(veriTransaction.getFee().toFriendlyString());
+            Coin amount = veriTransaction.getAmount();
+            Coin fee = veriTransaction.getFee();
+            amountView.setText(amount.toFriendlyString());
+            feeView.setText(fee.toFriendlyString());
             totalView.setText(total.toFriendlyString());
             addrView.setText(veriTransaction.getContact().getAddress());
+
+            Fiat fiatTotal = exchangeManager.getExchangeRate().coinToFiat(total);
+            Fiat fiatAmount = exchangeManager.getExchangeRate().coinToFiat(amount);
+            Fiat fiatFee = exchangeManager.getExchangeRate().coinToFiat(fee);
+
+            totalFiatView.setText(UtilMethods.roundFiat(fiatTotal).toFriendlyString());
+            amountFiatView.setText(UtilMethods.roundFiat(fiatAmount).toFriendlyString());
+            feeFiatView.setText(UtilMethods.roundFiat(fiatFee).toFriendlyString());
 
             String name = veriTransaction.getContact().getName();
             if(name == null || name.isEmpty()){

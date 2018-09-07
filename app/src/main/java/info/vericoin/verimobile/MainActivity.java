@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.bitcoinj.utils.ExchangeRate;
+
 import info.vericoin.verimobile.Adapters.TransactionListAdapter;
 import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Managers.WalletManager;
@@ -24,7 +26,7 @@ import info.vericoin.verimobile.ViewModules.Updaters.WalletValueUpdater;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class MainActivity extends WalletAppKitActivity {
+public class MainActivity extends WalletAppKitActivity implements ExchangeManager.OnExchangeRateChange{
 
     private final static int RECENT_TRANSACTION_SIZE = 5;
 
@@ -36,7 +38,6 @@ public class MainActivity extends WalletAppKitActivity {
     private CardView blockChainView;
     private Button sendButton;
     private Button receiveButton;
-    private ConstraintLayout swapButton;
     private ConstraintLayout coinBalanceLayout;
 
     private TextView percentComplete;
@@ -59,7 +60,6 @@ public class MainActivity extends WalletAppKitActivity {
 
     private WalletManager walletManager;
     private ExchangeManager exchangeManager;
-    private boolean showingFiat = false;
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -72,6 +72,7 @@ public class MainActivity extends WalletAppKitActivity {
         setContentView(R.layout.activity_main);
         walletManager = ((VeriMobileApplication) getApplication()).getWalletManager();
         exchangeManager = ((VeriMobileApplication) getApplication()).getExchangeManager();
+        exchangeManager.addExchangeRateChangeListener(this);
 
         unconfirmedBalance = findViewById(R.id.unconfirmedBalance);
         availableBalance = findViewById(R.id.availableBalance);
@@ -86,7 +87,6 @@ public class MainActivity extends WalletAppKitActivity {
         mRecyclerView = findViewById(R.id.recyclerView);
         blockChainView = findViewById(R.id.blockChainCard);
         emptyTextViewTXs = findViewById(R.id.emptyTextViewTXs);
-        swapButton = findViewById(R.id.swapAmountButton);
         coinBalanceLayout = findViewById(R.id.coinBalanceLayout);
 
         mRecyclerView.setEmptyView(emptyTextViewTXs);
@@ -143,27 +143,19 @@ public class MainActivity extends WalletAppKitActivity {
             }
         });
 
-        swapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Swap between VRC and VRM
-            }
-        });
-
         coinBalanceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Swap between Fiat and Coin
-                if(exchangeManager.doesExchangeRateExist()){
-                    walletValueUpdater.setExchangeRate(exchangeManager.getExchangeRate());
-                    walletValueUpdater.swapCurrency();
-                }
+                walletValueUpdater.setExchangeRate(exchangeManager.getExchangeRate());
+                walletValueUpdater.swapCurrency();
+                mAdapter.swapCurrency();
             }
         });
 
         // specify an adapter (see also next example)
         if (mAdapter == null) {
-            mAdapter = new TransactionListAdapter(kit, MainActivity.this);
+            mAdapter = new TransactionListAdapter(kit, MainActivity.this, exchangeManager.getExchangeRate());
             mRecyclerView.setAdapter(mAdapter);
         }
 
@@ -212,6 +204,7 @@ public class MainActivity extends WalletAppKitActivity {
         walletValueUpdater.stopListening();
         blockchainUpdater.stopListening();
         peerGroupUpdater.stopListening();
+        exchangeManager.removeExchangeRateChangeListener(this);
     }
 
     @Override
@@ -234,4 +227,12 @@ public class MainActivity extends WalletAppKitActivity {
         }
     }
 
+    @Override
+    public void exchangeRateUpdated(ExchangeRate exchangeRate) {
+        walletValueUpdater.setExchangeRate(exchangeRate);
+        walletValueUpdater.updateWalletView();
+
+        mAdapter.setExchangeRate(exchangeRate);
+        mAdapter.notifyDataSetChanged();
+    }
 }

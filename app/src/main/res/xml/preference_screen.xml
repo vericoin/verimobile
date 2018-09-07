@@ -24,6 +24,19 @@
             android:defaultValue="true"/>
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/currencyTitle"
+        android:key="currency">
+        <ListPreference
+            android:key="fiatType"
+            android:entries="@array/fiatCurrencies"
+            android:entryValues="@array/fiatCurrencies"
+            android:defaultValue="@string/default_fiat_value"
+            android:title="@string/fiatType" />
+        <Preference
+            android:key="refreshFiat"
+            android:title="@string/refreshButton" />
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Wallet"
         android:key="wallet">
         <Preference

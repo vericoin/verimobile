@@ -10,10 +10,12 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.kits.WalletAppKit;
+import org.bitcoinj.utils.ExchangeRate;
 
 import java.util.List;
 
 import info.vericoin.verimobile.R;
+import info.vericoin.verimobile.Util.UtilMethods;
 
 public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.ViewHolder> {
 
@@ -21,9 +23,23 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
 
     private WalletAppKit kit;
 
-    public InputListAdapter(WalletAppKit kit, List<TransactionInput> myDataset) {
+    private ExchangeRate exchangeRate;
+
+    private boolean showFiatAmount = false;
+
+    public void swapCurrency(){
+        showFiatAmount = !showFiatAmount;
+        notifyDataSetChanged();
+    }
+
+    public void setExchangeRate(ExchangeRate exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+    public InputListAdapter(WalletAppKit kit, List<TransactionInput> myDataset, ExchangeRate exchangeRate) {
         this.kit = kit;
         mDataset = myDataset;
+        this.exchangeRate = exchangeRate;
     }
 
     public void setmDataset(List<TransactionInput> mDataset) {
@@ -55,7 +71,11 @@ public class InputListAdapter extends RecyclerView.Adapter<InputListAdapter.View
         if (value == null) {
             holder.amount.setText(R.string.N_A);
         } else {
-            holder.amount.setText(value.toFriendlyString());
+            if(showFiatAmount){
+                holder.amount.setText(UtilMethods.roundFiat(exchangeRate.coinToFiat(value)).toFriendlyString());
+            }else {
+                holder.amount.setText(value.toFriendlyString());
+            }
         }
 
         TransactionOutput output = input.getConnectedOutput();

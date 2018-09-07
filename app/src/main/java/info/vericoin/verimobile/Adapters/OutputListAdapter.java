@@ -9,10 +9,12 @@ import android.widget.TextView;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.kits.WalletAppKit;
+import org.bitcoinj.utils.ExchangeRate;
 
 import java.util.List;
 
 import info.vericoin.verimobile.R;
+import info.vericoin.verimobile.Util.UtilMethods;
 
 public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.ViewHolder> {
 
@@ -20,10 +22,24 @@ public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.Vi
 
     private WalletAppKit kit;
 
+    private ExchangeRate exchangeRate;
+
+    private boolean showFiatAmount = false;
+
+    public void setExchangeRate(ExchangeRate exchangeRate) {
+        this.exchangeRate = exchangeRate;
+    }
+
+    public void swapCurrency(){
+        showFiatAmount = !showFiatAmount;
+        notifyDataSetChanged();
+    }
+
     // Provide a suitable constructor (depends on the kind of dataset)
-    public OutputListAdapter(WalletAppKit kit, List<TransactionOutput> myDataset) {
+    public OutputListAdapter(WalletAppKit kit, List<TransactionOutput> myDataset, ExchangeRate exchangeRate) {
         this.kit = kit;
         mDataset = myDataset;
+        this.exchangeRate = exchangeRate;
     }
 
     public void setmDataset(List<TransactionOutput> mDataset) {
@@ -55,7 +71,11 @@ public class OutputListAdapter extends RecyclerView.Adapter<OutputListAdapter.Vi
         if (amount == null) {
             holder.amount.setText(R.string.N_A);
         } else {
-            holder.amount.setText(amount.toFriendlyString());
+            if(showFiatAmount) {
+                holder.amount.setText(UtilMethods.roundFiat(exchangeRate.coinToFiat(amount)).toFriendlyString());
+            }else {
+                holder.amount.setText(amount.toFriendlyString());
+            }
         }
         try {
             holder.address.setText(output.getAddressFromP2PKHScript(kit.params()).toBase58());

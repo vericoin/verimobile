@@ -9,7 +9,10 @@ import com.google.zxing.common.BitMatrix;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.TransactionConfidence;
+import org.bitcoinj.utils.Fiat;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.text.DateFormat;
 import java.util.Arrays;
@@ -109,5 +112,18 @@ public class UtilMethods {
             DateFormat format = DateFormat.getDateTimeInstance();
             return format.format(date);
         }
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public static Fiat roundFiat(Fiat fiat){
+        long roundFiat = Math.round((double) fiat.getValue() / 100) * 100;
+        return Fiat.valueOf("USD", roundFiat);
     }
 }

@@ -152,5 +152,16 @@
     </string-array>
     <string name="wallet_is_encrypted">Your wallet is encrypted with your current password.</string>
     <string name="wallet_is_not_encrypted">Your wallet is not encrypted!</string>
-    <string name="swap_amount_button">Swap Amount</string>
+    <string name="swap_currency">Swap Currency</string>
+    <string name="currencyTitle">Currency</string>
+    <string name="fiatType">Fiat Type</string>
+    <string name="refreshButton">Refresh</string>
+
+    <array name="fiatCurrencies">
+        <item>USD</item>
+        <item>CAD</item>
+    </array>
+    <string name="default_fiat_value">USD</string>
+    <string name="refreshing_exchange_rate">Refreshing Exchange Rate</string>
+
 </resources>
