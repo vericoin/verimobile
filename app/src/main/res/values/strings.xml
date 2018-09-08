@@ -164,6 +164,7 @@
         <item>CNY</item>
         <item>EUR</item>
         <item>GBP</item>
+        <item>HKD</item>
         <item>INR</item>
         <item>JPY</item>
         <item>KRW</item>
@@ -177,6 +178,7 @@
         <item>cny</item>
         <item>eur</item>
         <item>gbp</item>
+        <item>hkd</item>
         <item>inr</item>
         <item>jpy</item>
         <item>krw</item>
