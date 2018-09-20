@@ -191,4 +191,11 @@
 
     <string name="provided_by_coin_gecko">Powered by CoinGecko API</string>
 
+    <string name="payment_channel_name">Payments</string>
+    <string name="payment_channel_desc">Be notified when payment is received</string>
+
+    <string name="notification_payment_title">Incoming Payment</string>
+
+    <string name="received_text">Received</string>
+
 </resources>

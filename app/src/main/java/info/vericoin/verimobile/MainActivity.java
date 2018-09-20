@@ -13,10 +13,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.utils.ExchangeRate;
+import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 
 import info.vericoin.verimobile.Adapters.TransactionListAdapter;
 import info.vericoin.verimobile.Managers.ExchangeManager;
+import info.vericoin.verimobile.Managers.VeriNotificationManager;
 import info.vericoin.verimobile.Managers.WalletManager;
 import info.vericoin.verimobile.Util.RecyclerViewEmptySupport;
 import info.vericoin.verimobile.ViewModules.Updaters.BlockchainUpdater;
@@ -26,7 +31,7 @@ import info.vericoin.verimobile.ViewModules.Updaters.WalletValueUpdater;
 
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
-public class MainActivity extends WalletAppKitActivity implements ExchangeManager.OnExchangeRateChange{
+public class MainActivity extends WalletAppKitActivity implements ExchangeManager.OnExchangeRateChange, WalletCoinsReceivedEventListener{
 
     private final static int RECENT_TRANSACTION_SIZE = 5;
 
@@ -60,6 +65,7 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
 
     private WalletManager walletManager;
     private ExchangeManager exchangeManager;
+    private VeriNotificationManager veriNotificationManager;
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -72,6 +78,8 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
         setContentView(R.layout.activity_main);
         walletManager = ((VeriMobileApplication) getApplication()).getWalletManager();
         exchangeManager = ((VeriMobileApplication) getApplication()).getExchangeManager();
+        veriNotificationManager = ((VeriMobileApplication) getApplication()).getVeriNotificationManager();
+        veriNotificationManager.clearTransactions();
 
         unconfirmedBalance = findViewById(R.id.unconfirmedBalance);
         availableBalance = findViewById(R.id.availableBalance);
@@ -187,6 +195,7 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
         peerGroupUpdater.listenForPeerConnections();
 
         exchangeManager.addExchangeRateChangeListener(this);
+        kit.wallet().addCoinsReceivedEventListener(WalletManager.runInUIThread, this);
     }
 
     @Override
@@ -206,6 +215,7 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
         blockchainUpdater.stopListening();
         peerGroupUpdater.stopListening();
         exchangeManager.removeExchangeRateChangeListener(this);
+        kit.wallet().removeCoinsReceivedEventListener(this);
     }
 
     @Override
@@ -235,5 +245,10 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
 
         mAdapter.setExchangeRate(exchangeRate);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+        veriNotificationManager.clearTransactions();
     }
 }

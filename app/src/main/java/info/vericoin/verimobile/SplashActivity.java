@@ -8,10 +8,6 @@ import info.vericoin.verimobile.Managers.WalletManager;
 
 public class SplashActivity extends WalletAppKitActivity {
 
-    private VeriMobileApplication veriMobileApplication;
-
-    private WalletManager walletManager;
-
     public static Intent createIntent(Context context) {
         return new Intent(context, SplashActivity.class);
     }
@@ -20,8 +16,6 @@ public class SplashActivity extends WalletAppKitActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        veriMobileApplication = (VeriMobileApplication) getApplication();
-        walletManager = veriMobileApplication.getWalletManager();
 
         if (walletManager.doesWalletExist(SplashActivity.this)) {
             walletManager.startWallet(SplashActivity.this);

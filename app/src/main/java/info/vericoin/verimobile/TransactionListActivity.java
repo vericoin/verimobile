@@ -9,14 +9,20 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.Transaction;
 import org.bitcoinj.utils.ExchangeRate;
+import org.bitcoinj.wallet.Wallet;
+import org.bitcoinj.wallet.listeners.WalletCoinsReceivedEventListener;
 
 import info.vericoin.verimobile.Adapters.TransactionListAdapter;
 import info.vericoin.verimobile.Managers.ExchangeManager;
+import info.vericoin.verimobile.Managers.VeriNotificationManager;
+import info.vericoin.verimobile.Managers.WalletManager;
 import info.vericoin.verimobile.Util.RecyclerViewEmptySupport;
 import info.vericoin.verimobile.ViewModules.Updaters.TransactionListUpdater;
 
-public class TransactionListActivity extends WalletAppKitActivity implements ExchangeManager.OnExchangeRateChange {
+public class TransactionListActivity extends WalletAppKitActivity implements ExchangeManager.OnExchangeRateChange, WalletCoinsReceivedEventListener {
 
     private RecyclerViewEmptySupport mRecyclerView;
     private LinearLayoutManager mLayoutManager;
@@ -26,6 +32,8 @@ public class TransactionListActivity extends WalletAppKitActivity implements Exc
     private TransactionListUpdater transactionListUpdater;
 
     private TextView emptyTextView;
+
+    private VeriNotificationManager veriNotificationManager;
 
     public static Intent createIntent(Context context) {
         return new Intent(context, TransactionListActivity.class);
@@ -41,6 +49,9 @@ public class TransactionListActivity extends WalletAppKitActivity implements Exc
         veriMobileApplication = (VeriMobileApplication) getApplication();
         exchangeManager = veriMobileApplication.getExchangeManager();
         exchangeManager.addExchangeRateChangeListener(this);
+
+        veriNotificationManager = veriMobileApplication.getVeriNotificationManager();
+        veriNotificationManager.clearTransactions();
 
         mRecyclerView = findViewById(R.id.recyclerView);
         emptyTextView = findViewById(R.id.emptyTextView);
@@ -71,12 +82,15 @@ public class TransactionListActivity extends WalletAppKitActivity implements Exc
 
         transactionListUpdater.updateTransactionList();
         transactionListUpdater.listenForTransactions();
+
+        kit.wallet().addCoinsReceivedEventListener(WalletManager.runInUIThread, this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         transactionListUpdater.stopListening();
+        kit.wallet().removeCoinsReceivedEventListener(this);
     }
 
     @Override
@@ -109,5 +123,10 @@ public class TransactionListActivity extends WalletAppKitActivity implements Exc
     public void exchangeRateUpdated(ExchangeRate exchangeRate) {
         mAdapter.setExchangeRate(exchangeRate);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+        veriNotificationManager.clearTransactions();
     }
 }

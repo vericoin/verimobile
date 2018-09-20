@@ -15,9 +15,9 @@ public abstract class WalletAppKitActivity extends VeriActivity implements OnCon
 
     private boolean resumeStateActive = false;
 
-    private VeriMobileApplication veriMobileApplication;
+    protected VeriMobileApplication veriMobileApplication;
 
-    private WalletManager walletManager;
+    protected WalletManager walletManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
