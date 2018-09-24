@@ -32,6 +32,8 @@ public class SettingsActivity extends WalletAppKitActivity {
 
     private static String PASSWORD_DIALOG_TAG = "passwordDialog";
 
+    private static String ABOUT_PAGE_URL = "https://vericoin.info/about/";
+
     private MyPreferenceFragment fragment;
 
     public static Intent createIntent(Context context) {
@@ -72,6 +74,7 @@ public class SettingsActivity extends WalletAppKitActivity {
         private CheckBoxPreference secureWindow;
         private WalletAppKit kit;
         private SettingsActivity settingsActivity;
+        private Preference aboutPage;
 
         private Preference refreshFiat;
         private ListPreference fiatType;
@@ -108,6 +111,16 @@ public class SettingsActivity extends WalletAppKitActivity {
             fingerPrint = (CheckBoxPreference) findPreference(getString(R.string.fingerprint_enabled_key));
 
             secureWindow = (CheckBoxPreference) findPreference(getString(R.string.secure_window_key));
+
+            aboutPage = findPreference("aboutKey");
+
+            aboutPage.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    openAboutPage();
+                    return true;
+                }
+            });
 
             fingerprintHelper = new FingerprintHelper((AppCompatActivity) getActivity());
 
@@ -192,6 +205,11 @@ public class SettingsActivity extends WalletAppKitActivity {
                     checkBoxPreference.setChecked(after);
                 }
             });
+        }
+
+        public void openAboutPage(){
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ABOUT_PAGE_URL));
+            startActivity(browserIntent);
         }
 
         public boolean doesPasswordExist() {

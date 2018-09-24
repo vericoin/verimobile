@@ -198,4 +198,7 @@
 
     <string name="received_text">Received</string>
 
+    <string name="pref_category_more">More Information</string>
+    <string name="pref_about">About Vericoin &amp; Verium</string>
+
 </resources>

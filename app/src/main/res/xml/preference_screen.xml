@@ -53,4 +53,11 @@
             android:title="Delete Wallet" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_category_more"
+        android:key="moreCategory">
+        <Preference
+            android:key="aboutKey"
+            android:title="@string/pref_about" />
+    </PreferenceCategory>
+
 </PreferenceScreen>
