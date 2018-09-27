@@ -201,4 +201,15 @@
     <string name="pref_category_more">More Information</string>
     <string name="pref_about">About Vericoin &amp; Verium</string>
 
+    <string name="pref_wallet_title">Wallet</string>
+    <string name="pref_export_wallet_title">Export Wallet</string>
+    <string name="pref_view_seed_title">View Seed</string>
+    <string name="pref_delete_wallet_title">Delete Wallet</string>
+    <string name="pref_secure_window_title">Secure Window</string>
+    <string name="pref_secure_window_summary">Prevents device from taking screenshots of app, and hides content when minimized.</string>
+    <string name="pref_finger_print_title">Fingerprint Unlocking</string>
+    <string name="pref_finger_print_summary">Allow fingerprint to unlock wallet instead of using password</string>
+    <string name="pref_lock_transaction_title">Lock Transactions</string>
+    <string name="pref_lock_transaction_summary">Require wallet to be unlocked before sending transactions. If wallet is encrypted then password is required to send transactions.</string>
+    <string name="pref_change_password_title">Change Password</string>
 </resources>

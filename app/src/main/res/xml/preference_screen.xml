@@ -7,20 +7,20 @@
 
         <Preference
             android:key="@string/change_password_button"
-            android:title="Change Password" />
+            android:title="@string/pref_change_password_title" />
         <CheckBoxPreference
             android:key="@string/lock_transactions_key"
-            android:summary="Require wallet to be unlocked before sending transactions. If wallet is encrypted then password is required to send transactions."
-            android:title="Lock Transactions" />
+            android:summary="@string/pref_lock_transaction_summary"
+            android:title="@string/pref_lock_transaction_title" />
         <CheckBoxPreference
             android:key="@string/fingerprint_enabled_key"
-            android:summary="Allow fingerprint to unlock wallet instead of using password"
-            android:title="Fingerprint Unlocking"
+            android:summary="@string/pref_finger_print_summary"
+            android:title="@string/pref_finger_print_title"
             android:defaultValue="true"/>
         <CheckBoxPreference
             android:key="@string/secure_window_key"
-            android:summary="Prevents device from taking screenshots of app, and hides content when minimized."
-            android:title="Secure Window"
+            android:summary="@string/pref_secure_window_summary"
+            android:title="@string/pref_secure_window_title"
             android:defaultValue="true"/>
     </PreferenceCategory>
 
@@ -37,20 +37,20 @@
             android:title="@string/refreshButton" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Wallet"
+    <PreferenceCategory android:title="@string/pref_wallet_title"
         android:key="wallet">
         <Preference
             android:key="@string/view_contacts_key"
             android:title="@string/view_contacts_button" />
         <Preference
             android:key="@string/export_wallet_button"
-            android:title="Export Wallet" />
+            android:title="@string/pref_export_wallet_title" />
         <Preference
             android:key="@string/view_seed_button"
-            android:title="View Seed" />
+            android:title="@string/pref_view_seed_title" />
         <Preference
             android:key="@string/delete_wallet_button"
-            android:title="Delete Wallet" />
+            android:title="@string/pref_delete_wallet_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_more"
