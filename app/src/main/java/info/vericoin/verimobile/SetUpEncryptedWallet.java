@@ -98,7 +98,7 @@ public class SetUpEncryptedWallet extends VeriActivity {
             @Override
             public void run() {
                 Toast.makeText(SetUpEncryptedWallet.this, R.string.wallet_imported, Toast.LENGTH_LONG).show();
-                startActivity(SplashActivity.createIntent(SetUpEncryptedWallet.this));
+                startActivity(SplashActivity.createIntent(SetUpEncryptedWallet.this, false));
             }
         });
     }

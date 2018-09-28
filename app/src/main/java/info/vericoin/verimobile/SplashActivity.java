@@ -8,14 +8,22 @@ import info.vericoin.verimobile.Managers.WalletManager;
 
 public class SplashActivity extends WalletAppKitActivity {
 
-    public static Intent createIntent(Context context) {
-        return new Intent(context, SplashActivity.class);
+    private final static String BUNDLE_BACK_UP_WALLET= "backUp";
+
+    private boolean showBackUpWalletActivity;
+
+    public static Intent createIntent(Context context, boolean showBackUpWalletActivity) {
+        Intent intent = new Intent(context, SplashActivity.class);
+        intent.putExtra(BUNDLE_BACK_UP_WALLET, showBackUpWalletActivity);
+        return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        showBackUpWalletActivity = getIntent().getBooleanExtra(BUNDLE_BACK_UP_WALLET, false);
 
         if (walletManager.doesWalletExist(SplashActivity.this)) {
             walletManager.startWallet(SplashActivity.this);
@@ -28,7 +36,9 @@ public class SplashActivity extends WalletAppKitActivity {
     @Override
     protected void onWalletKitReady() {
 
-        if (doesPasswordExist()) {
+        if(showBackUpWalletActivity) {
+            startActivity(BackUpWalletInfoActivity.createIntent(this));
+        }else if (doesPasswordExist()) {
             startActivity(UnlockActivity.createIntent(SplashActivity.this)); //Ask for password;
         } else {
             startActivity(MainActivity.createIntent(SplashActivity.this));

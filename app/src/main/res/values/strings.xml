@@ -212,4 +212,12 @@
     <string name="pref_lock_transaction_title">Lock Transactions</string>
     <string name="pref_lock_transaction_summary">Require wallet to be unlocked before sending transactions. If wallet is encrypted then password is required to send transactions.</string>
     <string name="pref_change_password_title">Change Password</string>
+    <string name="dusty_send_request_err">Send amount is too small</string>
+
+    <string name="confirm_send_title">Confirm Payment</string>
+    <string name="to_address">To</string>
+    
+    <string name="wallet_safety_tip">VeriMobile is a Simplified Payment Verification wallet. What that means is that this device has full and exclusive access to the coins stored on this wallet. We recommend you encrypt this wallet in case your device is compromised. We also recommend that you only store a small portion of your coins on this wallet. Please keep a backup of your wallet or seed somewhere secured. You can not recover your coins without access to your wallet or seed.</string>
+    <string name="i_have_read_text">I have read and understand</string>
+    <string name="quick_tip">Quick Tip</string>
 </resources>

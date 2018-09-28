@@ -199,12 +199,6 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-        stopListeners();
-    }
-
-    @Override
     protected void onWalletKitStop() {
         stopListeners();
     }

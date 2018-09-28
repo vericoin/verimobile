@@ -11,15 +11,17 @@ import android.widget.Toast;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.utils.Fiat;
 
+import info.vericoin.verimobile.Dialogs.ConfirmSendDialog;
 import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Models.VeriTransaction;
 import info.vericoin.verimobile.Util.UtilMethods;
 
 import static android.view.View.GONE;
 
-public class ReviewActivity extends WalletAppKitActivity {
+public class ReviewActivity extends WalletAppKitActivity implements ConfirmSendDialog.OnClickListener{
 
     private final static String VERI_TRANSACTION = "veriTransaction";
+    private final static String CONFIRM_DIALOG_TAG = "confirmDialog";
     private VeriMobileApplication veriMobileApplication;
     private ExchangeManager exchangeManager;
     private Button sendButton;
@@ -99,9 +101,20 @@ public class ReviewActivity extends WalletAppKitActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(ProcessTransactionActivity.createIntent(ReviewActivity.this, veriTransaction));
+                createConfirmationDialog();
             }
         });
     }
 
+    private void createConfirmationDialog(){
+        ConfirmSendDialog confirmSendDialog = new ConfirmSendDialog();
+        confirmSendDialog.setArguments(ConfirmSendDialog.createBundle(veriTransaction));
+        confirmSendDialog.setListener(this);
+        confirmSendDialog.show(getSupportFragmentManager(), CONFIRM_DIALOG_TAG);
+    }
+
+    @Override
+    public void OnConfirm() {
+        startActivity(ProcessTransactionActivity.createIntent(ReviewActivity.this, veriTransaction));
+    }
 }

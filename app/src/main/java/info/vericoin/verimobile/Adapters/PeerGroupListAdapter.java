@@ -42,10 +42,12 @@ public class PeerGroupListAdapter extends RecyclerView.Adapter<PeerGroupListAdap
         long ping = peer.getPingTime();
         String address = peer.getAddress().toString();
         int clientVersion = peer.getPeerVersionMessage().clientVersion;
+        long bestHeight = peer.getBestHeight();
 
         holder.pingView.setText(String.format("%tL ms", ping));
         holder.addressView.setText(address);
         holder.clientVersionView.setText(String.format(Locale.getDefault(), "%d", clientVersion));
+        holder.bestHeight.setText(String.format(Locale.getDefault(), "%d blocks", bestHeight));
     }
 
     @Override
@@ -61,12 +63,14 @@ public class PeerGroupListAdapter extends RecyclerView.Adapter<PeerGroupListAdap
         private TextView clientVersionView;
         private TextView addressView;
         private TextView pingView;
+        private TextView bestHeight;
 
         private ViewHolder(ConstraintLayout v) {
             super(v);
             clientVersionView = v.findViewById(R.id.clientVersion);
             pingView = v.findViewById(R.id.ping);
             addressView = v.findViewById(R.id.address);
+            bestHeight = v.findViewById(R.id.bestHeight);
         }
     }
 }

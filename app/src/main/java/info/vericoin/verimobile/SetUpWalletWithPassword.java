@@ -98,7 +98,7 @@ public abstract class SetUpWalletWithPassword extends VeriActivity {
 
     public void importComplete() {
         Toast.makeText(this, R.string.wallet_imported, Toast.LENGTH_LONG).show();
-        startActivity(SplashActivity.createIntent(SetUpWalletWithPassword.this));
+        startActivity(SplashActivity.createIntent(SetUpWalletWithPassword.this, false));
     }
 
     public boolean isEncryptWallet() {

@@ -24,11 +24,7 @@ import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Managers.PasswordManager;
 import info.vericoin.verimobile.Util.FingerprintHelper;
 
-public class SettingsActivity extends WalletAppKitActivity {
-
-    public final static String BTC_WALLET_FILE_NAME = "Bitcoin_Testnet3_Wallet";
-
-    public final static String MIME_TYPE = "application/x-bitcoin";
+public class SettingsActivity extends BackUpWalletActivity {
 
     private static String PASSWORD_DIALOG_TAG = "passwordDialog";
 
@@ -57,8 +53,6 @@ public class SettingsActivity extends WalletAppKitActivity {
 
     public static class MyPreferenceFragment extends PreferenceFragment implements ExchangeManager.OnExchangeRateChange {
 
-        // Unique request code.
-        private static final int WRITE_REQUEST_CODE = 43;
         private Preference changePasswordRow;
         private Preference exportWallet;
         private Preference viewSeed;
@@ -278,7 +272,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                         dialog.setListener(new PasswordDialog.OnPasswordListener() {
                             @Override
                             public void onSuccess(String password) {
-                                createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
+                                settingsActivity.backUpWallet();
                             }
                         });
                         dialog.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), PASSWORD_DIALOG_TAG);
@@ -303,7 +297,7 @@ public class SettingsActivity extends WalletAppKitActivity {
                 exportWallet.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference preference) {
-                        createFile(MIME_TYPE, BTC_WALLET_FILE_NAME);
+                        settingsActivity.backUpWallet();
                         return true;
                     }
                 });
@@ -341,43 +335,6 @@ public class SettingsActivity extends WalletAppKitActivity {
             } else {                          //Wallet is NOT encrypted and there is NO password.
                 lockTransactions.setEnabled(false);
                 fingerPrint.setEnabled(false);
-            }
-        }
-
-        private void createFile(String mimeType, String fileName) {
-            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
-
-            // Filter to only show results that can be "opened", such as
-            // a file (as opposed to a list of contacts or timezones).
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-            // Create a file with the requested MIME type.
-            intent.setType(mimeType);
-            intent.putExtra(Intent.EXTRA_TITLE, fileName);
-            startActivityForResult(intent, WRITE_REQUEST_CODE);
-        }
-
-        @Override
-        public void onActivityResult(int requestCode, int resultCode, Intent data) {
-            // The ACTION_OPEN_DOCUMENT intent was sent with the request code
-            // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
-            // response to some other intent, and the code below shouldn't run at all.
-
-            if (requestCode == WRITE_REQUEST_CODE && resultCode == RESULT_OK) {
-                // The document selected by the user won't be returned in the intent.
-                // Instead, a URI to that document will be contained in the return intent
-                // provided to this method as a parameter.
-                // Pull that URI using resultData.getData().
-                if (data != null) {
-                    Uri uri = data.getData();
-                    try {
-                        kit.wallet().saveToFileStream(getActivity().getContentResolver().openOutputStream(uri));
-                        Toast.makeText(getActivity(), getString(R.string.wallet_saved), Toast.LENGTH_LONG).show();
-                    } catch (IOException e) {
-                        Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG).show();
-                        e.printStackTrace();
-                    }
-                }
             }
         }
 

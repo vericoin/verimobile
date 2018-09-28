@@ -15,6 +15,7 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.utils.Fiat;
 import org.bitcoinj.wallet.SendRequest;
+import org.bitcoinj.wallet.Wallet;
 
 import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Models.VeriTransaction;
@@ -168,6 +169,13 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
                                 @Override
                                 public void run() {
                                     failed(getString(R.string.insufficient_funds));
+                                }
+                            });
+                        } catch (Wallet.DustySendRequested e){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    failed(getString(R.string.dusty_send_request_err));
                                 }
                             });
                         } catch (final Exception e){

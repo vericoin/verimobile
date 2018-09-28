@@ -127,7 +127,7 @@ public class CreateWalletActivity extends VeriActivity {
     }
 
     public void startApp() {
-        startActivity(SplashActivity.createIntent(CreateWalletActivity.this));
+        startActivity(SplashActivity.createIntent(CreateWalletActivity.this, true));
         ActivityCompat.finishAffinity(CreateWalletActivity.this); //Prevent app from going back to previous activities.
     }
 
