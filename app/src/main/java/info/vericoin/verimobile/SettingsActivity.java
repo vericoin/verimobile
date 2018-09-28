@@ -17,8 +17,6 @@ import android.widget.Toast;
 import org.bitcoinj.kits.WalletAppKit;
 import org.bitcoinj.utils.ExchangeRate;
 
-import java.io.IOException;
-
 import info.vericoin.verimobile.Dialogs.PasswordDialog;
 import info.vericoin.verimobile.Managers.ExchangeManager;
 import info.vericoin.verimobile.Managers.PasswordManager;

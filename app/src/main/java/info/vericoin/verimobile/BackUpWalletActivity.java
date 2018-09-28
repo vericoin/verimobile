@@ -4,11 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.widget.Toast;
 
-import org.bitcoinj.kits.WalletAppKit;
-
 import java.io.IOException;
-
-import info.vericoin.verimobile.Managers.WalletManager;
 
 public abstract class BackUpWalletActivity extends WalletAppKitActivity {
 

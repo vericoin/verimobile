@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import info.vericoin.verimobile.Managers.WalletManager;
-
 public class SplashActivity extends WalletAppKitActivity {
 
     private final static String BUNDLE_BACK_UP_WALLET= "backUp";
