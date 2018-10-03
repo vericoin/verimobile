@@ -19,4 +19,6 @@
     <color name="backgroundLTGray">#E8E8E8</color>
     <color name="itemLTGray">#F8F8F8</color>
     <color name="selectLTGray">#D0D0D0</color>
+    <color name="vrm_color">#46505a</color>
+    <color name="vrc_color">#418bca</color>
 </resources>

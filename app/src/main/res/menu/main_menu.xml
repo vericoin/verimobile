@@ -2,6 +2,11 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <item android:id="@+id/showFiat"
+        android:icon="@drawable/ic_baseline_attach_money_24px"
+        android:title="@string/show_fiat_menu"
+        app:showAsAction="ifRoom"/>
+
     <item android:id="@+id/settings"
         android:icon="@drawable/ic_baseline_settings"
         android:title="@string/settings_button"

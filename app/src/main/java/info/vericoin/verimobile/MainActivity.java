@@ -2,6 +2,7 @@ package info.vericoin.verimobile;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DividerItemDecoration;
@@ -11,6 +12,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.bitcoinj.core.Coin;
@@ -45,6 +47,8 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
     private Button receiveButton;
     private ConstraintLayout coinBalanceLayout;
 
+    private ImageView coinIcon;
+
     private TextView percentComplete;
 
     private Button viewTransactionsButton;
@@ -67,11 +71,15 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
     private ExchangeManager exchangeManager;
     private VeriNotificationManager veriNotificationManager;
 
+    private ConstraintLayout fullBalanceLayout;
+
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
+
+    private boolean showVRC = true;
 
     @Override
     protected void onWalletKitReady() {
@@ -95,6 +103,9 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
         blockChainView = findViewById(R.id.blockChainCard);
         emptyTextViewTXs = findViewById(R.id.emptyTextViewTXs);
         coinBalanceLayout = findViewById(R.id.coinBalanceLayout);
+
+        coinIcon = findViewById(R.id.coinIcon);
+        fullBalanceLayout = findViewById(R.id.fullBalanceLayout);
 
         mRecyclerView.setEmptyView(emptyTextViewTXs);
         mRecyclerView.setNestedScrollingEnabled(false);
@@ -150,13 +161,18 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
             }
         });
 
+        loadVRC();
         coinBalanceLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Swap between Fiat and Coin
-                walletValueUpdater.setExchangeRate(exchangeManager.getExchangeRate());
-                walletValueUpdater.swapCurrency();
-                mAdapter.swapCurrency();
+
+                showVRC = !showVRC;
+
+                if(showVRC){
+                    loadVRC();
+                }else {
+                    loadVRM();
+                }
             }
         });
 
@@ -198,6 +214,20 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
         kit.wallet().addCoinsReceivedEventListener(WalletManager.runInUIThread, this);
     }
 
+    public void loadVRC(){
+        coinIcon.setImageResource(R.drawable.vrc_icon);
+        fullBalanceLayout.setBackgroundResource(R.color.vrc_color);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
+                .getColor(R.color.vrc_color)));
+    }
+
+    public void loadVRM(){
+        coinIcon.setImageResource(R.drawable.vrm_icon);
+        fullBalanceLayout.setBackgroundResource(R.color.vrm_color);
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources()
+                .getColor(R.color.vrm_color)));
+    }
+
     @Override
     protected void onWalletKitStop() {
         stopListeners();
@@ -226,6 +256,12 @@ public class MainActivity extends WalletAppKitActivity implements ExchangeManage
             case R.id.settings:
                 //Write your code
                 startActivity(SettingsActivity.createIntent(this));
+                return true;
+            case R.id.showFiat:
+                //Swap between Fiat and Coin
+                walletValueUpdater.setExchangeRate(exchangeManager.getExchangeRate());
+                walletValueUpdater.swapCurrency();
+                mAdapter.swapCurrency();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
