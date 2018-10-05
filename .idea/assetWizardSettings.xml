@@ -13,6 +13,35 @@
                       <PersistentState>
                         <option name="children">
                           <map>
+                            <entry key="actionbar">
+                              <value>
+                                <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="paddingPercent" value="-5" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="C:\Users\Maxwell\Desktop\Vericonomy logo files\PNG transparent\600px-Vrc_logo-symbol.png" />
+                                      <entry key="outputName" value="ic_vrc_action_icon" />
+                                      <entry key="theme" value="HOLO_DARK" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
                             <entry key="launcher">
                               <value>
                                 <PersistentState>
@@ -75,7 +104,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputIconType" value="NOTIFICATION" />
+                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>
@@ -97,8 +126,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_baseline_attach_money_24px" />
-                            <entry key="sourceFile" value="C:\Users\Maxwell\Downloads\baseline-attach_money-24px.svg" />
+                            <entry key="outputName" value="ic_baseline_share_24px" />
+                            <entry key="sourceFile" value="C:\Users\Maxwell\Downloads\baseline-share-24px.svg" />
                           </map>
                         </option>
                       </PersistentState>

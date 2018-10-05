@@ -3,6 +3,9 @@ package info.vericoin.verimobile;
 import android.content.Context;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -63,6 +66,9 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
 
     private Coin coin;
     private Fiat fiat;
+
+    private MenuItem switchCoinButton;
+    private boolean isVRC = true;
 
     public static Intent createIntent(Context context, VeriTransaction veriTransaction) {
         Intent intent = new Intent(context, AmountActivity.class);
@@ -274,5 +280,39 @@ public class AmountActivity extends WalletAppKitActivity implements View.OnClick
         nextButton.setEnabled(true);
         nextButton.setText(R.string.next_button);
         startActivity(ReviewActivity.createIntent(this, veriTransaction));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.amount_menu, menu);
+        switchCoinButton = menu.findItem(R.id.switchCoin);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.switchCoin:
+                if(isVRC){
+                    changeToVRM();
+                }else{
+                    changeToVRC();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void changeToVRC(){
+        isVRC = true;
+        switchCoinButton.setIcon(R.drawable.ic_vrc_action_icon);
+    }
+
+    public void changeToVRM(){
+        isVRC = false;
+        switchCoinButton.setIcon(R.drawable.ic_vrm_action_icon);
     }
 }

@@ -221,4 +221,18 @@
     <string name="i_have_read_text">I have read and understand</string>
     <string name="quick_tip">Quick Tip</string>
     <string name="show_fiat_menu">Show Fiat</string>
+    <string name="language_category">Language</string>
+
+    <array name="language_entries">
+        <item>English</item>
+        <item>Spanish</item>
+    </array>
+    <array name="language_values">
+        <item>english</item>
+        <item>spanish</item>
+    </array>
+    <string name="default_language_value">english</string>
+    <string name="switch_coin_button">Switch Coin</string>
+    <string name="share_menu_button">Share</string>
+    <string name="current_addr_share">Address</string>
 </resources>
