@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    compileOptions.encoding = 'windows-1251'
     compileSdkVersion 28
     defaultConfig {
         applicationId "info.vericoin.verimobile"
